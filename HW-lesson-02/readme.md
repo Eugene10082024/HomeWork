@@ -1,6 +1,6 @@
 ## ДЗ к Занятию 2.
 
-## Работа с mdadm
+## Работа с mdadm - что сделать.
 
 1. добавить в Vagrantfile еще дисков сломать/починить raid собрать R0/R5/R10 на выбор.
 
@@ -14,9 +14,9 @@
 
 В каталоге создано 2 подкатлога в которых размещены vagranfile
 
-VM-01 - содержит vagranfile для автоматисеского сбора RAID10 из 4 дисков
+папка VM-01 - содержит vagranfile для автоматисеского сбора RAID10 из 4 дисков
 
-VM-02 - содержит vagranfile для автоматисеского сбора RAID10 из 4 дисков и автоматического создания 5 разделов
+папка VM-02 - содержит vagranfile для автоматисеского сбора RAID10 из 4 дисков и автоматического создания 5 разделов
 
 ## Выполнение п.1 ДЗ.
 
@@ -46,11 +46,11 @@ VM-02 - содержит vagranfile для автоматисеского сбо
 
 Для устранения данных сообщений и нормальной работы была выполнена установка доп. пакетов  перезагрузка конфигурации vagrantfile.
 
-vagrant ssh
+        vagrant ssh
 
 sudo yum install dkms binutils gcc make patch libgomp glibc-headers glibc-devel kernel-headers kernel-devel kernel.x86_64 -y
 
-vagrant reload
+        vagrant reload
 
 В итоге был подключен VBoxGuestAdditions.iso и выполнены все необходимые настройки.
 
@@ -205,17 +205,19 @@ vagrant reload
     
 2.4. Проверяем
 
-   cat /proc/mdstat 
-    Personalities : [raid10] 
-    md0 : active raid10 sdc[2] sdb[1] sda[0]
+        cat /proc/mdstat 
+   
+        Personalities : [raid10] 
+        md0 : active raid10 sdc[2] sdb[1] sda[0]
         2093056 blocks super 1.2 512K chunks 2 near-copies [4/3] [UUU_]
-      
-unused devices: <none>
+        unused devices: <none>
+        
 Теперь у нас 3 диска в RAID 
 
 2.5. Вернем диск sdd в массив RAID 10
 
-    sudo mdadm /dev/md0 --add /dev/sdd
+        sudo mdadm /dev/md0 --add /dev/sdd
+        
 2.6. Проверяем
 
     cat /proc/mdstat
