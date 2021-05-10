@@ -114,41 +114,41 @@ centos-7.7: 'virtualbox' provider box: centos-7.7.1908-kernel-5-x86_64-Minimal.b
 
     root@pc-01:/mnt/disk-data/data/0-HW/HW-01/manual_kernel_update-master/packer# vagrant box add --name centos-7-5 centos-7.7.1908-kernel-5-x86_64-Minimal.box
 
-box: Box file was not detected as metadata. Adding it directly...
+    box: Box file was not detected as metadata. Adding it directly...
 
-box: Adding box 'centos-7-5' (v0) for provider:
+    box: Adding box 'centos-7-5' (v0) for provider:
 
-box: Unpacking necessary files from: file:///mnt/disk-data/data/0-HW/HW-01/manual_kernel_update-master/packer/centos-7.7.1908-kernel-5-x86_64-Minimal.box
+    box: Unpacking necessary files from: file:///mnt/disk-data/data/0-HW/HW-01/manual_kernel_update-master/packer/centos-7.7.1908-kernel-5-x86_64-Minimal.box
 
-box: Successfully added box 'centos-7-5' (v0) for 'virtualbox'!
+    box: Successfully added box 'centos-7-5' (v0) for 'virtualbox'!
 
 3.6. Выполняем проверку: 
 
     C:\Users\a.sarafanov>vagrant box list
 
-CentOS-7-5    (virtualbox, 0)
+    CentOS-7-5    (virtualbox, 0)
 
-centos/7      (virtualbox, 2004.01)
+    centos/7      (virtualbox, 2004.01)
 
 3.7. Создаем конфигурационный файл vagrant
 
     root@pc-01:/mnt/disk-data/data/0-HW/HW-01/VM-02# vagrant init centos-7-5
 
-A Vagrantfile has been placed in this directory. You are now
+    A Vagrantfile has been placed in this directory. You are now
 
-ready to vagrant up your first virtual environment! Please read
+    ready to vagrant up your first virtual environment! Please read
 
-the comments in the Vagrantfile as well as documentation on
+    the comments in the Vagrantfile as well as documentation on
 
-vagrantup.com for more information on using Vagrant.
+    vagrantup.com for more information on using Vagrant.
 
 3.8. Создаем виртуальную машину и входим в нее.
 
     root@pc-01:/mnt/disk-data/data/0-HW/HW-01/VM-02# vagrant up                            
 
-Bringing machine 'default' up with 'virtualbox' provider...
+    Bringing machine 'default' up with 'virtualbox' provider...
 
-default: Machine booted and ready!
+    default: Machine booted and ready!
 
 3.9. root@pc-01:/mnt/disk-data/data/0-HW/HW-01/VM-02#
 
@@ -162,6 +162,10 @@ Last login: Mon May 3 19:09:15 2021 from 10.0.2.2
 
     5.12.1-1.el7.elrepo.x86_64
 
-3.10. Размещаем centos-7.7.1908-kernel-5-x86_64-Minimal.box на vagrant.cloud.com по адресу:
+3.10. Box (centos-7.7.1908-kernel-5-x86_64-Minimal.box) размещен на vagrant.cloud.com по адресу:
 
-    https://app.vagrantup.com/Aleksey-10081967/boxes/centos-7-5/versions/1.0/providers/VirtualBox/edit?new=true
+    https://app.vagrantup.com/Aleksey-Sa/boxes/centos-7-5
+
+3.11. Установка из созданного шаблона: 
+    
+    vagrant init Aleksey-Sa/centos-7-5
