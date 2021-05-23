@@ -165,6 +165,7 @@ Nginx работает.
 	[builder@vmrepo ~] vi rpmbuild/SPECS/nginx.spec
 
 Находим %build и добавляем --with-openssl=/home/builder/open-1.1.1k
+
 Имеем:
 
 	%build
@@ -215,6 +216,7 @@ Nginx работает.
 ## 3. Создание собственного репозитория.
 
 В создаваемый репозиторий будем размещать следующие пакеты:
+
     [root@vmrepo rpm]# ls -al
     total 245196
     drwxr-xr-x. 2 vagrant vagrant      4096 май 20 18:56 .
@@ -334,8 +336,7 @@ Nginx работает.
     Проверка    : 1C_Enterprise83-common-8.3.6-2041.x86_64                                                                                                                                                                               6/6 
 
 Установлено:
-  1C_Enterprise83-common.x86_64 0:8.3.6-2041    1C_Enterprise83-common-nls.x86_64 0:8.3.6-2041    1C_Enterprise83-server.x86_64 0:8.3.6-2041    1C_Enterprise83-server-nls.x86_64 0:8.3.6-2041    1C_Enterprise83-ws.x86_64 0:8.3.6-2041   
-  1C_Enterprise83-ws-nls.x86_64 0:8.3.6-2041   
+  1C_Enterprise83-common.x86_64 0:8.3.6-2041    1C_Enterprise83-common-nls.x86_64 0:8.3.6-2041    1C_Enterprise83-server.x86_64 0:8.3.6-2041    1C_Enterprise83-server-nls.x86_64 0:8.3.6-2041    1C_Enterprise83-ws.x86_64 0:8.3.6-2041 1C_Enterprise83-ws-nls.x86_64 0:8.3.6-2041   
 
     
 ### Проверяем статус сервиса 1С и запускаем его.
