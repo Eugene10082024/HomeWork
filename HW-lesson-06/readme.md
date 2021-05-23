@@ -153,6 +153,7 @@ Nginx работает.
 	[builder@vmrepo ~]$ tar -xvf latest.tar.gz
 
 Имеем:
+
 	[builder@vmrepo ~]$ ls -al modules/
 	total 4
 	drwxrwxr-x.  4 builder builder   65 May 20 16:39 .
