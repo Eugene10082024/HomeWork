@@ -166,6 +166,7 @@ Nginx работает.
 
 Находим %build и добавляем --with-openssl=/home/builder/open-1.1.1k
 Имеем:
+
 	%build
 	./configure %{BASE_CONFIGURE_ARGS} \
 		--with-cc-opt="%{WITH_CC_OPT}" \
