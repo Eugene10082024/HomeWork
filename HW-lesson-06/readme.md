@@ -22,16 +22,14 @@
 	drwxrwxr-x. 2 builder builder  6 May 20 09:20 SPECS
 	drwxrwxr-x. 2 builder builder  6 May 20 09:20 SRPMS
 
-### 1.5. Выполняем дополнительные действия под root.
-	[root@vmrepo SRC]# mount.cifs //10.60.32.55/10-dir_linux /mnt/windows -o user=a.sarafanov
 
-### 1.6. Копируем файл   nginx-1.19.10-1.el7.ngx.src.rpm из папки /mnt/windows/SRC в папку /home/builder и меняем владельца
-	[root@vmrepo SRC]# cp /mnt/windows/SRC/nginx-1.19.10-1.el7.ngx.src.rpm /home/builder/
-	[root@vmrepo SRC]# chown builder:builder /home/builder/nginx-1.19.10-1.el7.ngx.src.rpm
-	 su - builder
+
+### 1.5. Скачиваем файл nginx-1.20.1-1.el7.ngx.src.rpm  в папку /home/builder с сайта разработчика
+	[root@vmrepo SRC]# wget http://nginx.org/packages/centos/7/SRPMS/nginx-1.20.1-1.el7.ngx.src.rpm 
+	
 	 
-### 1.7. Установим скачанный исходник командой:
-	rpm -Uvh nginx-1.19.10-1.el7.ngx.src.rpm
+### 1.5. Установим скачанный исходник командой:
+	rpm -Uvh nginx-1.20.1-1.el7.ngx.src.rpm
 
 ### 1.8. Проверяем наличие развернутого исходного кода в rpmbuild/SOURCES
 	[builder@vmrepo ~]$ ls -al rpmbuild/SOURCES
@@ -39,7 +37,7 @@
 	drwxrwxr-x. 2 builder builder    4096 May 20 09:31 .
 	drwxrwxr-x. 7 builder builder      72 May 20 09:20 ..
 	-rw-r--r--. 1 builder builder     351 Apr 13 18:48 logrotate
-	-rw-r--r--. 1 builder builder 1061062 Apr 13 18:34 nginx-1.19.10.tar.gz
+	-rw-r--r--. 1 builder builder 1061062 Apr 13 18:34 nginx-1.20.1.tar.gz
 	-rwxr-xr-x. 1 builder builder     646 Apr 13 18:48 nginx.check-reload.sh
 	-rw-r--r--. 1 builder builder     643 Apr 13 18:48 nginx.conf
 	-rw-r--r--. 1 builder builder    1377 Apr 13 18:48 nginx.copyright
@@ -58,8 +56,8 @@
 	Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.ybId6q
 	+ umask 022
 	+ cd /home/builder/rpmbuild/BUILD
-	+ cd nginx-1.19.10
-	+ /usr/bin/rm -rf /home/builder/rpmbuild/BUILDROOT/nginx-1.19.10-1.el7.ngx.x86_64
+	+ cd nginx-1.20.1
+	+ /usr/bin/rm -rf /home/builder/rpmbuild/BUILDROOT/nginx-1.20.1-1.el7.ngx.x86_64
 	+ exit 0
 
 ### 1.10. Сборка пакета завершена. Проверяем что получилось.
@@ -67,8 +65,8 @@
 	total 2584
 	drwxr-xr-x. 2 builder builder     100 May 20 09:44 .
 	drwxrwxr-x. 3 builder builder      20 May 20 09:44 ..
-	-rw-rw-r--. 1 builder builder  810724 May 20 09:44 nginx-1.19.10-1.el7.ngx.x86_64.rpm
-	-rw-rw-r--. 1 builder builder 1834012 May 20 09:44 nginx-debuginfo-1.19.10-1.el7.ngx.x86_64.rpm
+	-rw-rw-r--. 1 builder builder  810724 May 20 09:44 nginx-1.20.1-1.el7.ngx.x86_64.rpm
+	-rw-rw-r--. 1 builder builder 1834012 May 20 09:44 nginx-debuginfo-1.20.1-1.el7.ngx.x86_64.rpm
 
 ### 1.11. Проверяем установлен nginx на данной ВМ
 	[root@vmrepo SRC]# rpm -qa | grep nginx*
@@ -77,10 +75,10 @@
 	nginx не установлен.
 	
 ### 1.12. Устанавливаем nginx на ВМ
-	[root@vmrepo SRC]# rpm -ivh /home/builder/rpmbuild/RPMS/x86_64/nginx-1.19.10-1.el7.ngx.x86_64.rpm
+	[root@vmrepo SRC]# rpm -ivh /home/builder/rpmbuild/RPMS/x86_64/nginx-1.20.1-1.el7.ngx.x86_64.rpm
 	Preparing...                          ################################# [100%]
 	Updating / installing...
-	   1:nginx-1:1.19.10-1.el7.ngx        ################################# [100%]
+	   1:nginx-1:1.20.1-1.el7.ngx        ################################# [100%]
 	----------------------------------------------------------------------
 
 	Thanks for using nginx!
@@ -138,10 +136,10 @@ Nginx работает.
 
 ### 1.14. Смотрим полное название установленного в системе пакета:
 	[root@vmrepo SRC]# rpm -qa | grep nginx
-	nginx-1.19.10-1.el7.ngx.x86_64
+	nginx-1.20.1-1.el7.ngx.x86_64
 
 ### 1.15. Удаляем установленный nginx с ВМ
-	[root@vmrepo SRC]# rpm -e nginx-1.19.10-1.el7.ngx.x86_64
+	[root@vmrepo SRC]# rpm -e nginx-1.20.1-1.el7.ngx.x86_64
 	[root@vmrepo SRC]# rpm -qa | grep nginx
 	[root@vmrepo SRC]#
 	su - builder
@@ -159,8 +157,7 @@ Nginx работает.
 	drwxrwxr-x.  4 builder builder   65 May 20 16:39 .
 	drwx------.  5 builder builder  183 May 20 10:34 ..
 	drwxrwxr-x. 19 builder builder 4096 May 20 16:33 openssl-1.1.1k
-	drwxrwxr-x.  3 builder builder  152 May 20 10:33 spnego-http-auth-nginx-module
-
+	
 
 ### 2.3. Редоктируем файл nginx.spec
 	[builder@vmrepo ~] vi rpmbuild/SPECS/nginx.spec
@@ -173,17 +170,17 @@ Nginx работает.
 	./configure %{BASE_CONFIGURE_ARGS} \
 		--with-cc-opt="%{WITH_CC_OPT}" \
 		--with-ld-opt="%{WITH_LD_OPT}" \
-		--with-openssl=/home/builder/modules/openssl-1.1.1k \
-		--with-debug
-
+		--with-debug \
+		--with-openssl=/home/builder/modules/openssl-1.1.1k
+	
 ### 2.4. Выполняем сборку rpm пакета nginx с модулем openssl
 
 	[builder@vmrepo ~]$ rpmbuild -bb rpmbuild/SPECS/nginx.spec
 	Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.Ibl8VW
 	+ umask 022
 	+ cd /home/builder/rpmbuild/BUILD
-	+ cd nginx-1.19.10
-	+ /usr/bin/rm -rf /home/builder/rpmbuild/BUILDROOT/nginx-1.19.10-1.el7.ngx.x86_64
+	+ cd nginx-1.20.1
+	+ /usr/bin/rm -rf /home/builder/rpmbuild/BUILDROOT/nginx-1.20.1-1.el7.ngx.x86_64
 	+ exit 0
 
 ### 2.5. Пакет собран. Проверяем
@@ -191,14 +188,14 @@ Nginx работает.
 	total 4104
 	drwxr-xr-x. 2 builder builder     100 May 20 16:36 .
 	drwxrwxr-x. 3 builder builder      20 May 20 09:44 ..
-	-rw-rw-r--. 1 builder builder 2200036 May 20 16:36 nginx-1.19.10-1.el7.ngx.x86_64.rpm
-	-rw-rw-r--. 1 builder builder 1996300 May 20 16:36 nginx-debuginfo-1.19.10-1.el7.ngx.x86_64.rpm
+	-rw-rw-r--. 1 builder builder 2200036 May 20 16:36 nginx-1.20.1-1.el7.ngx.x86_64.rpm
+	-rw-rw-r--. 1 builder builder 1996300 May 20 16:36 nginx-debuginfo-1.20.1-1.el7.ngx.x86_64.rpm
 
 ### 2.5. Устанавлиаем и запускаем nginx.
-	[root@vmrepo x86_64]# rpm -ivh nginx-1.19.10-1.el7.ngx.x86_64.rpm
+	[root@vmrepo x86_64]# rpm -ivh nginx-1.20.1-1.el7.ngx.x86_64.rpm
 	Preparing...                          ################################# [100%]
 	Updating / installing...
-	   1:nginx-1:1.19.10-1.el7.ngx        ################################# [100%]
+	   1:nginx-1:1.20.1-1.el7.ngx        ################################# [100%]
 
 	[root@vmrepo x86_64]# systemctl start nginx
 	
@@ -228,7 +225,7 @@ Nginx работает.
     -rw-rw-rw-. 1 vagrant vagrant  53525865 май 26  2015 1C_Enterprise83-server-nls-8.3.6-2041.x86_64.rpm
     -rw-rw-rw-. 1 vagrant vagrant    183312 май 26  2015 1C_Enterprise83-ws-8.3.6-2041.x86_64.rpm
     -rw-rw-rw-. 1 vagrant vagrant     15250 май 26  2015 1C_Enterprise83-ws-nls-8.3.6-2041.x86_64.rpm
-    -rw-r--r--. 1 vagrant vagrant   2200036 май 20 18:44 nginx-1.19.10-1.el7.ngx.x86_64.rpm
+    -rw-r--r--. 1 vagrant vagrant   2200036 май 20 18:44 nginx-1.20.1-1.el7.ngx.x86_64.rpm
 
 ### 3.1. Создаем каталог для репозитория.
     [root@vmrepo rpm]# mkdir -p /usr/share/nginx/html/repo
@@ -276,7 +273,7 @@ Nginx работает.
     <a href="1C_Enterprise83-server-nls-8.3.6-2041.x86_64.rpm">1C_Enterprise83-server-nls-8.3.6-2041.x86_64.rpm</a>   20-May-2021 19:00            53525865
     <a href="1C_Enterprise83-ws-8.3.6-2041.x86_64.rpm">1C_Enterprise83-ws-8.3.6-2041.x86_64.rpm</a>           20-May-2021 19:00              183312
     <a href="1C_Enterprise83-ws-nls-8.3.6-2041.x86_64.rpm">1C_Enterprise83-ws-nls-8.3.6-2041.x86_64.rpm</a>       20-May-2021 19:00               15250
-    <a href="nginx-1.19.10-1.el7.ngx.x86_64.rpm">nginx-1.19.10-1.el7.ngx.x86_64.rpm</a>                 20-May-2021 19:00             2200036
+    <a href="nginx-1.20.1-1.el7.ngx.x86_64.rpm">nginx-1.20.1-1.el7.ngx.x86_64.rpm</a>                 20-May-2021 19:00             2200036
     </pre><hr></body>
     </html>
 
