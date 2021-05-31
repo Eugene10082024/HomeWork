@@ -1,0 +1,12 @@
+[Unit]
+Description=2 instences Apache
+[Service]
+Type=notify
+EnvironmentFile=/etc/sysconfig/httpd-%I
+ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND
+ExecReload=/usr/sbin/httpd $OPTIONS -k graceful
+ExecStop=/bin/kill -WINCH ${MAINPID}
+KillSignal=SIGCONT
+PrivateTmp=true
+[Install]
+WantedBy=multi-user.target

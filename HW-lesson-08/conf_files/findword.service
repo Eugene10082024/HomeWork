@@ -1,0 +1,13 @@
+[Unit]
+Description=Find word in file
+Wants=findword.timer
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/sysconfig/findword.cfg
+ExecStart=/usr/local/bin/findword.sh $KEY $FILE
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

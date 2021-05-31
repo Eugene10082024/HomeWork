@@ -1,0 +1,10 @@
+[Unit]
+Destription=timer start demon findword
+
+[Timer]
+OnUnitActiveSec=30
+#OnCalendar=*:*:00,30
+Unit=findword.service
+
+[Install]
+WantedBy=timers.target
