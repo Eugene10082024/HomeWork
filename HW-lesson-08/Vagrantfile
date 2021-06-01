@@ -1,0 +1,128 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+MACHINES = {
+  :vmtest => {
+        :box_name => "centos/8",
+        :box_version => "2011.00",
+		:ip_addr => '192.168.11.171',		
+   },
+}
+
+Vagrant.configure("2") do |config|
+	config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+	config.vm.box_version = "2011.00"
+	config.vm.box_check_update = false
+		MACHINES.each do |boxname, boxconfig|
+			config.vm.define boxname do |box|
+			box.vm.box = boxconfig[:box_name]
+			box.vm.host_name = boxname.to_s
+			box.vbguest.installer_options = { allow_kernel_upgrade: true }
+			#box.vm.network "forwarded_port", guest: 3260, host: 3260+offset
+			box.vm.network "private_network", ip: boxconfig[:ip_addr]
+			box.vm.provider :virtualbox do |vb|
+				vb.customize ["modifyvm", :id, "--memory", "1024"]
+               		end
+			box.vm.provision "shell", inline: <<-SHELL
+				mkdir -p ~root/.ssh
+				cp ~vagrant/.ssh/auth* ~root/.ssh
+				sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config;
+				systemctl restart sshd;	
+		echo "Выполняем обновление kernel"
+			SHELL
+			end
+		end
+
+	config.vm.define "vmtest" do |vmtest|
+		vmtest.vm.provision "shell", inline: <<-SHELL
+# Установка репозитория и необходимых для работы пакетов		
+ sudo dnf install -y epel-release
+ sudo dnf install -y spawn-fcgi php php-cli mod_fcgid httpd wget
+ 
+# Настройка timezone	
+sudo timedatectl set-timezone Europe/Moscow
+sudo systemctl restart chronyd.service
+
+# Настройка файла resolf.conf для разрешения имен
+sudo echo 'nameserver	10.0.2.3' > /etc/resolv.conf
+sudo echo 'nameserver	8.8.8.8' >> /etc/resolv.conf
+
+# Отключение SELINUX
+sudo sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
+sudo setenforce 0
+
+# Настройка файла hosts
+sudo echo ' 127.0.0.1	localhost' > /etc/hosts
+sudo echo '192.168.11.171	vmtest' >> /etc/hosts
+
+# п.1 ДЗ
+# Скачиваем из репозитория github конфигурационные файлы для настройки сервиса. 	
+sudo wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/findword.cfg -O /etc/sysconfig/findword.cfg
+sudo wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/findword.service -O /etc/systemd/system/findword.service
+sudo wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/findword.timer -O /etc/systemd/system/findword.timer
+  
+# Создаем скрипт для поиска значения в нужном файле (значение и файл задаются в /etc/sysconfig/findword.cfg  
+sudo echo '#! /bin/bash' > /usr/local/bin/findword.sh
+sudo echo '/usr/bin/grep $1 $2' >> /usr/local/bin/findword.sh
+sudo echo 'exit 0' >> /usr/local/bin/findword.sh
+
+# Делаем созданный скрипт исполняемым   
+sudo chmod 755 /usr/local/bin/findword.sh
+
+sudo systemctl daemon-reload
+
+# Запускаем findword.service и findword.timer
+sudo systemctl enable findword.timer
+sudo systemctl enable findword.service
+sudo systemctl start findword.timer
+sudo systemctl start findword.service   
+
+# Проверка работы созданного сервиса journalctl -f -u findword.service - выводит информацию каждые 30 секунд
+
+# п.2 ДЗ
+# Создаем файл с параметрами запуска spawn-fcgi
+sudo echo 'SOCKET=/var/run/php-fcgi.sock' > /etc/sysconfig/spawn-fcgi
+sudo echo 'OPTIONS="-u apache -g apache -s $SOCKET -S -M 0600 -C 32 -F 1 -P /var/run/spawn-fcgi.pid -- /usr/bin/php-cgi"' >> /etc/sysconfig/spawn-fcgi
+
+# Скачиваем из репозитория github файл unit spawn-fcgi.service.
+sudo wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/spawn-fcgi.service -O /etc/systemd/system/spawn-fcgi.service
+
+sudo systemctl daemon-reload
+
+# Запускаем spawn-fcgi.service
+sudo systemctl enable spawn-fcgi
+sudo systemctl start spawn-fcgi
+
+# Проверка работы созданного сервиса systemctl status spawn-fcgi.service
+
+# п.3 ДЗ
+# Скачиваем из репозитория github файл unit httpd@.service и 2 конфига для запуска 2 экземпляров Apache 
+wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/httpd.service.temp -O /etc/systemd/system/httpd@.service
+wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/httpd-first.conf -O /etc/httpd/conf/httpd-first.conf
+wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/httpd-second.conf -O /etc/httpd/conf/httpd-second.conf
+
+# Создаем 2 файла с окружением
+sudo echo 'OPTIONS=-f conf/httpd-first.conf' > /etc/sysconfig/httpd-first
+sudo echo 'OPTIONS=-f conf/httpd-second.conf' > /etc/sysconfig/httpd-second
+
+sudo systemctl daemon-reload
+
+# Запускаем 2 экземпляра Apache
+sudo systemctl start httpd@first
+sudo systemctl start httpd@second
+
+# Проверка работы systemctl status httpd@first.service и 	systemctl status httpd@second.service	
+				
+       SHELL
+	end
+ 
+end
+
+
+
+
+
+
+
+
+
