@@ -77,7 +77,6 @@ sudo systemctl enable findword.service
 sudo systemctl start findword.timer
 sudo systemctl start findword.service   
 
-# Проверка работы созданного сервиса journalctl -f -u findword.service - выводит информацию каждые 30 секунд
 
 # п.2 ДЗ
 # Создаем файл с параметрами запуска spawn-fcgi
@@ -92,8 +91,6 @@ sudo systemctl daemon-reload
 # Запускаем spawn-fcgi.service
 sudo systemctl enable spawn-fcgi
 sudo systemctl start spawn-fcgi
-
-# Проверка работы созданного сервиса systemctl status spawn-fcgi.service
 
 # п.3 ДЗ
 # Скачиваем из репозитория github файл unit httpd@.service и 2 конфига для запуска 2 экземпляров Apache 
@@ -111,7 +108,6 @@ sudo systemctl daemon-reload
 sudo systemctl start httpd@first
 sudo systemctl start httpd@second
 
-# Проверка работы systemctl status httpd@first.service и 	systemctl status httpd@second.service	
 				
        SHELL
 	end

@@ -10,35 +10,31 @@
 	В папке HomeWork/HW-lesson-08/ создана папка conf_files в которой размещены конфигурационные файлы используемые для выполнения ДЗ путем развертывания ВМ с необходимыми компонентами через Vagrantfile файл.
 	
 
-## Выполнение п.1 ДЗ
+## 1. Выполнение п.1 ДЗ
 
+### 1.1. Скачиваем из репозитория github конфигурационные файлы для настройки findword.service и  findword.timer. 	
+     wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/findword.cfg -O /etc/sysconfig/findword.cfg
+     wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/findword.service -O /etc/systemd/system/findword.service
+     wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/findword.timer -O /etc/systemd/system/findword.timer   
 
-	[root@vmtest ~]# systemctl status findword.service
-	
-	● findword.service - Find word in file
-	   Loaded: loaded (/etc/systemd/system/findword.service; enabled; vendor preset: disabled)
-	   Active: inactive (dead) since Tue 2021-06-01 14:15:40 MSK; 29s ago
-	  Process: 19889 ExecStart=/usr/local/bin/findword.sh $KEY $FILE (code=exited, status=0/SUCCESS)
-	 Main PID: 19889 (code=exited, status=0/SUCCESS)
+### 1.2. Создаем скрипт для поиска значения в нужном файле (значение и файл задаются в /etc/sysconfig/findword.cfg  
+    sudo echo '#! /bin/bash' > /usr/local/bin/findword.sh
+    sudo echo '/usr/bin/grep $1 $2' >> /usr/local/bin/findword.sh
+    sudo echo 'exit 0' >> /usr/local/bin/findword.sh 
 
-	Jun 01 14:15:40 vmtest systemd[1]: Starting Find word in file...
-	Jun 01 14:15:40 vmtest systemd[1]: findword.service: Succeeded.
-	Jun 01 14:15:40 vmtest systemd[1]: Started Find word in file.
+### 1.3. Делаем созданный скрипт исполняемым   
+    
+    sudo chmod 755 /usr/local/bin/findword.sh
 
-	[root@vmtest ~]# systemctl status findword.timer
-	
-	● findword.timer
-	   Loaded: loaded (/etc/systemd/system/findword.timer; enabled; vendor preset: disabled)
-	   Active: active (waiting) since Tue 2021-06-01 13:15:33 MSK; 1h 1min ago
-	  Trigger: Tue 2021-06-01 14:17:41 MSK; 24s left
+### 1.4. Запускаем findword.service и findword.timer
 
-	Jun 01 13:15:33 vmtest systemd[1]: Started findword.timer.
-	Jun 01 13:15:34 vmtest systemd[1]: /etc/systemd/system/findword.timer:2: Unknown lvalue 'Destription' in section 'Unit'
-	Jun 01 13:15:34 vmtest systemd[1]: /etc/systemd/system/findword.timer:2: Unknown lvalue 'Destription' in section 'Unit'
-	Jun 01 13:15:34 vmtest systemd[1]: /etc/systemd/system/findword.timer:2: Unknown lvalue 'Destription' in section 'Unit'
-	Jun 01 13:15:36 vmtest systemd[1]: /etc/systemd/system/findword.timer:2: Unknown lvalue 'Destription' in section 'Unit'
+    sudo systemctl daemon-reload    
+    sudo systemctl enable findword.timer
+    sudo systemctl enable findword.service
+    sudo systemctl start findword.timer
+    sudo systemctl start findword.service   
 
-
+### 1.5. Проверка работы созданного сервиса journalctl -f -u findword.service - выводит информацию каждые 30 секунд
 
 	[root@vmtest ~]# journalctl -f -u findword.service
 	
@@ -106,34 +102,19 @@
 	Complete!
 	[root@localhost ~]#
 
-### 2.4. Редактируем конфиг файл /etc/sysconfig/spawn-fcgi
+### 2.4. Создаем файл с параметрами запуска spawn-fcgi
+    sudo echo 'SOCKET=/var/run/php-fcgi.sock' > /etc/sysconfig/spawn-fcgi
+    sudo echo 'OPTIONS="-u apache -g apache -s $SOCKET -S -M 0600 -C 32 -F 1 -P /var/run/spawn-fcgi.pid -- /usr/bin/php-cgi"' >> /etc/sysconfig/spawn-fcgi
 
-	[root@localhost ~] sed -i 's/#SOCKET/SOCKET/' /etc/sysconfig/spawn-fcgi
-	[root@localhost ~] sed -i 's/#OPTIONS/OPTIONS/' /etc/sysconfig/spawn-fcgi
+### 2.5. Скачиваем из репозитория github файл unit spawn-fcgi.service.
+    sudo wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/spawn-fcgi.service -O /etc/systemd/system/spawn-fcgi.service
 
-### 2.5. Создаем Unit /etc/systemd/system/spawn-fcgi.service
+### 2.6. Запускаем spawn-fcgi.service
+    sudo systemctl daemon-reload
+    sudo systemctl enable spawn-fcgi
+    sudo systemctl start spawn-fcgi
 
-	[root@localhost ~] vi /etc/systemd/system/spawn-fcgi.service
-	[Unit]
-	Description=Spawn-fcgi startup service by Otus
-	After=network.target
-	[Service]
-	Type=simple
-	PIDFile=/var/run/spawn-fcgi.pid
-	EnvironmentFile=/etc/sysconfig/spawn-fcgi
-	ExecStart=/usr/bin/spawn-fcgi -n $OPTIONS
-	KillMode=process
-	[Install]
-	WantedBy=multi-user.target
-
-### 2.6. Перечтываем конфигурацию Units
-	[root@localhost ~]# systemctl daemon-reload
-
-### 2.7. Запускаем spawn-fcgi.service
-	[root@localhost ~]# systemctl enable spawn-fcgi
-	[root@localhost ~]# systemctl start spawn-fcgi
-
-### 2.8 Проверяем работу сервиса spawn-fcgi.service
+### 2.7 Проверяем работу сервиса spawn-fcgi.service
 	[root@vmtest ~]# systemctl status spawn-fcgi.service
 	● spawn-fcgi.service - Spawn-fcgi startup service by Otus
 	   Loaded: loaded (/etc/systemd/system/spawn-fcgi.service; enabled; vendor preset: disabled)
@@ -182,52 +163,18 @@
 
 ## 3. Выполнение п.3 ДЗ
 
-### 3.1. Создаем Unit для запуска сервисов httpd.
-	
-		vi /etc/systemd/system/httpd@.service
-		
-		[Unit]
-		Description=The Apache HTTP Server
-		After=network.target remote-fs.target nss-lookup.target
-		Documentation=man:httpd(8)
-		Documentation=man:apachectl(8)
-		[Service]
-		Type=notify
-		EnvironmentFile=/etc/sysconfig/httpd-%I
-		ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND
-		ExecReload=/usr/sbin/httpd $OPTIONS -k graceful
-		ExecStop=/bin/kill -WINCH ${MAINPID}
-		KillSignal=SIGCONT
-		PrivateTmp=true
-		[Install]
-		WantedBy=multi-user.target
+### 3.1. Скачиваем из репозитория github файл unit httpd@.service и 2 конфига для запуска 2 экземпляров Apache 
+    wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/httpd.service.temp -O /etc/systemd/system/httpd@.service
+    wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/httpd-first.conf -O /etc/httpd/conf/httpd-first.conf
+    wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-08/conf_files/httpd-second.conf -O /etc/httpd/conf/httpd-second.conf
 
-### 3.2. создаем конфигурационный файл для сервиса http@first
-	vi /etc/sysconfig/httpd-first
-	OPTIONS=-f conf/httpd-first.conf
+### 3.2. Создаем 2 файла с окружением
+    sudo echo 'OPTIONS=-f conf/httpd-first.conf' > /etc/sysconfig/httpd-first
+    sudo echo 'OPTIONS=-f conf/httpd-second.conf' > /etc/sysconfig/httpd-second
 
-### 3.2. создаем конфигурационный файл для сервиса http@second
-	vi /etc/sysconfig/httpd-second
-	OPTIONS=-f conf/httpd-second.conf
-	
-### 3.3. Копируем httpd.conf в  httpd-first.conf и httpd-second.conf. Изменяем порт простушивания и PidFile в созданных файлах.
-		cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd-first.conf
-		cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd-first.conf
-		
-	В файле httpd-first.conf:
-		PidFile /var/run/httpd-first.pid
-		Listen 8080
-
-	В файле httpd-second.conf:
-		PidFile /var/run/httpd-second.pid
-		Listen 8081	
-
-### 3.4. Перечитываем 
-    systemctl daemon-reload
-
-### 3.5. Запускаем 2 экземпляра инстенсов Apache
-    systemctl start httpd@first
-    systemctl start httpd@second
+# 3.3. Запускаем 2 экземпляра Apache
+    sudo systemctl start httpd@first
+    sudo systemctl start httpd@second
 
 ### 3.6. Проверяем работу запущенных экземплятор
 	[root@vmtest ~]# systemctl status httpd@first.service
