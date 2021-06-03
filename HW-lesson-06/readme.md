@@ -9,13 +9,12 @@
 	percona-release-0.1-6.noarch.rpm
 	httpd-2.4.6-97.el7.centos.x86_64.rpm
 
-В данном описании приводится пример размещения пактов сервера 1С и nginx-1.20.1-1.el7.ngx.x86_64.rpm c модулем openssl-1.1.1k
+В данном описании приводится пример размещения пакетов сервера 1С и nginx-1.20.1-1.el7.ngx.x86_64.rpm c модулем openssl-1.1.1k
 
 ##	1.Сборка nginx из исходных кодов.
 ### 1.1. Устанавливаем доп. пакеты.
 	yum install -y rpm-build rpmdevtools yum-utils openssl-devel zlib-devel pcre-devel redhat-lsb-core createrepo
 	  
-
 ### 1.2. создадим пользователя builder. Опция -m сразу создаст домашний каталог для пользователя.
 	[root@vmrepo ~]# useradd builder -m
 
@@ -157,14 +156,13 @@ Nginx работает.
 	drwxrwxr-x.  4 root root   65 May 20 16:39 .
 	drwx------.  5 root root  183 May 20 10:34 ..
 	drwxrwxr-x. 19 root root 4096 May 20 16:33 openssl-1.1.1k
-	
 
 ### 2.3. Редоктируем файл nginx.spec
 	[root@vmrepo ~] vi rpmbuild/SPECS/nginx.spec
 
 Добавляем в строку, начинающуюся с %define BASE_CONFIGURE_ARGS в самый конец к списку параметров: --with-openssl=/root/modules/openssl-1.1.1k --with-openssl-opt=enable-tls1_3
 
-	![picture](nginx_spec.png) 
+![picture](nginx_spec.png) 
 
 ### 2.4. Выполняем сборку rpm пакета nginx с модулем openssl
 
