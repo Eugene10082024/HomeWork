@@ -6,5 +6,5 @@
 
 ## Результат
 
-Написан скрипт - ps-script.sh  [a relative link](ps-script.sh)
+Написан скрипт - ps-script.sh - [ссылка на файл](ps-script.sh)
   
