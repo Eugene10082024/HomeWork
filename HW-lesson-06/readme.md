@@ -1,72 +1,71 @@
+##	ДЗ к занятию 6.
+Размещаем свой RPM в своем репозитории
+1. создать свой RPM (можно взять свое приложение, либо собрать к примеру апач с определенными опциями)
+2. создать свой репо и разместить там свой RPM реализовать это все либо в вагранте, либо развернуть у себя через nginx и дать ссылку на репо
+
+### Примечание.
+В файле Vagrant в созданный репозиторий будут помещены следующие пакеты:
+	nginx-1.20.1-1.el7.ngx.x86_64.rpm c модулем openssl-1.1.1k
+	percona-release-0.1-6.noarch.rpm
+	httpd-2.4.6-97.el7.centos.x86_64.rpm
+
+В данном описании приводится пример размещения пакетов сервера 1С и nginx-1.20.1-1.el7.ngx.x86_64.rpm c модулем openssl-1.1.1k
 
 ##	1.Сборка nginx из исходных кодов.
 ### 1.1. Устанавливаем доп. пакеты.
 	yum install -y rpm-build rpmdevtools yum-utils openssl-devel zlib-devel pcre-devel redhat-lsb-core createrepo
 	  
-
 ### 1.2. создадим пользователя builder. Опция -m сразу создаст домашний каталог для пользователя.
 	[root@vmrepo ~]# useradd builder -m
 
-### 1.3. Заходим под пользователем builder
-	[root@vmrepo ~]# su - builder
+### 1.3. Переходим в домашний каталог root
+	[root@vmrepo ~]# cd ~
 
 ### 1.4. Создадим структуру каталогов для сборки и посмотрим что создано:
-	[builder@vmrepo ~]$ rpmdev-setuptree
-	[builder@vmrepo ~]$ ls -al rpmbuild/
-	total 0
-	drwxrwxr-x. 7 builder builder 72 May 20 09:20 .
-	drwx------. 3 builder builder 96 May 20 09:20 ..
-	drwxrwxr-x. 2 builder builder  6 May 20 09:20 BUILD
-	drwxrwxr-x. 2 builder builder  6 May 20 09:20 RPMS
-	drwxrwxr-x. 2 builder builder  6 May 20 09:20 SOURCES
-	drwxrwxr-x. 2 builder builder  6 May 20 09:20 SPECS
-	drwxrwxr-x. 2 builder builder  6 May 20 09:20 SRPMS
-
-
-
-### 1.5. Скачиваем файл nginx-1.20.1-1.el7.ngx.src.rpm  в папку /home/builder с сайта разработчика
-	[root@vmrepo SRC]# wget http://nginx.org/packages/centos/7/SRPMS/nginx-1.20.1-1.el7.ngx.src.rpm 
+	[root@vmrepo ~]$ rpmdev-setuptree
 	
-	 
+### 1.5. Скачиваем файл nginx-1.20.1-1.el7.ngx.src.rpm  в папку /root с сайта разработчика
+	[root@vmrepo SRC]# wget http://nginx.org/packages/centos/7/SRPMS/nginx-1.20.1-1.el7.ngx.src.rpm 
+		 
 ### 1.5. Установим скачанный исходник командой:
 	rpm -Uvh nginx-1.20.1-1.el7.ngx.src.rpm
 
 ### 1.8. Проверяем наличие развернутого исходного кода в rpmbuild/SOURCES
-	[builder@vmrepo ~]$ ls -al rpmbuild/SOURCES
+	[root@vmrepo ~]$ ls -al rpmbuild/SOURCES
 	total 1092
-	drwxrwxr-x. 2 builder builder    4096 May 20 09:31 .
-	drwxrwxr-x. 7 builder builder      72 May 20 09:20 ..
-	-rw-r--r--. 1 builder builder     351 Apr 13 18:48 logrotate
-	-rw-r--r--. 1 builder builder 1061062 Apr 13 18:34 nginx-1.20.1.tar.gz
-	-rwxr-xr-x. 1 builder builder     646 Apr 13 18:48 nginx.check-reload.sh
-	-rw-r--r--. 1 builder builder     643 Apr 13 18:48 nginx.conf
-	-rw-r--r--. 1 builder builder    1377 Apr 13 18:48 nginx.copyright
-	-rw-r--r--. 1 builder builder     475 Apr 13 18:48 nginx-debug.service
-	-rw-r--r--. 1 builder builder     148 Apr 13 18:48 nginx-debug.sysconf
-	-rw-r--r--. 1 builder builder    1093 Apr 13 18:48 nginx.default.conf
-	-rwxr-xr-x. 1 builder builder    3655 Apr 13 18:48 nginx.init.in
-	-rw-r--r--. 1 builder builder     469 Apr 13 18:48 nginx.service
-	-rw-r--r--. 1 builder builder     355 Apr 13 18:48 nginx.suse.logrotate
-	-rw-r--r--. 1 builder builder      98 Apr 13 18:48 nginx.sysconf
-	-rw-r--r--. 1 builder builder     906 Apr 13 18:48 nginx.upgrade.sh
+	drwxrwxr-x. 2 root root    4096 May 20 09:31 .
+	drwxrwxr-x. 7 root root      72 May 20 09:20 ..
+	-rw-r--r--. 1 root root     351 Apr 13 18:48 logrotate
+	-rw-r--r--. 1 root root 1061062 Apr 13 18:34 nginx-1.20.1.tar.gz
+	-rwxr-xr-x. 1 root root     646 Apr 13 18:48 nginx.check-reload.sh
+	-rw-r--r--. 1 root root     643 Apr 13 18:48 nginx.conf
+	-rw-r--r--. 1 root root    1377 Apr 13 18:48 nginx.copyright
+	-rw-r--r--. 1 root root     475 Apr 13 18:48 nginx-debug.service
+	-rw-r--r--. 1 root root     148 Apr 13 18:48 nginx-debug.sysconf
+	-rw-r--r--. 1 root root    1093 Apr 13 18:48 nginx.default.conf
+	-rwxr-xr-x. 1 root root    3655 Apr 13 18:48 nginx.init.in
+	-rw-r--r--. 1 root root     469 Apr 13 18:48 nginx.service
+	-rw-r--r--. 1 root root     355 Apr 13 18:48 nginx.suse.logrotate
+	-rw-r--r--. 1 root root      98 Apr 13 18:48 nginx.sysconf
+	-rw-r--r--. 1 root root     906 Apr 13 18:48 nginx.upgrade.sh
 
 ### 1.9. Собираем установочный RPM-пакет:
-	 rpmbuild -bb rpmbuild/SPECS/nginx.spec
+	 rpmbuild -ba rpmbuild/SPECS/nginx.spec
 	...
 	Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.ybId6q
 	+ umask 022
-	+ cd /home/builder/rpmbuild/BUILD
+	+ cd /root/rpmbuild/BUILD
 	+ cd nginx-1.20.1
-	+ /usr/bin/rm -rf /home/builder/rpmbuild/BUILDROOT/nginx-1.20.1-1.el7.ngx.x86_64
+	+ /usr/bin/rm -rf /root/rpmbuild/BUILDROOT/nginx-1.20.1-1.el7.ngx.x86_64
 	+ exit 0
 
 ### 1.10. Сборка пакета завершена. Проверяем что получилось.
-	[builder@vmrepo ~]$ ls -al rpmbuild/RPMS/x86_64/
+	[root@vmrepo ~]$ ls -al rpmbuild/RPMS/x86_64/
 	total 2584
-	drwxr-xr-x. 2 builder builder     100 May 20 09:44 .
-	drwxrwxr-x. 3 builder builder      20 May 20 09:44 ..
-	-rw-rw-r--. 1 builder builder  810724 May 20 09:44 nginx-1.20.1-1.el7.ngx.x86_64.rpm
-	-rw-rw-r--. 1 builder builder 1834012 May 20 09:44 nginx-debuginfo-1.20.1-1.el7.ngx.x86_64.rpm
+	drwxr-xr-x. 2 root root     100 May 20 09:44 .
+	drwxrwxr-x. 3 root root      20 May 20 09:44 ..
+	-rw-rw-r--. 1 root root  810724 May 20 09:44 nginx-1.20.1-1.el7.ngx.x86_64.rpm
+	-rw-rw-r--. 1 root root 1834012 May 20 09:44 nginx-debuginfo-1.20.1-1.el7.ngx.x86_64.rpm
 
 ### 1.11. Проверяем установлен nginx на данной ВМ
 	[root@vmrepo SRC]# rpm -qa | grep nginx*
@@ -75,7 +74,7 @@
 	nginx не установлен.
 	
 ### 1.12. Устанавливаем nginx на ВМ
-	[root@vmrepo SRC]# rpm -ivh /home/builder/rpmbuild/RPMS/x86_64/nginx-1.20.1-1.el7.ngx.x86_64.rpm
+	[root@vmrepo SRC]# rpm -ivh /root/rpmbuild/RPMS/x86_64/nginx-1.20.1-1.el7.ngx.x86_64.rpm
 	Preparing...                          ################################# [100%]
 	Updating / installing...
 	   1:nginx-1:1.20.1-1.el7.ngx        ################################# [100%]
@@ -142,54 +141,46 @@ Nginx работает.
 	[root@vmrepo SRC]# rpm -e nginx-1.20.1-1.el7.ngx.x86_64
 	[root@vmrepo SRC]# rpm -qa | grep nginx
 	[root@vmrepo SRC]#
-	su - builder
+	
 
 ## 2. Сборка nginx с модулем OpenSSL.
 
 ### 2.1. Скачиваем и разархивируем крайнюю версию openssl.
-	[builder@vmrepo ~]$ wget https://www.openssl.org/source/latest.tar.gz
-	[builder@vmrepo ~]$ tar -xvf latest.tar.gz
+	[root@vmrepo ~]$ wget https://www.openssl.org/source/latest.tar.gz
+	[root@vmrepo ~]$ tar -xvf latest.tar.gz
 
 Имеем:
 
-	[builder@vmrepo ~]$ ls -al modules/
+	[root@vmrepo ~]$ ls -al modules/
 	total 4
-	drwxrwxr-x.  4 builder builder   65 May 20 16:39 .
-	drwx------.  5 builder builder  183 May 20 10:34 ..
-	drwxrwxr-x. 19 builder builder 4096 May 20 16:33 openssl-1.1.1k
-	
+	drwxrwxr-x.  4 root root   65 May 20 16:39 .
+	drwx------.  5 root root  183 May 20 10:34 ..
+	drwxrwxr-x. 19 root root 4096 May 20 16:33 openssl-1.1.1k
 
 ### 2.3. Редоктируем файл nginx.spec
-	[builder@vmrepo ~] vi rpmbuild/SPECS/nginx.spec
+	[root@vmrepo ~] vi rpmbuild/SPECS/nginx.spec
 
-Находим %build и добавляем --with-openssl=/home/builder/open-1.1.1k
+Добавляем в строку, начинающуюся с %define BASE_CONFIGURE_ARGS в самый конец к списку параметров: --with-openssl=/root/modules/openssl-1.1.1k --with-openssl-opt=enable-tls1_3
 
-Имеем:
+![picture](nginx_spec.png) 
 
-	%build
-	./configure %{BASE_CONFIGURE_ARGS} \
-		--with-cc-opt="%{WITH_CC_OPT}" \
-		--with-ld-opt="%{WITH_LD_OPT}" \
-		--with-debug \
-		--with-openssl=/home/builder/modules/openssl-1.1.1k
-	
 ### 2.4. Выполняем сборку rpm пакета nginx с модулем openssl
 
-	[builder@vmrepo ~]$ rpmbuild -bb rpmbuild/SPECS/nginx.spec
+	[root@vmrepo ~]$ rpmbuild -ba rpmbuild/SPECS/nginx.spec
 	Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.Ibl8VW
 	+ umask 022
-	+ cd /home/builder/rpmbuild/BUILD
+	+ cd /root/rpmbuild/BUILD
 	+ cd nginx-1.20.1
-	+ /usr/bin/rm -rf /home/builder/rpmbuild/BUILDROOT/nginx-1.20.1-1.el7.ngx.x86_64
+	+ /usr/bin/rm -rf /root/rpmbuild/BUILDROOT/nginx-1.20.1-1.el7.ngx.x86_64
 	+ exit 0
 
 ### 2.5. Пакет собран. Проверяем
-	[builder@vmrepo ~]$ ls -al rpmbuild/RPMS/x86_64
+	[root@vmrepo ~]$ ls -al rpmbuild/RPMS/x86_64
 	total 4104
-	drwxr-xr-x. 2 builder builder     100 May 20 16:36 .
-	drwxrwxr-x. 3 builder builder      20 May 20 09:44 ..
-	-rw-rw-r--. 1 builder builder 2200036 May 20 16:36 nginx-1.20.1-1.el7.ngx.x86_64.rpm
-	-rw-rw-r--. 1 builder builder 1996300 May 20 16:36 nginx-debuginfo-1.20.1-1.el7.ngx.x86_64.rpm
+	drwxr-xr-x. 2 root root     100 May 20 16:36 .
+	drwxrwxr-x. 3 root root      20 May 20 09:44 ..
+	-rw-rw-r--. 1 root root 2200036 May 20 16:36 nginx-1.20.1-1.el7.ngx.x86_64.rpm
+	-rw-rw-r--. 1 root root 1996300 May 20 16:36 nginx-debuginfo-1.20.1-1.el7.ngx.x86_64.rpm
 
 ### 2.5. Устанавлиаем и запускаем nginx.
 	[root@vmrepo x86_64]# rpm -ivh nginx-1.20.1-1.el7.ngx.x86_64.rpm
@@ -210,6 +201,9 @@ Nginx работает.
 			   ├─14723 nginx: master process /usr/sbin/nginx -c /etc/nginx/nginx.conf
 			   └─14724 nginx: worker process
 
+### 2.6. Проверяем наличие openssl-1.1.1k выполняя команду nginx -V.
+
+![picture](nginx.png)
 
 ## 3. Создание собственного репозитория.
 
@@ -281,12 +275,12 @@ Nginx работает.
     [root@vmrepo rpm]# cat >> /etc/yum.repos.d/otus.repo << EOF 
     [otus]
     name=otus-linux
-    baseurl=http://192.168.11.101/repo
+    baseurl=http://192.168.11.201/repo
     gpgcheck=0
     enabled=1
     EOF
 
-## Подымаем вторую ВМ и проверяем установку пакетов.
+## Подымаем вторую ВМ и выполняем установку пакетов.
 
     [root@vmrepo log]# ip addr
     3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
@@ -341,14 +335,15 @@ Nginx работает.
     [root@vmrepo log]# service srv1cv83 status
     1C:Enterprise 8.3 server status:
     Init script: NOT STARTED.
+	
     [root@vmrepo log]# service srv1cv83 start
     Starting 1C:Enterprise 8.3 server: OK
+	
     [root@vmrepo log]# service srv1cv83 status
     1C:Enterprise 8.3 server status:
     Init script: STARTED.
         Ragent: RUNNING.
 
-    
     
     
     

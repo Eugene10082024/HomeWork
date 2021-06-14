@@ -43,14 +43,16 @@ Vagrant.configure("2") do |config|
 
 	config.vm.define "vmrepo" do |vmrepo|
 		vmrepo.vm.provision "shell", inline: <<-SHELL
-        
-		#sudo rm -rf /etc/yum.repo.d/otus.repo
+ 		
 		sudo useradd builder -m
+		
 		sudo yum install -y epel-release
 		sudo yum install -y rpm-build rpmdevtools yum-utils openssl-devel zlib-devel pcre-devel redhat-lsb-core 
         sudo yum install -y git  gcc make automake yum-utils wget createrepo 
+		
+        cd /root
         
-        yum-builddep -y nginx 
+		sudo yum-builddep -y nginx 
 		
 cat << EOF | sudo tee /etc/yum.repos.d/nginx.repo
 [nginx-stable]
@@ -61,18 +63,19 @@ enabled=1
 gpgkey=https://nginx.org/keys/nginx_signing.key
 module_hotfixes=true
 EOF
-		mkdir /home/vagrant/modules
+		sudo mkdir /root/modules
 		
-		wget https://www.openssl.org/source/latest.tar.gz -O /home/vagrant/modules/latest.tar.gz
-		cd /home/vagrant/modules
-		tar -xvf /home/vagrant/modules/latest.tar.gz 
+		sudo wget https://www.openssl.org/source/latest.tar.gz -O /root/modules/latest.tar.gz
+		cd /root/modules
+		tar -xvf /root/modules/latest.tar.gz 
+		
 		
 		cd /root
-		sudo wget http://nginx.org/packages/centos/7/SRPMS/nginx-1.20.1-1.el7.ngx.src.rpm 
-		rpmdev-setuptree 
+		sudo wget http://nginx.org/packages/centos/7/SRPMS/nginx-1.20.1-1.el7.ngx.src.rpm -O /root/nginx-1.20.1-1.el7.ngx.src.rpm
+		sudo rpmdev-setuptree 
 		sudo rpm -ivh nginx-1.20.1-1.el7.ngx.src.rpm 
-        
-        sudo rpmbuild -bb rpmbuild/SPECS/nginx.spec 
+		sudo wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-06/nginx.spec -O /root/rpmbuild/SPECS/nginx.spec
+        sudo rpmbuild -ba rpmbuild/SPECS/nginx.spec 
 		sudo yum localinstall -y /root/rpmbuild/RPMS/x86_64/nginx-1.20.1-1.el7.ngx.x86_64.rpm
         sudo systemctl start nginx
         sudo systemctl status nginx
@@ -92,6 +95,7 @@ enabled=1
 gpgcheck=0
 EOF
 
+
 cat << EOF | sudo tee /etc/nginx/conf.d/default.conf
 server {
     listen       80;
@@ -103,14 +107,11 @@ server {
     }
     error_page   500 502 503 504  /50x.html;
     location = /50x.html {
-        root   /usr/share/nginx/html;
-    }
+       root   /usr/share/nginx/html;
+   }
 }
 EOF
-
-
 sudo nginx -s reload        
-        
       
         
        SHELL
