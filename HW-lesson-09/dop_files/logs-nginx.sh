@@ -9,15 +9,25 @@ else
     echo $$ > /var/run/an-log.pid
 fi
 
-#if ( set -o noclobber; echo "$$">/var/run/an-log.pid ) 2>/dev/null; then trap "rm -f "$lockfile";exit $?" INT TERM EXIT
-
-
-
 # Задание переменных файлов
 file_log=access.log
 file_rez=rezult.log
 file_numline=numline
 
+# Проверка на наличие файла log используемого для анализа
+
+[[ if ! -f $file_log ]]; then
+        echo 'Файл для проведения анализа отсутствует !!!!' > $file_rez
+        echo 'Ожидался - ' $file_log >> $file_rez
+        rm -rf /var/run/an-log.pid
+        exit 1
+fi
+
+# Проверка на наличие файла с номером строки для продолжения подсчета
+if [[ ! -f $file_numline ]]; then
+        > $file_numline
+        echo 0 > $file_numline
+fi
 
 # Удаление пустных строк из файла log
 cp $file_log tmp.log; rm -rf $file_log
@@ -46,9 +56,15 @@ awk "NR>$(($num_line+1))" $file_log | awk '{print $1}' | sort | uniq -c | sort -
 echo '5 http адресов с максимальным количеством обращений за указанный период:' >> $file_rez
 awk "NR>$(($num_line+1))" $file_log | awk '($9 ~ /200/)' | awk '{print $7}' | sort | uniq -c | sort -rn | head -n 5 >> $file_rez
 
+# Количество ответов с кодом 200
+echo 'Количество ответов с кодом 200' >> $file_rez
+awk "NR>$(($num_line+1))"  $file_log | awk '($9 ~ /200/)' |cut -d '"' -f3 | cut -d ' ' -f2 | sort | uniq -c | sort -rn >> $file_rez
+
 # все ошибки c момента последнего запуска
-echo 'Перечень кодов и их количество за указанный период:' >> $file_rez
-awk "NR>$(($num_lime+1))" $file_log | cut -d '"' -f3 | cut -d ' ' -f2 | sort | uniq -c | sort -rn >> $file_rez
+echo 'Перечень кодов ошибок и их количество за указанный период:' >> $file_rez
+awk "NR>$(($num_line+1))"  $file_log | awk '($9 ~ /3/)' |cut -d '"' -f3 | cut -d ' ' -f2 | sort | uniq -c | sort -rn >> $file_rez
+awk "NR>$(($num_line+1))"  $file_log | awk '($9 ~ /4/)' |cut -d '"' -f3 | cut -d ' ' -f2 | sort | uniq -c | sort -rn >> $file_rez
+awk "NR>$(($num_line+1))"  $file_log | awk '($9 ~ /5/)' |cut -d '"' -f3 | cut -d ' ' -f2 | sort | uniq -c | sort -rn >> $file_rez
 
 # Запись количества строк в файле
 echo $checkLines > $file_numline
@@ -58,5 +74,3 @@ cat $file_rez | mail -s "Анализ access.log за последний час"
 
 # Удаление an-log.pid
 rm -rf /var/run/an-log.pid
-#rm -rf $file_rez
-#trap - INT TERM EXIT
