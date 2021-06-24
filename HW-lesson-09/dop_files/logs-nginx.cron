@@ -1,0 +1,2 @@
+#!/bin/bash
+/root/scripts/logs-nginx.sh
