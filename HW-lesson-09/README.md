@@ -31,6 +31,10 @@
   
   По умолчанию в скрипте указаны следующие значения:
   
+    file_log=access.log
+    file_rez=rezult.log
+    file_numline=numline
+    sendaddress="root@localhost"
 
   
 
