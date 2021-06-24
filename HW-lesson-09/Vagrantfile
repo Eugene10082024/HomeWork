@@ -2,38 +2,56 @@
 # vim: set ft=ruby :
 
 MACHINES = {
-  :bash => {
+  :vmtest => {
         :box_name => "centos/7",
-        :ip_addr => '192.168.11.101'
-  }
+        :box_version => "2004.01",
+		:ip_addr => '192.168.11.191',		
+   },
 }
 
 Vagrant.configure("2") do |config|
+	config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+	config.vm.box_version = "2004.01"
+	config.vm.box_check_update = false
+		MACHINES.each do |boxname, boxconfig|
+			config.vm.define boxname do |box|
+			box.vm.box = boxconfig[:box_name]
+			box.vm.host_name = boxname.to_s
+			box.vbguest.installer_options = { allow_kernel_upgrade: true }
+			#box.vm.network "forwarded_port", guest: 3260, host: 3260+offset
+			box.vm.network "private_network", ip: boxconfig[:ip_addr]
+			box.vm.provider :virtualbox do |vb|
+				vb.customize ["modifyvm", :id, "--memory", "1024"]
+               		end
+			box.vm.provision "shell", inline: <<-SHELL
+				mkdir -p ~root/.ssh
+				cp ~vagrant/.ssh/auth* ~root/.ssh
+				sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config;
+				systemctl restart sshd;	
+				yum install -y kernel*				
+			SHELL
+			end
+		end
 
-  MACHINES.each do |boxname, boxconfig|
+	config.vm.define "vmtest" do |vmtest|
+		vmtest.vm.provision "shell", inline: <<-SHELL
+			
+			systemctl enable chronyd.service	
+			timedatectl set-timezone Europe/Moscow
+			yum install -y epel-release 	
+			yum install -y sendmail
+			yum install -y mailx
+			yum install -y wget
+			
+			sudo mkdir /root/scripts
+			sudo wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-09/dop_files/logs-nginx.sh -O /root/scripts/logs-nginx.sh > /dev/null 2>&1
+			sudo wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-09/dop_files/access.log  -O /root/scripts/access.log > /dev/null 2>&1
+			sudo wget https://raw.githubusercontent.com/Aleksey-10081967/HomeWork/main/HW-lesson-09/dop_files/logs-nginx.cron -O /root/scripts/logs-nginx.cron > /dev/null 2>&1
+			sudo chmod +x /root/scripts/logs-nginx.sh
+			sudo chmod +x /root/scripts/logs-nginx.cron
 
-      config.vm.define boxname do |box|
-
-          box.vm.box = boxconfig[:box_name]
-          box.vm.host_name = boxname.to_s
-
-          #box.vm.network "forwarded_port", guest: 3260, host: 3260+offset
-
-          box.vm.network "private_network", ip: boxconfig[:ip_addr]
-
-          box.vm.provider :virtualbox do |vb|
-            vb.customize ["modifyvm", :id, "--memory", "1024"]
-          end
-
-	  box.vm.synced_folder ".", "/vagrant"
-          
-          box.vm.provision "shell", inline: <<-SHELL
-            mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh
-            sudo mkdir /var/log/parser && sudo chown vagrant /var/log/parser
-            sudo yum install vim mailx -y
-          SHELL
-
-      end
-  end
+			
+       SHELL
+	end
+ 
 end
-
