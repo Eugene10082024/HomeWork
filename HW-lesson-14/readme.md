@@ -94,3 +94,5 @@
 	
 Результат:
 
+![picture](pic\rezult.png)
+
