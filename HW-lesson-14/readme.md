@@ -94,5 +94,5 @@
 	
 Результат:
 
-![picture](pic\rezult.png)
+![picture](pic/rezult.png)
 
