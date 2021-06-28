@@ -1,0 +1,5 @@
+##Формат записи
+#Имя хоста (значение Ansible); Адрес хоста; Имя пользователя, от которого происходит подключение; Пароль этого пользователя; Повышение привилегий выполнения (sudo); Пароль для повышения привелегий
+[nginx]
+nginx1 ansible_host=192.168.11.191 ansible_user=vagrant ansible_password=vagrant ansible_become=yes ansible_become_password=vagrant
+#nginx1 ansible_host=127.0.0.1 ansible_user=vagrant ansible_password=vagrant ansible_become=yes ansible_become_password=vagrant

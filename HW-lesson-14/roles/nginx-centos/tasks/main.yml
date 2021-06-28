@@ -1,0 +1,68 @@
+# Установка nginx, пакет не будет обновлен, если он уже установлен и не последней версии.
+
+#- name: Установка дополнительных пакетов
+#    yum: pkg={{ item }} state=latest
+#    with_items:
+#      - atop
+#      - net-tools
+#      - wget
+#      - curl
+#      - yum-utils
+#    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+
+# Установка последней версии wget.
+- name: ensure wget installed
+  yum:
+    name: wget
+    state: latest
+  when:
+    ansible_os_family == "RedHat"
+
+# Настройка репозитория nginx
+
+- name: configure repo nginx
+  template:
+    src: nginx.repo.j2
+    dest: /etc/yum.repos.d/nginx.repo
+    owner: root
+    group: root
+    mode: 0664
+
+# Установка nginx сервер 
+- name: Install Nginx 
+  yum:
+    name=nginx
+    state=latest
+  when:
+    ansible_os_family == "RedHat"
+  notify:
+    - start nginx
+
+
+# Конфигурирование nginx
+- name: configure main nginx config
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0664
+  notify:
+    - reload nginx
+
+# Настройка работы сайта через порт 8080
+- name: install new port 
+  template:
+    src: default.conf.j2
+    dest: /etc/nginx/conf.d/default.conf
+    owner: root
+    group: root
+    mode: 0664
+  notify:
+    - reload nginx
+
+
+
+
+

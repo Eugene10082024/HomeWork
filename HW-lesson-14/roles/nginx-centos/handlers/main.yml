@@ -1,0 +1,23 @@
+---
+# Хэндлер перезагрузки nginx (без полной остановки службы), выполняется только после завершения всех задач из файла tasks/main.yml и если был вызван.
+- name: start nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes	
+    
+
+- name: reload nginx
+  systemd:
+    name: nginx
+    state: reloaded
+    daemon_reload: yes
+
+# Хэндлер перезапуска nginx, выполняется только после завершения всех задач из файла tasks/main.yml и если был вызван.
+- name: restart nginx
+  systemd:
+    name: nginx
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+

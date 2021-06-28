@@ -1,0 +1,4 @@
+---
+# Настройки nginx
+nginx_listen_port: 8080
+nginx_worker_connections: 1024
