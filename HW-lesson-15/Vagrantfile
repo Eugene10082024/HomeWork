@@ -1,0 +1,93 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+MACHINES = {
+  :vmtest => {
+        :box_name => "centos/7",
+        :box_version => "1804.02",
+		:ip_addr => '192.168.11.195',		
+   },
+}
+
+Vagrant.configure("2") do |config|
+	config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+	config.vm.box_version = "1804.02"
+	config.vm.box_check_update = false
+		MACHINES.each do |boxname, boxconfig|
+			config.vm.define boxname do |box|
+			box.vm.box = boxconfig[:box_name]
+			box.vm.host_name = boxname.to_s
+			box.vbguest.installer_options = { allow_kernel_upgrade: true }
+			box.vm.network "private_network", ip: boxconfig[:ip_addr]
+			box.vm.provider :virtualbox do |vb|
+				vb.customize ["modifyvm", :id, "--memory", "1024"]
+               		end
+			box.vm.provision "shell", inline: <<-SHELL
+				mkdir -p ~root/.ssh
+				cp ~vagrant/.ssh/auth* ~root/.ssh
+				sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config;
+				systemctl restart sshd;	
+				yum install -y wget
+			SHELL
+			end
+		end
+
+	config.vm.define "vmtest" do |vmtest|
+		vmtest.vm.provision "shell", inline: <<-SHELL
+		# Устанавливаем дополнительные пакеты (Docker) для выполнения Задания 3
+		sudo yum install -y yum-utils
+		sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+		sudo yum install -y docker-ce docker-ce-cli containerd.io
+		sudo usermod -aG docker vagrant
+		
+		# Создание группы admin	
+		  groupadd admin
+		
+		# Создаем 3-х пользователей	
+			sudo adduser admin01 
+			sudo adduser user01
+			sudo adduser user02
+		
+		# Присваиваем им пароль 12345678	
+			sudo echo "admin01:12345678" | chpasswd
+			sudo echo "user01:12345678" | chpasswd
+			sudo echo "user02:12345678" | chpasswd
+
+		# Задание 1. Ограничение входа по ssh по времени  пользователей
+		# Создаем записи в файле /etc/security/time.conf для запрещения login пользователей user01 и user02 в выходные дни 
+		
+		echo '*;*;admin01;Al0000-2400' >> /etc/security/time.conf
+		echo '*;*;user01;!SuSa0000-2400' >> /etc/security/time.conf
+		echo '*;*;user02;SuSa0000-2400' >> /etc/security/time.conf
+		
+		# Добавляем строку в pam файл /etc/pam.d/sshd
+		sudo sed -i '8i account     required       pam_time.so' /etc/pam.d/sshd 
+		
+		# Задание 2. Подготовка для настройки доступа с помощью PAM в группы
+		
+		# Добавляем пользователя admin01 в группу admin
+		sudo usermod -aG admin admin01
+		
+		# Копируем скрипт проверяющий права доступа (группа и дни недели) на ВМ
+		sudo cp /vagrant/pam-rule-gr-admin.sh /usr/local/bin
+		sudo chmod +x /usr/local/bin/pam-rule-gr-admin.sh
+		
+		# Добавляем закомментированную строку опредеяющую проверку доступа с помощью скрипта
+		sudo sed -i '9i #account     required       pam_exec.so /usr/local/bin/pam-rule-gr-admin.sh' /etc/pam.d/sshd
+
+		# Задание 3. Предоставление возможности запуска, перезапуска и останова сервиса docker пользователю vagrant
+		sudo cp /vagrant/01-systemctl.rules /etc/polkit-1/rules.d/01-systemctl.rules
+	
+       SHELL
+	end
+ 
+end
+
+
+
+
+
+
+
+
+
