@@ -119,6 +119,7 @@ SE-Linux - когда все запрещено.
 ![picture](pic/pic2.png)
 
 Результат. nginx запустился на нестандартном порту 6180
+
 Возращаем полиики и праввила SE Linux в исходное состояние: semanage port -d -t http_port_t -p tcp 6180
 		
 ![picture](pic/pic3.png)
