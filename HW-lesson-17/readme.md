@@ -116,27 +116,28 @@ SE-Linux - когда все запрещено.
 
 7.1. Реализация варианта 1 : -> semanage port -a -t http_port_t -p tcp 6180
 
-		pic 2
+![picture](pic/pic2.png)
 
-		Результат. nginx запустился на нестандартном порту 6180
-		Возращаем полиики и праввила SE Linux в исходное состояние: semanage port -d -t http_port_t -p tcp 6180
+Результат. nginx запустился на нестандартном порту 6180
+Возращаем полиики и праввила SE Linux в исходное состояние: semanage port -d -t http_port_t -p tcp 6180
 		
-		pic 3
+![picture](pic/pic3.png)
 		
 		
 7.2. Реализация варианта 2 : -> setsebool -P nis_enabled 1
 
-		pic 4
+![picture](pic/pic4.png)
 
-		Результат. nginx запустился на нестандартном порту 6180
+Результат. nginx запустился на нестандартном порту 6180
 		
-		Возращаем полиики и праввила SE Linux в исходное состояние:	setsebool -P nis_enabled 0
+Возращаем полиики и праввила SE Linux в исходное состояние:	setsebool -P nis_enabled 0
 		
-		pic 5
+![picture](pic/pic5.png)
 		
 7.3. ausearch -c 'nginx' --raw | audit2allow -M my-nginx
-		semodule -i my-nginx.pp
+
+semodule -i my-nginx.pp
 		
-		pic 6
+![picture](pic/pic6.png)
 		
 		
