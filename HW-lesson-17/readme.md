@@ -140,5 +140,7 @@ SE-Linux - когда все запрещено.
 semodule -i my-nginx.pp
 		
 ![picture](pic/pic6.png)
-		
-		
+
+
+## Решение задания 2
+
