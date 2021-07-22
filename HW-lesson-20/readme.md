@@ -1,6 +1,6 @@
 ## ДЗ к Занятию 20
  
-### Prometheus, Zabbix 
+Prometheus, Zabbix 
 
 ### Задание 1
 
