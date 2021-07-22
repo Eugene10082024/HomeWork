@@ -103,21 +103,17 @@ Prometheus, Zabbix
 
 ### Подключение ВМ к Zabbix.
 К системе мониторинга Zabbix были подключены 3 ВМ.
-
-![picture](pic/piс2.png)
+![picture](pic/pic2.png)
 
 После подключения серверов к Zabbix пошел сбор данных
-
-![picture](pic/piс3.png) 
+![picture](pic/pic3.png)
 
 ### Комплексный экран для мониторинга ВМ 3 (WordPress)
-
-![picture](pic/piс4_1.png)
-![picture](pic/piс4_2.png)
+![picture](pic/pic4_1.png)
+![picture](pic/pic4_2.png)
 
 Дополнительно настроен мониторинг хостовой машины под управлением Windows.
-
-![picture](pic/piс5.png)
+![picture](pic/pic5.png)
 
 
 
