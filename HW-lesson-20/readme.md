@@ -15,18 +15,18 @@ Prometheus, Zabbix
 ### 1. Развертывание стенда мониторинга Zabbix.
 Стенд мониторинга включает в себя 3ВМ. 
  BM1 - СУБД Postgres c бд для работы Zabbix (IP - 192.168.11.121)
- ВМ2 - Apache + фронтэнд Zabbix (IP - 192.168.11.122)
+ ВМ2 - Apache+Zabbix (IP - 192.168.11.122)
  BM3 - WordPress как тестовый сервер. (IP - 192.168.11.124)
  
  Развертывание ВМ1 выполнялось с помощью vagrant. Файл vagrantfile размещен в папке vagrant_vm. 
- СУБД Postgres разворачивалось с помощью ansible playbook. Данный playbook запускался с отдельной ВМ настроенной для управления. PlayBook размещен в папке ans_postgres. 
+ СУБД Postgres разворачивалась с помощью ansible playbook. Данный playbook запускался с отдельной ВМ настроенной для управления ansible. PlayBook размещен в папке ans_postgres. 
  
  Развертывание ВМ2 выполнялось с помощью vagrant. Файл vagrantfile размещен в папке vagrant_vm.
- Развертывание Zabbix и настройка БД Postgresql выполнялась руками.
+ Развертывание Zabbix+Apache и настройка БД Postgresql выполнялась руками.
  
  Развертывание ВМ3 выполнялось с помощью vagrant.  Файл vagrantfile размещен в папке vagrant_wordpress. После окончания развертывания для окончательной настройки необходимо подключиться по адресу: http://192.168.11.124/
  
- pic-wp.png
+ ![picture](pic/pic-wp.png)
   
  ### Последовательность действий по развертыванию Zabbix на ВМ2 и настройке БД Postgres на ВМ1.
  
@@ -38,6 +38,7 @@ Prometheus, Zabbix
  2. Установка web ceрвера apache
  
 	      dnf -y install httpd
+	      
  3. Развертывание пакетов zabbix для apache:
  
 	      dnf -y install zabbix-server-pgsql zabbix-web-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
@@ -75,7 +76,7 @@ Prometheus, Zabbix
         Hostname=anstest2
         Include=/etc/zabbix/zabbix_agentd.d/*.conf
   
-  Данный пуннкт выполняется на всех ВМ которые ставятся на мониторинг
+  Данный пуннкт выполняется на всех ВМ которые ставятся на мониторинг после установки агента zabbix
   
 
 ### На сервере БД (ВМ2) Выполняем следующие действия:
@@ -92,26 +93,31 @@ Prometheus, Zabbix
 
    	sudo -u postgres createdb -O zabbix zabbix
 	
- 4. Создаем объекты БД из файла create.sql.gz. Выполняем из под пользователя postgres
+ 4. Создаем объекты БД из файла create.sql.gz. Выполняем команду ниже из под пользователя postgres
 	
         zcat /usr/share/doc/zabbix-server-pgsql/create.sql.gz | psql -U zabbix -d zabbix
          
 После выполнения настроек выполняем первый вход в zabbix: http://192.168.11.122/zabbix
 
-pic1.png
+![picture](pic/piс1.png)
 
 ### Подключение ВМ к Zabbix.
 К системе мониторинга Zabbix были подключены 3 ВМ.
 
-pic2.png
+![picture](pic/piс2.png)
 
 После подключения серверов к Zabbix пошел сбор данных
 
-pic3.png
+![picture](pic/piс3.png)
 
 ### Комплексный экран для мониторинга ВМ 3 (WordPress)
-pic4_1.png
-pic4_2.png
+
+![picture](pic/piс4_1.png)
+![picture](pic/piс4_2.png)
+
+Дополнительно настроен мониторинг хостовой машины под управлением Windows.
+
+![picture](pic/piс5.png)
 
 
 
