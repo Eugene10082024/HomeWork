@@ -98,8 +98,8 @@ Prometheus, Zabbix
         zcat /usr/share/doc/zabbix-server-pgsql/create.sql.gz | psql -U zabbix -d zabbix
          
 После выполнения настроек выполняем первый вход в zabbix: http://192.168.11.122/zabbix
+![picture](pic/pic1.png)
 
-![picture](pic/piс1.png)
 
 ### Подключение ВМ к Zabbix.
 К системе мониторинга Zabbix были подключены 3 ВМ.
