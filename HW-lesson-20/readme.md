@@ -26,7 +26,7 @@ Prometheus, Zabbix
  
  Развертывание ВМ3 выполнялось с помощью vagrant.  Файл vagrantfile размещен в папке vagrant_wordpress. После окончания развертывания для окончательной настройки необходимо подключиться по адресу: http://192.168.11.124/
  
- pic-wp.png
+ ![picture](pic/pic-wp.png)
   
  ### Последовательность действий по развертыванию Zabbix на ВМ2 и настройке БД Postgres на ВМ1.
  
@@ -99,20 +99,25 @@ Prometheus, Zabbix
          
 После выполнения настроек выполняем первый вход в zabbix: http://192.168.11.122/zabbix
 
-pic1.png
+![picture](pic/piс1.png)
 
 ### Подключение ВМ к Zabbix.
 К системе мониторинга Zabbix были подключены 3 ВМ.
 
-pic2.png
+![picture](pic/piс2.png)
 
 После подключения серверов к Zabbix пошел сбор данных
 
-pic3.png
+![picture](pic/piс3.png)
 
 ### Комплексный экран для мониторинга ВМ 3 (WordPress)
-pic4_1.png
-pic4_2.png
+
+![picture](pic/piс4_1.png)
+![picture](pic/piс4_2.png)
+
+Дополнительно настроен мониторинг хостовой машины под управлением Windows.
+
+![picture](pic/piс5.png)
 
 
 
