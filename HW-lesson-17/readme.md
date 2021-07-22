@@ -181,6 +181,19 @@ semodule -i my-nginx.pp
 	2.2. semodule -i my-iscworker0000.pp
 
 По моему мнению более предпочтительный вариант 1 он меняет контекст безопасности на конкретный файл. Но так файла еще нет (он не создам) данный вариант нене применим. Поэтому буду использовать вариант 2.
+
 ![picture](pic/pic11.png)
+
+
+![picture](pic/pic12.png)
+
+
+![picture](pic/pic13.png)
+
+![picture](pic/pic14.png)
+
+![picture](pic/pic15.png)
+
+
 
 
