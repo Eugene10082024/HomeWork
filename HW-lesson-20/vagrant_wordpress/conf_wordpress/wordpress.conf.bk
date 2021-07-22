@@ -1,0 +1,16 @@
+
+
+<VirtualHost 192.168.11.124:80>
+	ServerAdmin webmaster@yourdomain.com
+	DocumentRoot "/var/www/html/"
+	ServerName wordpress
+	ServerAlias www.wordpress.su
+	ErrorLog "/var/log/httpd/wordpress-error_log"
+	CustomLog "/var/log/httpd/wordpress-access_log" combined
+	<Directory "/var/www/html/">
+	   DirectoryIndex index.html index.php
+	   Options FollowSymLinks
+	   AllowOverride All
+	   Require all granted
+	</Directory>
+</VirtualHost>
