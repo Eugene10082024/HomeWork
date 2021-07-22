@@ -108,7 +108,7 @@ Prometheus, Zabbix
 
 После подключения серверов к Zabbix пошел сбор данных
 
-![picture](pic/piс3.png)
+![picture](pic/piс3.png) 
 
 ### Комплексный экран для мониторинга ВМ 3 (WordPress)
 
