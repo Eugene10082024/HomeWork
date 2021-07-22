@@ -134,4 +134,47 @@ semodule -i my-nginx.pp
 
 ## Решение задания 2
 
+### 2.1. Развертывание стенда
+Развертывание стенда выполнил как на хостовой машине с Windows, так и на хостовой машине с Astra Linux CE.
+На хостовой машине с Astra Linux CE создание ВМ и выполнение playbook.yml прошло без проблем. При этом на данной хостовой машине должен быть установлен Ansible.
+На хостовой машине с Windows потребовалось развернуть дополнительную ВМ. На ней установить Ansible, создать ssh key, пробросить из на развернуые c помощью vagrant ВМ (ns01 и client). После чего с ВМ Ansible запустить playbook.yml.
+В обоих случаях после развертывания ВМ (ns01 и client) командой vagrant up необходимо было обновить kernel и установить kernel-devel для монтирования папки /vagrant
+Результат выполнения playbook.yml ниведен ниже.
+![picture](pic/pic7.png)
+![picture](pic/pic7-1.png)
+
+### 2.2. Выполнение команды обновления зоны
+Результат выполнения команды.
+![picture](pic/pic8.png)
+
+По информации от системного администратора - проблема в SE Linux
+
+### 2.3. Выполняем анализ файла /var/log/audit/audit.log c помощью утилиты audit2why. 
+
+	audit2why < /var/log/audit/audit.log
+
+Результат выполнения команды
+![picture](pic/pic9.png)
+
+В выводе видно, что отсутствует разрешение на создание файла с именем named.ddns.lab.view1.jnl
+
+2.4. Выполнение анализа того же файла audit.log с помощью другой утилиты – sealert. 
+Данная утилита помимо вывода причин возникновения ошибки, предлагает варианты решения возникшей проблемы.
+
+	sealert –a /var/log/audit/audit.log
+
+Результат выполнения команды.
+![picture](pic/pic10.png)
+
+Утилита для решения проблемы, предлагает 2 варианта:
+Вариант 1: Изменить контекст безопасности параметра FILE_TYPE файла named.ddns.lab.view1.jnl.
+1.1.	semanage fcontext -a -t FILE_TYPE 'named.ddns.lab.view1.jnl'
+где -  FILE_TYPE is one of the following: dnssec_trigger_var_run_t, ipa_var_lib_t, krb5_host_rcache_t, krb5_keytab_t, named_cache_t, named_log_t, named_tmp_t, named_var_run_t, named_zone_t.
+1.2.	recon -v 'named.ddns.lab.view1.jnl'
+Вариант 2. – создать модуль разрешающий выполнять данное действие. 
+2.1. ausearch -c 'isc-worker0000' --raw | audit2allow -M my-iscworker0000
+2.2. semodule -i my-iscworker0000.pp
+По моему мнению более предпочтительный вариант 1 он меняет контекст безопасности на конкретный файл. Но так файла еще нет (он не создам) данный вариант нене применим. Поэтому буду использовать вариант 2.
+![picture](pic/pic11.png)
+
 
