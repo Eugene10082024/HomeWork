@@ -56,18 +56,14 @@ Prometheus, Zabbix
  6. Настраиваем работу сервисов
  
         systemctl start zabbix-server zabbix-agent httpd php-fpm
-
         systemctl enable zabbix-server zabbix-agent httpd php-fpm
 
 7. Дополнительно настраиваем SE Linux
 
        setsebool -P httpd_can_connect_zabbix on
-
        setsebool -P httpd_can_network_connect_db on
-
        ausearch -c 'zabbix_server' --raw | audit2allow -M my-zabbixserver
-       
-	      semodule -X 300 -i my-zabbixserver.pp
+       semodule -X 300 -i my-zabbixserver.pp
        
 8. Настраиваем агента zabbix для мониторинга путем редактирования параметров файла /etc/
 
@@ -98,10 +94,12 @@ Prometheus, Zabbix
 	
  4. Создаем объекты БД из файла create.sql.gz. Выполняем из под пользователя postgres
 	
-         zcat /usr/share/doc/zabbix-server-pgsql/create.sql.gz | psql -U zabbix -d zabbix
+        zcat /usr/share/doc/zabbix-server-pgsql/create.sql.gz | psql -U zabbix -d zabbix
          
 После выполнения настроек выполняем первый вход в zabbix: http://192.168.11.122/zabbix
+
 pic1.png
+
 ### Подключение ВМ к Zabbix.
 К системе мониторинга Zabbix были подключены 3 ВМ.
 
