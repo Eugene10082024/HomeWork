@@ -159,22 +159,27 @@ semodule -i my-nginx.pp
 
 В выводе видно, что отсутствует разрешение на создание файла с именем named.ddns.lab.view1.jnl
 
-2.4. Выполнение анализа того же файла audit.log с помощью другой утилиты – sealert. 
+## 2.4. Выполнение анализа того же файла audit.log с помощью другой утилиты – sealert. 
 Данная утилита помимо вывода причин возникновения ошибки, предлагает варианты решения возникшей проблемы.
 
 	sealert –a /var/log/audit/audit.log
 
 Результат выполнения команды.
+
 ![picture](pic/pic10.png)
 
 Утилита для решения проблемы, предлагает 2 варианта:
-Вариант 1: Изменить контекст безопасности параметра FILE_TYPE файла named.ddns.lab.view1.jnl.
-1.1.	semanage fcontext -a -t FILE_TYPE 'named.ddns.lab.view1.jnl'
-где -  FILE_TYPE is one of the following: dnssec_trigger_var_run_t, ipa_var_lib_t, krb5_host_rcache_t, krb5_keytab_t, named_cache_t, named_log_t, named_tmp_t, named_var_run_t, named_zone_t.
-1.2.	recon -v 'named.ddns.lab.view1.jnl'
-Вариант 2. – создать модуль разрешающий выполнять данное действие. 
-2.1. ausearch -c 'isc-worker0000' --raw | audit2allow -M my-iscworker0000
-2.2. semodule -i my-iscworker0000.pp
+
+Вариант 1. Изменить контекст безопасности параметра FILE_TYPE файла named.ddns.lab.view1.jnl.
+
+	1.1.	semanage fcontext -a -t FILE_TYPE 'named.ddns.lab.view1.jnl'
+	1.2.	recon -v 'named.ddns.lab.view1.jnl'
+
+Вариант 2. Создать модуль разрешающий выполнять данное действие. 
+
+	2.1. ausearch -c 'isc-worker0000' --raw | audit2allow -M my-iscworker0000
+	2.2. semodule -i my-iscworker0000.pp
+
 По моему мнению более предпочтительный вариант 1 он меняет контекст безопасности на конкретный файл. Но так файла еще нет (он не создам) данный вариант нене применим. Поэтому буду использовать вариант 2.
 ![picture](pic/pic11.png)
 
