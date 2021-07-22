@@ -34,7 +34,7 @@ Prometheus, Zabbix
  
  ### На ВМ2 :
  
-1. Копирование схемы DB на сервер БД (ВМ 1) в профиль postgres
+1. Копируем схемы DB на сервер БД (ВМ 1) в профиль postgres
 
        sudo scp /usr/share/doc/zabbix-sql-scripts/postgresql/create.sql.gz vagrant@192.168.11.121:/home/vagrant
  
