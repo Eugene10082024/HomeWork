@@ -20,7 +20,7 @@ SE Linux - когда все запрещено.
 
 Для работы с SE Linux устанавливаются необходимые пакеты.
 
-### 1. После создания ВМ из vagrantfile входим по ssh и проверяем настройки:
+### 1.1. После создания ВМ из vagrantfile входим по ssh и проверяем настройки:
 
 		[root@vmtest ~]# systemctl status nginx.service
 		● nginx.service - The nginx HTTP and reverse proxy server
@@ -32,13 +32,13 @@ SE Linux - когда все запрещено.
 		Enforcing
 		[root@vmtest ~]#
 		
-### 2. Пытаемся запустить nginx и получаем сообщение об ошибке.
+### 1.2. Пытаемся запустить nginx и получаем сообщение об ошибке.
 
 		[root@vmtest ~]# systemctl start nginx
 		Job for nginx.service failed because the control process exited with error code.
 		See "systemctl status nginx.service" and "journalctl -xe" for details.
 		
-### 3. Выполняем первичный анализ причин не старта nginx
+### 1.3. Выполняем первичный анализ причин не старта nginx
 
 	[root@vmtest ~]# systemctl status nginx
 	● nginx.service - The nginx HTTP and reverse proxy server
@@ -59,11 +59,11 @@ SE Linux - когда все запрещено.
 
 	nginx: [emerg] bind() to 0.0.0.0:6180 failed (13: Permission denied)
 	
-### 4. Проверяем файл /var/log/audit/audit.log. Находим строку. Но не очень понятно что делать.
+### 1.4. Проверяем файл /var/log/audit/audit.log. Находим строку. Но не очень понятно что делать.
 
 		type=AVC msg=audit(1626343048.497:1310): avc:  denied  { name_bind } for  pid=18381 comm="nginx" src=6180 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
 
-### 5. Проверяем контекст безопасности предоставленный nginx
+### 1.5. Проверяем контекст безопасности предоставленный nginx
 
 		[root@vmtest ~]# whereis nginx
 		nginx: /usr/sbin/nginx /usr/lib64/nginx /etc/nginx /usr/share/nginx /usr/share/man/man8/nginx.8.gz /usr/share/man/man3/nginx.3pm.gz
@@ -77,9 +77,9 @@ SE Linux - когда все запрещено.
 
 	Видим что nginx разрешено использовать следующие порты - 80, 81, 443, 488, 8008, 8009, 8443, 9000
 
-### 6. Для понимания дальнейших действий используем утилиты для работы с SELinux.
+### 1.6. Для понимания дальнейших действий используем утилиты для работы с SELinux.
 	
-6.1. [root@vmtest ~]# audit2why < /var/log/audit/audit.log
+1.6.1. [root@vmtest ~]# audit2why < /var/log/audit/audit.log
 	
 	Результат вывода:
 	
@@ -95,16 +95,16 @@ SE Linux - когда все запрещено.
 				
 Для предоставления доступа предлагается выполнить команду: setsebool -P nis_enabled 1
 	
-6.2. [root@vmtest ~]# sealert -a /var/log/audit/audit.log
+1.6.2. [root@vmtest ~]# sealert -a /var/log/audit/audit.log
 	
 Результат выполнения данной утилиты - вывод 3 рекомендации по устранению проблемы 
 		
 ![picture](pic/pic1.png)
 	
 	
-7. Устрание проблемы предлагаемыми способами.
+### 1.7. Устрание проблемы предлагаемыми способами.
 
-7.1. Реализация варианта 1 : -> semanage port -a -t http_port_t -p tcp 6180
+1.7.1. Реализация варианта 1 : -> semanage port -a -t http_port_t -p tcp 6180
 
 ![picture](pic/pic2.png)
 
@@ -115,7 +115,7 @@ SE Linux - когда все запрещено.
 ![picture](pic/pic3.png)
 		
 		
-7.2. Реализация варианта 2 : -> setsebool -P nis_enabled 1
+1.7.2. Реализация варианта 2 : -> setsebool -P nis_enabled 1
 
 ![picture](pic/pic4.png)
 
@@ -125,7 +125,7 @@ SE Linux - когда все запрещено.
 		
 ![picture](pic/pic5.png)
 		
-7.3. ausearch -c 'nginx' --raw | audit2allow -M my-nginx
+1.7.3. ausearch -c 'nginx' --raw | audit2allow -M my-nginx
 
 semodule -i my-nginx.pp
 		
