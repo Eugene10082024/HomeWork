@@ -34,7 +34,7 @@ Prometheus, Zabbix
  
  ### На ВМ2 :
  
-1. Копируем схемы DB на сервер БД (ВМ 1) в профиль postgres
+1. Копируем объекты БД Zabbix на сервер БД (ВМ 1) в профиль vagrant
 
        sudo scp /usr/share/doc/zabbix-sql-scripts/postgresql/create.sql.gz vagrant@192.168.11.121:/home/vagrant
  
@@ -56,7 +56,7 @@ Prometheus, Zabbix
 
    	sudo -u postgres createdb -O zabbix zabbix
 	
- 4. Создаем объекты БД из файла create.sql.gz. Выполняем команду ниже из под пользователя postgres
+ 4. Импортируем объекты БД из файла create.sql.gz. Выполняем команду ниже из под пользователя postgres
 	
         zcat /usr/share/doc/zabbix-server-pgsql/create.sql.gz | psql -U zabbix -d zabbix
          
