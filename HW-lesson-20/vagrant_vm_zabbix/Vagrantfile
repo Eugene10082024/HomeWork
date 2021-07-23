@@ -1,0 +1,104 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+MACHINES = {
+  :dbzabbix => {
+        :box_name => "centos/7",
+        :ip_addr => '192.168.11.131',
+  },
+  :zabbix=> {
+        :box_name => "centos/8",
+        :ip_addr => '192.168.11.132',
+  },
+}
+
+Vagrant.configure("2") do |config|
+	config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+	config.vm.box_check_update = false
+		MACHINES.each do |boxname, boxconfig|
+			config.vm.define boxname do |box|
+			box.vm.box = boxconfig[:box_name]
+			box.vm.host_name = boxname.to_s
+			box.vbguest.installer_options = { allow_kernel_upgrade: true }
+			#box.vm.network "forwarded_port", guest: 3260, host: 3260+offset
+			box.vm.network "private_network", ip: boxconfig[:ip_addr]
+			box.vm.provider :virtualbox do |vb|
+				vb.customize ["modifyvm", :id, "--memory", "1024"]
+               		end
+			box.vm.provision "shell", inline: <<-SHELL
+				mkdir -p ~root/.ssh
+				cp ~vagrant/.ssh/auth* ~root/.ssh
+				sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config;
+				systemctl restart sshd;	
+				
+				sudo echo '127.0.0.1   localhost' > /etc/hosts
+				sudo echo '192.168.11.131	dbzabbix' >> /etc/hosts
+				sudo echo '192.168.11.132	zabbix' >> /etc/hosts
+				
+			SHELL
+			end
+		end
+
+	config.vm.define "dbzabbix" do |dbzabbix|
+				dbzabbix.vm.provision "shell", inline: <<-SHELL
+		echo "Provision Postgres SQL"
+		
+		sudo systemctl stop firewalld
+		sudo setenforce 0
+		sudo sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
+		
+		sudo cp /vagrant/conf_db/CentOS-postgres-13.repo /etc/yum.repos.d/
+		sudo yum install -y postgresql13-server.x86_64 postgresql13-contrib.x86_64
+		sudo mkdir /mnt/cluster
+		sudo chown -R postgres:postgres /mnt/cluster
+		sudo cp /vagrant/conf_db/postgresql-13.service.bk /usr/lib/systemd/system/postgresql-13.service
+		sudo systemctl daemon-reload
+		su - postgres -c "/usr/pgsql-13/bin/initdb -D /mnt/cluster"
+		sudo systemctl stop postgresql-13.service
+		sudo cp /vagrant/conf_db/postgresql.conf.bk /mnt/cluster/postgresql.conf
+		sudo cp /vagrant/conf_db/pg_hba.conf.bk /mnt/cluster/pg_hba.conf
+		sudo chmod 600 /mnt/cluster/pg_hba.conf
+		sudo chmod 600 /mnt/cluster/postgresql.conf
+		sudo chown -R postgres:postgres /mnt/cluster
+		sudo systemctl start postgresql-13.service
+		sudo cp /vagrant/conf_db/create.sql.gz /var/lib/pgsql 
+		sudo chown postgres:postgres /var/lib/pgsql/create.sql.gz
+		psql -U postgres -c "CREATE ROLE zabbix SUPERUSER CREATEDB LOGIN PASSWORD 'zabbix'"
+		psql -U postgres -c "CREATE DATABASE zabbix OWNER zabbix"
+		su - postgres -c "zcat /var/lib/pgsql/create.sql.gz | /usr/pgsql-13/bin/psql -U zabbix -d zabbix"
+					
+       SHELL
+	end
+       config.vm.define "zabbix" do |zabbix|
+			zabbix.vm.provision "shell", inline: <<-SHELL
+		
+		echo "Provision Zabbix server"
+		sudo systemctl stop firewalld
+		sudo setenforce 0
+		sudo sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
+		
+		sudo dnf -y install https://repo.zabbix.com/zabbix/5.4/rhel/8/x86_64/zabbix-release-5.4-1.el8.noarch.rpm  
+		sudo dnf -y install httpd
+		sudo dnf -y install zabbix-server-pgsql zabbix-web-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
+		sudo dnf -y install setroubleshoot-server
+		sudo cp /vagrant/conf_zabbix/zabbix_server.conf.bk /etc/zabbix/zabbix_server.conf
+		sudo cp /vagrant/conf_zabbix/zabbix_agentd.conf.bk /etc/zabbix/zabbix_agentd.conf
+						
+		# Настройка и запуск сервисов zabbix
+		sudo systemctl start zabbix-server zabbix-agent httpd php-fpm
+        sudo systemctl enable zabbix-server zabbix-agent httpd php-fpm
+		
+
+       SHELL
+       end
+
+end
+
+
+
+
+
+
+
+
+
