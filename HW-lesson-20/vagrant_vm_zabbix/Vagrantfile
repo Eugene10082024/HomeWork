@@ -86,7 +86,7 @@ Vagrant.configure("2") do |config|
 						
 		# Настройка и запуск сервисов zabbix
 		sudo systemctl start zabbix-server zabbix-agent httpd php-fpm
-        sudo systemctl enable zabbix-server zabbix-agent httpd php-fpm
+                sudo systemctl enable zabbix-server zabbix-agent httpd php-fpm
 		
 
        SHELL
