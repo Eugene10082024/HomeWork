@@ -21,3 +21,159 @@ Docker
 После запуска nginx должен показывать php info.Все собранные образы должны быть в docker hub
 
 ## Решение задания 1
+
+### Устанавливаем пакет для работы с docker
+
+    yum install docker.io
+
+### Для сборки image создаем следующие файлы.
+		
+    [root@vmtest docker]# ls -al
+		-rwxrwxrwx. 1 vagrant vagrant  345 Jul 13 11:08 default.conf
+		-rwxrwxrwx. 1 vagrant vagrant  225 Jul 23 05:02 Dockerfile
+		-rwxrwxrwx. 1 vagrant vagrant  341 Jul 13 11:08 index.html
+
+### Содержание файла Dockerfile
+
+		FROM alpine:3.7
+		RUN apk update \
+		&& apk upgrade \
+		&& apk add nginx\
+		&& mkdir -p /run/nginx
+		COPY ./default.conf /etc/nginx/conf.d/
+		COPY ./index.html /usr/share/nginx/html/
+		EXPOSE 80
+		CMD ["nginx", "-g", "daemon off;"]
+
+### Содержание файла default.conf
+		
+      listen       80;
+			server_name  localhost;
+			location / {
+				root   /usr/share/nginx/html;
+				index  index.html index.htm;
+			}
+			error_page   500 502 503 504  /50x.html;
+			location = /50x.html {
+				root   /usr/share/nginx/html;
+			}
+		}
+
+
+### Содержание файла index.html (Измененная первая страница nginx)
+
+    <!DOCTYPE html>
+		<html>
+		<head>
+		<title>Welcome to our personal nginx start page!</title>
+		<style>
+			body {
+				width: 50em;
+				margin: 0 auto;
+				font-family: Tahoma, Verdana, Arial, sans-serif;
+			}
+		</style>
+		</head>
+		<body>
+		<h1>Welcome to my docker nginx!</h1>
+
+		<p><em>Thank you for running my docker.</em></p>
+		</body>
+		</html>
+
+### Собираем образ на основе файла Dockerfile.
+
+		[root@vmtest docker]# docker build -f Dockerfile -t nginx_sa:alpine .
+
+		Sending build context to Docker daemon  4.096kB
+		Step 1/6 : FROM alpine:3.7
+		 ---> 6d1ef012b567
+		Step 2/6 : RUN apk update && apk upgrade && apk add nginx&& mkdir -p /run/nginx
+		 ---> Running in d7dafbf94309
+		fetch http://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86_64/APKINDEX.tar.gz
+		fetch http://dl-cdn.alpinelinux.org/alpine/v3.7/community/x86_64/APKINDEX.tar.gz
+		v3.7.3-184-gffd32bfd09 [http://dl-cdn.alpinelinux.org/alpine/v3.7/main]
+		v3.7.3-194-gcddd1b2302 [http://dl-cdn.alpinelinux.org/alpine/v3.7/community]
+		OK: 9054 distinct packages available
+		(1/2) Upgrading musl (1.1.18-r3 -> 1.1.18-r4)
+		(2/2) Upgrading musl-utils (1.1.18-r3 -> 1.1.18-r4)
+		Executing busybox-1.27.2-r11.trigger
+		OK: 4 MiB in 13 packages
+		(1/2) Installing pcre (8.41-r1)
+		(2/2) Installing nginx (1.12.2-r4)
+		Executing nginx-1.12.2-r4.pre-install
+		Executing busybox-1.27.2-r11.trigger
+		OK: 6 MiB in 15 packages
+		Removing intermediate container d7dafbf94309
+		 ---> 568d36eee844
+		Step 3/6 : COPY ./default.conf /etc/nginx/conf.d/
+		 ---> 6a1508ca40b8
+		Step 4/6 : COPY ./index.html /usr/share/nginx/html/
+		 ---> 174fde365160
+		Step 5/6 : EXPOSE 80
+		 ---> Running in 402bcf72763c
+		Removing intermediate container 402bcf72763c
+		 ---> 9a62e79444ed
+		Step 6/6 : CMD ["nginx", "-g", "daemon off;"]
+		 ---> Running in dc071ce0474a
+		Removing intermediate container dc071ce0474a
+		 ---> 51060de7681e
+		Successfully built 51060de7681e
+		Successfully tagged nginx_sa:alpine
+
+Cмотрим что получилось
+
+		[root@vmtest docker]# docker images
+		REPOSITORY   TAG       IMAGE ID       CREATED              SIZE
+		nginx_sa     alpine    51060de7681e   About a minute ago   7.46MB
+		alpine       3.7       6d1ef012b567   2 years ago          4.21MB
+
+### Запускаем докер с пробросом 80 порта хостовой ВМ на 80 порт докера.
+
+		[root@vmtest docker]# docker run -d -p 80:80 nginx_sa:alpine
+		959a54236a08020a84ff08709df2ab37eec4d6b6c73bf4a00cb1a5ab08a11c0a
+
+		[root@vmtest docker]# docker ps
+		CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                               NAMES
+		959a54236a08   nginx_sa:alpine   "nginx -g 'daemon of…"   7 minutes ago   Up 7 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp   hardcore_lovelace
+
+Проверяем работу nginx через браузер хостовой машины. http://192.168.11.222
+
+pic1
+
+### Размещение образа докера на DockerHub:
+
+1. Регистрируемся на Docker Hub - aleksey-10081967
+
+2. Создаем репозиторий
+
+3. из терминала выполняем команду - docker login
+
+4. После успешной авторизации указывваем образ, который хотим залить на dockerhub и его имя на портале
+
+			docker tag nginx_sa:alpine sa/nginx_sa-v1:alpine
+
+5. Загружаем образ на dockerhub
+
+			docker push sa/nginx_sa-v1:alpine
+
+7. Выполняем проверку загруженного образа на портал
+
+	7.1. Останавливаем контейнер и удаляем образы
+			docker stop <id_contener>
+			docker rmi -f <id_image>
+ 
+	7.2 Скачиваем образ с dockerhub
+			docker pull sa/nginx_sa-v1:alpine
+			docker images -a
+	
+	7.3 Запускаем контейнер
+	
+		docker run -d -p 80:80 sa/nginx_sa-v1:alpine
+ 
+ Проверяем
+ pic2.
+
+
+
+
