@@ -151,11 +151,11 @@ pic1
 
 			docker tag nginx_sa:alpine aleksey10081967/nginx_sa-v1:alpine
 
-Для информации:
+***Для информации:***
 
-	В имени образа который будет выложен на портале первым должен быть указан мой login созданный на портале -> aleksey10081967/nginx_sa-v1:alpine
+	***В имени образа который будет выложен на портале первым должен быть указан мой login созданный на портале -> aleksey10081967/nginx_sa-v1:alpine***
 
-	Иначе при размещении на портал получаем ошибку: denied: requested access to the resource is denied
+	***Иначе при размещении на портал получаем ошибку: denied: requested access to the resource is denied***
 
 4. Загружаем образ на dockerhub
 
