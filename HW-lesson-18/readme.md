@@ -141,9 +141,7 @@ Cмотрим что получилось
 		CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                               NAMES
 		959a54236a08   nginx_sa:alpine   "nginx -g 'daemon of…"   7 minutes ago   Up 7 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp   hardcore_lovelace
 
-Проверяем работу nginx через браузер хостовой машины. http://192.168.11.222
-
-pic1
+Проверяем работу nginx через браузер хостовой машины подключившись по http к ВМ где запущен контейнер.
 
 ### Размещение образа докера на DockerHub:
 
@@ -166,26 +164,23 @@ pic1
 			docker push aleksey10081967/nginx_sa-v1:alpine
 			
 Имеем загруженный на DockerHub собранный образ nginx ввиде поекта.
-pic2
+pic1
 
-Ссылка: https://hub.docker.com/repository/docker/aleksey10081967/nginx_sa-v1
+Ссылка: https://hub.docker.com/repository/docker/aleksey10081967/nginx_sa-v1:alpine
 
 7. Выполняем проверку загруженного образа на портал
 
-	7.1. Останавливаем контейнер и удаляем образы
-			docker stop <id_contener>
-			docker rmi -f <id_image>
- 
-	7.2 Скачиваем образ с dockerhub
-			docker pull sa/nginx_sa-v1:alpine
-			docker images -a
+	7.1 Скачиваем образ с dockerhub
 	
-	7.3 Запускаем контейнер
+		docker pull aleksey10081967/nginx_sa-v1:alpine
+		docker images -a
+			
+	7.2 Запускаем контейнер
 	
-		docker run -d -p 80:80 sa/nginx_sa-v1:alpine
+		docker run -d -p 80:80 aleksey10081967/nginx_sa-v1:alpine
  
- Проверяем
- pic3.
+ Проверяем работу nginx через браузер хостовой машины подключившись по http к ВМ где запущен контейнер.
+ pic2.
 
 ### Определите разницу между контейнером и образом. Вывод опишите в домашнем задании.
 
