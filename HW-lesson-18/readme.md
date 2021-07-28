@@ -22,7 +22,7 @@ Docker
 
 ## Решение задания 1
 
-### Устанавливаем docker
+### 1. Устанавливаем docker
 
 	yum install -y yum-utils
 	yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
@@ -30,14 +30,14 @@ Docker
 	systemctl start docker.service
 	systemctl enable docker.service
 
-### Для сборки image создаем следующие файлы.
+### 2. Для сборки image создаем следующие файлы.
 		
     [root@vmtest docker]# ls -al
 		-rwxrwxrwx. 1 vagrant vagrant  345 Jul 13 11:08 default.conf
 		-rwxrwxrwx. 1 vagrant vagrant  225 Jul 23 05:02 Dockerfile
 		-rwxrwxrwx. 1 vagrant vagrant  341 Jul 13 11:08 index.html
 
-### Содержание файла Dockerfile
+### 2.1. Содержание файла Dockerfile
 
 		FROM alpine:3.7
 		RUN apk update \
@@ -49,7 +49,7 @@ Docker
 		EXPOSE 80
 		CMD ["nginx", "-g", "daemon off;"]
 
-### Содержание файла default.conf
+### 2.2. Содержание файла default.conf
 		
       listen       80;
 			server_name  localhost;
@@ -64,7 +64,7 @@ Docker
 		}
 
 
-### Содержание файла index.html (Измененная первая страница nginx)
+### 2.3. Содержание файла index.html (Измененная первая страница nginx)
 
     <!DOCTYPE html>
 		<html>
@@ -85,7 +85,7 @@ Docker
 		</body>
 		</html>
 
-### Собираем образ на основе файла Dockerfile.
+### 3. Собираем образ на основе файла Dockerfile.
 
 		[root@vmtest docker]# docker build -f Dockerfile -t nginx_sa:alpine .
 
@@ -132,7 +132,7 @@ Cмотрим что получилось
 		nginx_sa     alpine    51060de7681e   About a minute ago   7.46MB
 		alpine       3.7       6d1ef012b567   2 years ago          4.21MB
 
-### Запускаем докер с пробросом 80 порта хостовой ВМ на 80 порт докера.
+### 4. Запускаем докер с пробросом 80 порта хостовой ВМ на 80 порт докера.
 
 		[root@vmtest docker]# docker run -d -p 80:80 nginx_sa:alpine
 		959a54236a08020a84ff08709df2ab37eec4d6b6c73bf4a00cb1a5ab08a11c0a
@@ -143,13 +143,13 @@ Cмотрим что получилось
 
 Проверяем работу nginx через браузер хостовой машины подключившись по http к ВМ где запущен контейнер.
 
-### Размещение образа докера на DockerHub:
+### 5. Размещение образа докера на DockerHub:
 
-1. Регистрируемся на Docker Hub - aleksey10081967
+5.1. Регистрируемся на Docker Hub - aleksey10081967
 
-2. Из терминала выполняем команду - docker login
+5.2. Из терминала выполняем команду - docker login
 
-3. После успешной авторизации указывваем образ, который хотим залить на dockerhub и его имя на портале
+5.3. После успешной авторизации указывваем образ, который хотим залить на dockerhub и его имя на портале
 
 			docker tag nginx_sa:alpine aleksey10081967/nginx_sa-v1:alpine
 
@@ -159,7 +159,7 @@ Cмотрим что получилось
 
 ***Иначе при размещении на портал получаем ошибку: denied: requested access to the resource is denied***
 
-4. Загружаем образ на dockerhub
+5.4. Загружаем образ на dockerhub
 
 			docker push aleksey10081967/nginx_sa-v1:alpine
 			
@@ -168,21 +168,21 @@ pic1
 
 Ссылка: https://hub.docker.com/repository/docker/aleksey10081967/nginx_sa-v1:alpine
 
-7. Выполняем проверку загруженного образа на портал
+### 6. Выполняем проверку загруженного образа на портал 
 
-	7.1 Скачиваем образ с dockerhub
+	6.1 Скачиваем образ с dockerhub
 	
 		docker pull aleksey10081967/nginx_sa-v1:alpine
 		docker images -a
 			
-	7.2 Запускаем контейнер
+	6.2 Запускаем контейнер
 	
 		docker run -d -p 80:80 aleksey10081967/nginx_sa-v1:alpine
  
  Проверяем работу nginx через браузер хостовой машины подключившись по http к ВМ где запущен контейнер.
  pic2.
 
-### Определите разницу между контейнером и образом. Вывод опишите в домашнем задании.
+## Определите разницу между контейнером и образом. Вывод опишите в домашнем задании.
 
  Образ - это набор слоев,в которые в процессе создания записывается различная информация, в том числе и ПО. Данная информация статическая и ее изменение возможно при изменении  образа. А это уже новый образ.
  
@@ -190,6 +190,6 @@ pic1
 
 При повторном создании контейнера объекты будут в состояни которое сохранено в образе.
 
-### Можно ли в контейнере собрать ядро?
+## Можно ли в контейнере собрать ядро?
 Да, наверное можно. Но для запуска ядра нужно дополнительно во внутрь контейнера засунуть ПО для виртуализации. Данное ПО сможет загрузить ядро, собранное нами.
  
