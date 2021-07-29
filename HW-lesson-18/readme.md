@@ -483,6 +483,41 @@ Cмотрим что получилось
 	php_1  | [29-Jul-2021 14:23:27] NOTICE: ready to handle connections
 
 2.5.3. Проверяем загрузку страницы php.
+![picture](pic/pic5.png)
+
+Файл docker-compose-1.yml:
+
+	version: '3'
+	services:
+	  web:
+	    image: aleksey10081967/web-v1:alpine
+	    container_name: web
+	    depends_on:
+	      - php
+	    volumes:
+	      - ./file_conf/:/code
+	      - ./nginx/:/etc/nginx/conf.d
+	    ports:
+	      - "80:80"
+	    networks:
+	      front_net:
+		ipv4_address: 10.20.30.10
+
+	  php:
+	    image: aleksey10081967/php-v1:alpine
+	    volumes:
+	      - ./file_conf/:/code
+	    ports:
+	      - "9000:9000"
+	    networks:
+	      front_net:
+		ipv4_address: 10.20.30.20
+
+	networks:
+	  front_net:
+	      ipam:
+		config:
+		  - subnet: "10.20.30.0/24"
 
 
 
