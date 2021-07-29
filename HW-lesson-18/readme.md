@@ -311,7 +311,7 @@ Cмотрим что получилось
 
 На ВМ ничего лишнего нет.
 
-### 2.2. Выполнение сборки образов и запуск контейнеров через файл docker-compose.yml
+### 2.3. Выполнение сборки образов и запуск контейнеров через файл docker-compose.yml
 
 [root@vmtest docker_compose4]# docker-compose up --build
 
@@ -378,12 +378,12 @@ Cмотрим что получилось
 	php_1  | [29-Jul-2021 13:05:30] NOTICE: ready to handle connections
 	php_1  | 10.20.30.10 -  29/Jul/2021:13:05:58 +0000 "GET /index.php" 200	
 
-### 2.3. Проверяем вывод страницы php
+### 2.4. Проверяем вывод страницы php
 
  ![picture](pic/pic3.png)	
 	
 	
- ### 2.4. Размещение образов докера на DockerHub.	
+ ### 2.5. Размещение образов докера на DockerHub.	
 
 Смотрим что у нас есть в локальном хранилище образов.
 
@@ -395,8 +395,9 @@ Cмотрим что получилось
 	php                    7.2-fpm-alpine3.7   a2dfd79ee40c   2 years ago          77.6MB
 
 Размещать на Docker hub будем - docker_compose_4_web:latest и docker_compose_4_php:latest. Для этого выполняем следующие дествия:
-2.4.1 Поключаемся к Docker hub
+2.5.1 Поключаемся к Docker hub
 	[root@vmtest docker_compose_4]# docker login
+	
 	Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
 	Username: aleksey10081967
 	Password:
@@ -405,12 +406,12 @@ Cмотрим что получилось
 	https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 	Login Succeeded
-2.4.2 Создаем tag для передаваемых образом:
+2.5.2 Создаем tag для передаваемых образом:
 
 	[root@vmtest docker_compose_4]# docker tag docker_compose_4_web:latest aleksey10081967/web-v1:alpine
 	[root@vmtest docker_compose_4]# docker tag docker_compose_4_php:latest aleksey10081967/php-v1:alpine
 	
-2.4.3 Размещаем образы на Docker Hub
+2.5.3 Размещаем образы на Docker Hub
 
 	[root@vmtest docker_compose_4]# docker push aleksey10081967/web-v1:alpine
 	The push refers to repository [docker.io/aleksey10081967/web-v1]
@@ -434,13 +435,13 @@ Cмотрим что получилось
 	alpine: digest: sha256:27d6009fab648088b00c606629a8c254331e04b136def4d1a7e0b147213aacad size: 2618
 	[root@vmtest docker_compose_4]#
 
-2.4.4. Проверяем наличие образов на Docker hub.
+2.5.4. Проверяем наличие образов на Docker hub.
 
 ![picture](pic/pic4.png)
 
-### 2.5. Проверяем развертывание контейнеров с DockerHub.
+### 2.6. Проверяем развертывание контейнеров с DockerHub.
 
-2.5.1. Скачиваем образы с Docker Hub
+2.6.1. Скачиваем образы с Docker Hub
 
 	[root@vmtest docker_compose_4]# docker pull aleksey10081967/web-v1:alpine
 	alpine: Pulling from aleksey10081967/web-v1
@@ -466,14 +467,14 @@ Cмотрим что получилось
 	Status: Downloaded newer image for aleksey10081967/php-v1:alpine
 	docker.io/aleksey10081967/php-v1:alpine
 
-2.5.2 Проверяем наличие образов в локальном хранилище.
+2.6.2 Проверяем наличие образов в локальном хранилище.
 
 	[root@vmtest docker_compose_4]# docker images
 	REPOSITORY               TAG       IMAGE ID       CREATED          SIZE
 	aleksey10081967/web-v1   alpine    08930daa54c2   31 minutes ago   7.46MB
 	aleksey10081967/php-v1   alpine    a2dfd79ee40c   2 years ago      77.6MB
 
-2.5.2. Запускаем docker-compose c файлов который использует для развертывания контейнеров скаченные образы.
+2.6.2. Запускаем docker-compose c файлов который использует для развертывания контейнеров скаченные образы.
 
 	[root@vmtest docker_compose_4]# docker-compose -f docker-compose-1.yml up
 	Creating docker_compose_4_php_1 ... done
@@ -482,7 +483,7 @@ Cмотрим что получилось
 	php_1  | [29-Jul-2021 14:23:27] NOTICE: fpm is running, pid 1
 	php_1  | [29-Jul-2021 14:23:27] NOTICE: ready to handle connections
 
-2.5.3. Проверяем загрузку страницы php.
+2.6.3. Проверяем загрузку страницы php.
 ![picture](pic/pic5.png)
 
 Файл docker-compose-1.yml:
