@@ -155,7 +155,7 @@ Cмотрим что получилось
 
 ***Для информации:***
 
-***В имени образа который будет выложен на портале первым должен быть указан мой login созданный на портале -> aleksey10081967/nginx_sa-v1:alpine***
+***В имени образа который будет выложен на портале первым должен быть указан login созданный на портале -> aleksey10081967/nginx_sa-v1:alpine***
 
 ***Иначе при размещении на портал получаем ошибку: denied: requested access to the resource is denied***
 
@@ -164,7 +164,8 @@ Cмотрим что получилось
 			docker push aleksey10081967/nginx_sa-v1:alpine
 			
 Имеем загруженный на DockerHub собранный образ nginx ввиде поекта.
-pic1
+
+![picture](pic/pic1.png)
 
 Ссылка: https://hub.docker.com/repository/docker/aleksey10081967/nginx_sa-v1:alpine
 
@@ -180,7 +181,8 @@ pic1
 		docker run -d -p 80:80 aleksey10081967/nginx_sa-v1:alpine
  
  Проверяем работу nginx через браузер хостовой машины подключившись по http к ВМ где запущен контейнер.
- pic2.
+ 
+ ![picture](pic/pic2.png)
 
 ## Определите разницу между контейнером и образом. Вывод опишите в домашнем задании.
 
