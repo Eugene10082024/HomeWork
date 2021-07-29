@@ -312,70 +312,73 @@ Cмотрим что получилось
 ### Выполняем сборку образов и запуск контейнеров через файл docker-compose.yml
 
 [root@vmtest docker_compose]# docker-compose up --build
-Building php
-Sending build context to Docker daemon  2.048kB
-Step 1/1 : FROM php:7.2-fpm-alpine3.7
-7.2-fpm-alpine3.7: Pulling from library/php
-c67f3896b22c: Pull complete
-88777455d910: Pull complete
-955e2028dd61: Pull complete
-7d47ce93cc1f: Pull complete
-591bb8d9afc3: Pull complete
-10a158dd6f4a: Pull complete
-4aa0e93a6621: Pull complete
-a5e3d48db581: Pull complete
-a53ed1f96150: Pull complete
-9b01b7a38d4e: Pull complete
-6100beaf6f07: Pull complete
-Digest: sha256:a990e5ff7b2e5a77ecfa904186d791fe6a0c52a267a607b6a578e6a48d9e1e29
-Status: Downloaded newer image for php:7.2-fpm-alpine3.7
- ---> a2dfd79ee40c
-Successfully built a2dfd79ee40c
-Successfully tagged docker_compose_4_php:latest
-Building web
-Sending build context to Docker daemon  3.072kB
-Step 1/4 : FROM alpine:3.7
-3.7: Pulling from library/alpine
-5d20c808ce19: Pull complete
-Digest: sha256:8421d9a84432575381bfabd248f1eb56f3aa21d9d7cd2511583c68c9b7511d10
-Status: Downloaded newer image for alpine:3.7
- ---> 6d1ef012b567
-Step 2/4 : RUN apk update && apk upgrade && apk add nginx&& mkdir -p /run/nginx
- ---> Running in cbea3f92c26a
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.7/community/x86_64/APKINDEX.tar.gz
-v3.7.3-184-gffd32bfd09 [http://dl-cdn.alpinelinux.org/alpine/v3.7/main]
-v3.7.3-194-gcddd1b2302 [http://dl-cdn.alpinelinux.org/alpine/v3.7/community]
-OK: 9054 distinct packages available
-(1/2) Upgrading musl (1.1.18-r3 -> 1.1.18-r4)
-(2/2) Upgrading musl-utils (1.1.18-r3 -> 1.1.18-r4)
-Executing busybox-1.27.2-r11.trigger
-OK: 4 MiB in 13 packages
-(1/2) Installing pcre (8.41-r1)
-(2/2) Installing nginx (1.12.2-r4)
-Executing nginx-1.12.2-r4.pre-install
-Executing busybox-1.27.2-r11.trigger
-OK: 6 MiB in 15 packages
-Removing intermediate container cbea3f92c26a
- ---> bb53afdca655
-Step 3/4 : EXPOSE 80
- ---> Running in bc3cb237ad32
-Removing intermediate container bc3cb237ad32
- ---> 629d544d4b2e
-Step 4/4 : CMD ["nginx", "-g", "daemon off;"]
- ---> Running in 19974386c1b2
-Removing intermediate container 19974386c1b2
- ---> d986ff9c0489
-Successfully built d986ff9c0489
-Successfully tagged docker_compose_4_web:latest
-Creating docker_compose_4_php_1 ... done
-Creating web                    ... done
-Attaching to docker_compose_4_php_1, web
-php_1  | [29-Jul-2021 13:05:30] NOTICE: fpm is running, pid 1
-php_1  | [29-Jul-2021 13:05:30] NOTICE: ready to handle connections
-php_1  | 10.20.30.10 -  29/Jul/2021:13:05:58 +0000 "GET /index.php" 200	
-	
-	
+
+	Building php
+	Sending build context to Docker daemon  2.048kB
+	Step 1/1 : FROM php:7.2-fpm-alpine3.7
+	7.2-fpm-alpine3.7: Pulling from library/php
+	c67f3896b22c: Pull complete
+	88777455d910: Pull complete
+	955e2028dd61: Pull complete
+	7d47ce93cc1f: Pull complete
+	591bb8d9afc3: Pull complete
+	10a158dd6f4a: Pull complete
+	4aa0e93a6621: Pull complete
+	a5e3d48db581: Pull complete
+	a53ed1f96150: Pull complete
+	9b01b7a38d4e: Pull complete
+	6100beaf6f07: Pull complete
+	Digest: sha256:a990e5ff7b2e5a77ecfa904186d791fe6a0c52a267a607b6a578e6a48d9e1e29
+	Status: Downloaded newer image for php:7.2-fpm-alpine3.7
+	 ---> a2dfd79ee40c
+	Successfully built a2dfd79ee40c
+	Successfully tagged docker_compose_4_php:latest
+	Building web
+	Sending build context to Docker daemon  3.072kB
+	Step 1/4 : FROM alpine:3.7
+	3.7: Pulling from library/alpine
+	5d20c808ce19: Pull complete
+	Digest: sha256:8421d9a84432575381bfabd248f1eb56f3aa21d9d7cd2511583c68c9b7511d10
+	Status: Downloaded newer image for alpine:3.7
+	 ---> 6d1ef012b567
+	Step 2/4 : RUN apk update && apk upgrade && apk add nginx&& mkdir -p /run/nginx
+	 ---> Running in cbea3f92c26a
+	fetch http://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86_64/APKINDEX.tar.gz
+	fetch http://dl-cdn.alpinelinux.org/alpine/v3.7/community/x86_64/APKINDEX.tar.gz
+	v3.7.3-184-gffd32bfd09 [http://dl-cdn.alpinelinux.org/alpine/v3.7/main]
+	v3.7.3-194-gcddd1b2302 [http://dl-cdn.alpinelinux.org/alpine/v3.7/community]
+	OK: 9054 distinct packages available
+	(1/2) Upgrading musl (1.1.18-r3 -> 1.1.18-r4)
+	(2/2) Upgrading musl-utils (1.1.18-r3 -> 1.1.18-r4)
+	Executing busybox-1.27.2-r11.trigger
+	OK: 4 MiB in 13 packages
+	(1/2) Installing pcre (8.41-r1)
+	(2/2) Installing nginx (1.12.2-r4)
+	Executing nginx-1.12.2-r4.pre-install
+	Executing busybox-1.27.2-r11.trigger
+	OK: 6 MiB in 15 packages
+	Removing intermediate container cbea3f92c26a
+	 ---> bb53afdca655
+	Step 3/4 : EXPOSE 80
+	 ---> Running in bc3cb237ad32
+	Removing intermediate container bc3cb237ad32
+	 ---> 629d544d4b2e
+	Step 4/4 : CMD ["nginx", "-g", "daemon off;"]
+	 ---> Running in 19974386c1b2
+	Removing intermediate container 19974386c1b2
+	 ---> d986ff9c0489
+	Successfully built d986ff9c0489
+	Successfully tagged docker_compose_4_web:latest
+	Creating docker_compose_4_php_1 ... done
+	Creating web                    ... done
+	Attaching to docker_compose_4_php_1, web
+	php_1  | [29-Jul-2021 13:05:30] NOTICE: fpm is running, pid 1
+	php_1  | [29-Jul-2021 13:05:30] NOTICE: ready to handle connections
+	php_1  | 10.20.30.10 -  29/Jul/2021:13:05:58 +0000 "GET /index.php" 200	
+
+### Проверяем вывод страницы php
+
+ ![picture](pic/pic3.png)	
 	
 	
 	
