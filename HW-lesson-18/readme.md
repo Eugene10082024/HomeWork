@@ -405,11 +405,12 @@ Cмотрим что получилось
 	https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 	Login Succeeded
-4.2.1 Создаем tag для передаваемых образом:
+2.4.2 Создаем tag для передаваемых образом:
 
 	[root@vmtest docker_compose_4]# docker tag docker_compose_4_web:latest aleksey10081967/web-v1:alpine
 	[root@vmtest docker_compose_4]# docker tag docker_compose_4_php:latest aleksey10081967/php-v1:alpine
-4.2.2 Размещаем образы на Docker Hub
+	
+2.4.3 Размещаем образы на Docker Hub
 
 	[root@vmtest docker_compose_4]# docker push aleksey10081967/web-v1:alpine
 	The push refers to repository [docker.io/aleksey10081967/web-v1]
@@ -433,11 +434,11 @@ Cмотрим что получилось
 	alpine: digest: sha256:27d6009fab648088b00c606629a8c254331e04b136def4d1a7e0b147213aacad size: 2618
 	[root@vmtest docker_compose_4]#
 
-4.2.3. Проверяем наличие образов на Docker hub.
+2.4.4. Проверяем наличие образов на Docker hub.
 
 ![picture](pic/pic4.png)
 
-
+### 2.5. Проверяем развертывание контейнеров с DockerHub.
 
 
 
