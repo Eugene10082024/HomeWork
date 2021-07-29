@@ -440,7 +440,49 @@ Cмотрим что получилось
 
 ### 2.5. Проверяем развертывание контейнеров с DockerHub.
 
+2.5.1. Скачиваем образы с Docker Hub
 
+	[root@vmtest docker_compose_4]# docker pull aleksey10081967/web-v1:alpine
+	alpine: Pulling from aleksey10081967/web-v1
+	5d20c808ce19: Pull complete
+	83af4ca014ee: Pull complete
+	Digest: sha256:cf67d72efb2e778088b4d893e5f979b759fb1c97e5b70983bccb3832da092fda
+	Status: Downloaded newer image for aleksey10081967/web-v1:alpine
+	docker.io/aleksey10081967/web-v1:alpine
+	[root@vmtest docker_compose_4]# docker pull aleksey10081967/php-v1:alpine
+	alpine: Pulling from aleksey10081967/php-v1
+	c67f3896b22c: Pull complete
+	88777455d910: Pull complete
+	955e2028dd61: Pull complete
+	7d47ce93cc1f: Pull complete
+	591bb8d9afc3: Pull complete
+	10a158dd6f4a: Pull complete
+	4aa0e93a6621: Pull complete
+	a5e3d48db581: Pull complete
+	a53ed1f96150: Pull complete
+	9b01b7a38d4e: Pull complete
+	6100beaf6f07: Pull complete
+	Digest: sha256:27d6009fab648088b00c606629a8c254331e04b136def4d1a7e0b147213aacad
+	Status: Downloaded newer image for aleksey10081967/php-v1:alpine
+	docker.io/aleksey10081967/php-v1:alpine
+
+2.5.2 Проверяем наличие образов в локальном хранилище.
+
+	[root@vmtest docker_compose_4]# docker images
+	REPOSITORY               TAG       IMAGE ID       CREATED          SIZE
+	aleksey10081967/web-v1   alpine    08930daa54c2   31 minutes ago   7.46MB
+	aleksey10081967/php-v1   alpine    a2dfd79ee40c   2 years ago      77.6MB
+
+2.5.2. Запускаем docker-compose c файлов который использует для развертывания контейнеров скаченные образы.
+
+	[root@vmtest docker_compose_4]# docker-compose -f docker-compose-1.yml up
+	Creating docker_compose_4_php_1 ... done
+	Creating web                    ... done
+	Attaching to docker_compose_4_php_1, web
+	php_1  | [29-Jul-2021 14:23:27] NOTICE: fpm is running, pid 1
+	php_1  | [29-Jul-2021 14:23:27] NOTICE: ready to handle connections
+
+2.5.3. Проверяем загрузку страницы php.
 
 
 
