@@ -199,13 +199,13 @@ Cмотрим что получилось
 
 ## Решение Задания 2.
 
-### 2.1. Создаем каталог docker-compose c подкаталогами
+### 2.1. Создание каталог docker-compose c подкаталогами
 Создаем в каталоге /vagrant указанный каталог со следующими подкаталогами.
 
-	[root@vmtest docker_compose]# pwd
-	/vagrant/docker_compose
+	[root@vmtest docker_compose4]# pwd
+	/vagrant/docker_compose4
 
-	[root@vmtest docker_compose]# ls -al
+	[root@vmtest docker_compose4]# ls -al
 	total 12
 	drwxrwxrwx. 1 vagrant vagrant 4096 Jul 29 12:18 .
 	drwxrwxrwx. 1 vagrant vagrant 4096 Jul 29 12:17 ..
@@ -234,6 +234,7 @@ Cмотрим что получилось
 	    networks:
 	      front_net:
 		ipv4_address: 10.20.30.10
+
 	  php:
 	    build:
 	      context: ./php7
@@ -244,6 +245,7 @@ Cмотрим что получилось
 	    networks:
 	      front_net:
 		ipv4_address: 10.20.30.20
+
 	networks:
 	  front_net:
 	      ipam:
@@ -295,9 +297,9 @@ Cмотрим что получилось
 
 	FROM php:7.2-fpm-alpine3.7
 
-### 2.2. Проверяем наличие локальных образом на ВМ.
+### 2.2. Проверка наличие локальных образом на ВМ.
 
-	[root@vmtest docker_compose]# docker images
+	[root@vmtest docker_compose4]# docker images
 	REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
 	[root@vmtest docker_compose]# docker system df
 	TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
@@ -309,9 +311,9 @@ Cмотрим что получилось
 
 На ВМ ничего лишнего нет.
 
-### Выполняем сборку образов и запуск контейнеров через файл docker-compose.yml
+### 2.2. Выполнение сборки образов и запуск контейнеров через файл docker-compose.yml
 
-[root@vmtest docker_compose]# docker-compose up --build
+[root@vmtest docker_compose4]# docker-compose up --build
 
 	Building php
 	Sending build context to Docker daemon  2.048kB
@@ -376,13 +378,21 @@ Cмотрим что получилось
 	php_1  | [29-Jul-2021 13:05:30] NOTICE: ready to handle connections
 	php_1  | 10.20.30.10 -  29/Jul/2021:13:05:58 +0000 "GET /index.php" 200	
 
-### Проверяем вывод страницы php
+### 2.3. Проверяем вывод страницы php
 
  ![picture](pic/pic3.png)	
 	
 	
-	
+ ### 2.4. Размещение образа докера на DockerHub.	
 
+docker tag nginx_sa:alpine aleksey10081967/nginx_sa-v1:alpine
+
+	[root@vmtest docker_compose4]# docker images
+	REPOSITORY             TAG                 IMAGE ID       CREATED          SIZE
+	docker_compose_4_web   latest              d986ff9c0489   11 minutes ago   7.46MB
+	alpine                 3.7                 6d1ef012b567   2 years ago      4.21MB
+	php                    7.2-fpm-alpine3.7   a2dfd79ee40c   2 years ago      77.6MB
+	docker_compose_4_php   latest              a2dfd79ee40c   2 years ago      77.6MB
 
 
 
