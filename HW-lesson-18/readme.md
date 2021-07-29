@@ -383,16 +383,63 @@ Cмотрим что получилось
  ![picture](pic/pic3.png)	
 	
 	
- ### 2.4. Размещение образа докера на DockerHub.	
+ ### 2.4. Размещение образов докера на DockerHub.	
 
-docker tag nginx_sa:alpine aleksey10081967/nginx_sa-v1:alpine
+Смотрим что у нас есть в локальном хранилище образов.
 
-	[root@vmtest docker_compose4]# docker images
-	REPOSITORY             TAG                 IMAGE ID       CREATED          SIZE
-	docker_compose_4_web   latest              d986ff9c0489   11 minutes ago   7.46MB
-	alpine                 3.7                 6d1ef012b567   2 years ago      4.21MB
-	php                    7.2-fpm-alpine3.7   a2dfd79ee40c   2 years ago      77.6MB
-	docker_compose_4_php   latest              a2dfd79ee40c   2 years ago      77.6MB
+	[root@vmtest docker_compose_4]# docker images
+	REPOSITORY             TAG                 IMAGE ID       CREATED              SIZE
+	docker_compose_4_web   latest              08930daa54c2   About a minute ago   7.46MB
+	alpine                 3.7                 6d1ef012b567   2 years ago          4.21MB
+	docker_compose_4_php   latest              a2dfd79ee40c   2 years ago          77.6MB
+	php                    7.2-fpm-alpine3.7   a2dfd79ee40c   2 years ago          77.6MB
+
+Размещать на Docker hub будем - docker_compose_4_web:latest и docker_compose_4_php:latest. Для этого выполняем следующие дествия:
+2.4.1 Поключаемся к Docker hub
+	[root@vmtest docker_compose_4]# docker login
+	Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+	Username: aleksey10081967
+	Password:
+	WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+	Configure a credential helper to remove this warning. See
+	https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+	Login Succeeded
+4.2.1 Создаем tag для передаваемых образом:
+
+	[root@vmtest docker_compose_4]# docker tag docker_compose_4_web:latest aleksey10081967/web-v1:alpine
+	[root@vmtest docker_compose_4]# docker tag docker_compose_4_php:latest aleksey10081967/php-v1:alpine
+4.2.2 Размещаем образы на Docker Hub
+
+	[root@vmtest docker_compose_4]# docker push aleksey10081967/web-v1:alpine
+	The push refers to repository [docker.io/aleksey10081967/web-v1]
+	f729049cad43: Pushed
+	3fc64803ca2d: Mounted from aleksey10081967/nginx_sa-v1
+	alpine: digest: sha256:cf67d72efb2e778088b4d893e5f979b759fb1c97e5b70983bccb3832da092fda size: 739
+
+	[root@vmtest docker_compose_4]# docker push aleksey10081967/php-v1:alpine
+	The push refers to repository [docker.io/aleksey10081967/php-v1]
+	a219a6485189: Mounted from library/php
+	9ff384c242d9: Mounted from library/php
+	c2775d6cea45: Mounted from library/php
+	c88b2983c3ba: Mounted from library/php
+	f8dadb08abb9: Mounted from library/php
+	bcbe08cb547c: Mounted from library/php
+	94c73441b05f: Mounted from library/php
+	dc00fbef458a: Mounted from library/php
+	9922bc15eeef: Mounted from library/php
+	0ea33a93585c: Mounted from library/php
+	ebf12965380b: Mounted from library/php
+	alpine: digest: sha256:27d6009fab648088b00c606629a8c254331e04b136def4d1a7e0b147213aacad size: 2618
+	[root@vmtest docker_compose_4]#
+
+4.2.3. Проверяем наличие образов на Docker hub.
+
+![picture](pic/pic4.png)
+
+
+
+
 
 
 
