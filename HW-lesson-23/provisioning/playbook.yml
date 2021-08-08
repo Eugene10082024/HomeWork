@@ -1,0 +1,135 @@
+---
+
+- hosts: all # part running on all hosts
+  become: true
+  tasks:
+
+  - name: Update file resolv.conf
+    template:
+      src: "templates/resolv.conf.j2"
+      dest: "/etc/resolv.conf"
+
+  - name: Update file hosts
+    template:
+      src: "templates/hosts.j2"
+      dest: "/etc/hosts"
+
+  - name: install packages 
+    dnf:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - epel-release
+      - net-tools
+      - wget
+      - chrony
+      - rsyslog
+      - setools
+      - setroubleshoot-server
+      - tzdata
+
+  - name: Set timezone to Asia/Tokyo
+    timezone:
+      name: Europe/Moscow
+
+  - name: restarted service chronyd
+    service:
+      name: chronyd
+      state: restarted
+      enabled: yes
+
+  - name: SELINUX in state permissive
+    selinux:
+      policy: targeted
+      state: permissive
+
+# Provision server rsyslog
+- hosts: serverlog # server rsyslog provision
+  become: true
+  tasks:
+  - name: start service firewalld
+    service:
+      name: firewalld
+      state: started
+      enabled: yes
+
+  - name: Open port 514/tcp on  firewalld
+    firewalld:
+      port: 514/tcp
+      permanent: true
+      state: enabled
+
+  - name: Open port  514/udp on firewalld 
+    firewalld:
+      port: 514/udp
+      permanent: yes
+      state: enabled
+   
+  - name: reload service firewalld
+    systemd:
+      name: firewalld
+      state: reloaded
+
+  - name: Update file rsyslog.conf
+    template:
+      src: "templates/serverlog/rsyslog.conf.j2"
+      dest: "/etc/rsyslog.conf"
+
+  - name: Restarted service rsyslog
+    service:
+      name: rsyslog
+      state: restarted
+      enabled: yes
+
+# Provision client rsyslog
+- hosts: clientlog # first client provision
+  become: true
+  tasks:
+
+  - name: Update config file client  rsyslog.conf
+    template:
+       src: "templates/clientlog/rsyslog.conf.j2"
+       dest: "/etc/rsyslog.conf"
+
+  - name: copy audit.conf
+    copy:
+      src: files/clientlog/audit.conf
+      dest: /etc/rsyslog.d/audit.conf
+      owner: root
+      group: root
+      mode: 0640
+
+  - name: copy auth.conf
+    copy:
+      src: files/clientlog/auth.conf
+      dest: /etc/rsyslog.d/auth.conf
+      owner: root
+      group: root
+      mode: 0640
+
+  - name: Restarted service rsyslog
+    service:
+      name: rsyslog
+      state: restarted
+      enabled: yes
+
+  - name: install nginx 
+    dnf:
+      name: nginx
+      state: present
+
+  - name: Update config file nginx.conf
+    template:
+       src: "templates/clientlog/nginx.conf.j2"
+       dest: "/etc/nginx/nginx.conf"
+
+  - name: Restarted service nginx
+    service:
+      name: nginx
+      state: restarted
+      enabled: yes
+
+
+
+

@@ -1,0 +1,6 @@
+[logs]
+serverlog      	ansible_host=192.168.11.230 ansible_user=ansible ansible_password=ansible ansible_become=yes	 ansible_become_password=ansible
+clientlog      	ansible_host=192.168.11.231 ansible_user=ansible ansible_password=ansible ansible_become=yes     ansible_become_password=ansible
+#serverelk      	ansible_host=192.168.11.232 ansible_user=ansible ansible_password=ansible ansible_become=yes     ansible_become_password=ansible
+
+
