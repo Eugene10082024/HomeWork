@@ -1,0 +1,121 @@
+# Provision server elk
+- hosts: serverelk # provision on server elk (elastic+kibana+logstash)
+  become: true
+  tasks:
+  - name: stop service firewalld
+    service:
+      name: firewalld
+      state: stop
+      enabled: no
+
+   - name: reload service firewalld on server elk
+    systemd:
+      name: firewalld
+      state: reloaded
+
+  - name: install java 1.8 on server elk on server elk
+    dnf:
+      name: java-1.8.0-openjdk-devel
+      state: present
+
+  - name: Add repository key for elasticsearch on server elk
+    rpm_key:
+      key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+  - name: copy file repo elk on server elk
+    copy:
+      src: files/elasticsearch.repo
+      dest: /etc/yum.repos.d/elasticsearch.repo
+      owner: root
+      group: root
+      mode: 0640
+
+  - name: install elasticsearch on server elk
+    dnf:
+      name: elasticsearch
+      state: present
+
+  - name: Update config file for server elasticsearch
+    template:
+       src: "templates/serverelk/elasticsearch.yml.j2"
+       dest: "/etc/elasticsearch/elasticsearch.yml"
+
+  - name: Restarted service elasticsearch
+    service:
+      name: elasticsearch
+      state: restarted
+      enabled: yes
+
+  - name: install kibana on server elk
+    dnf:
+      name: kibana
+      state: present
+
+  - name: Update config file for kibana
+    template:
+       src: "templates/kibana/kibana.yml.j2"
+       dest: "/etc/kibana/kibana.yml"
+
+  - name: Restarted service kibana
+    service:
+      name: kibana
+      state: restarted
+      enabled: yes
+
+  - name: install logstash on server elk
+    dnf:
+      name: logstash
+      state: present
+
+  - name: copy template input.conf
+    template:
+       src: "templates/logstash/input.conf.j2"
+       dest: "/etc/logstash/conf.d/input.conf"
+
+  - name: copy template output.conf
+    template:
+       src: "templates/logstash/output.conf.j2"
+       dest: "/etc/logstash/conf.d/output.conf"
+
+  - name: copy template filter.conf
+    template:
+       src: "templates/logstash/filter.conf.j2"
+       dest: "/etc/logstash/conf.d/filter.conf"
+
+  - name: Restarted service logstash
+    service:
+      name: logstash
+      state: restarted
+      enabled: yes
+
+- hosts: clientlog # provision on client vm with nginx
+  become: true
+  tasks:
+
+  - name: Add repository key for elasticsearch
+    rpm_key:
+      key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+  - name: copy file repo elasticsearch in clientlog vm
+    copy:
+      src: files/elasticsearch.repo
+      dest: /etc/yum.repos.d/elasticsearch.repo
+      owner: root
+      group: root
+      mode: 0640
+
+  - name: install filebeat on clientlog vm
+    dnf:
+      name: filebeat
+      state: present
+
+  - name: copy filebeat config nginx from template dir
+    template:
+       src: "templates/clientekl-nginx/filebeat.yml.j2"
+       dest: "/etc/filebeat/filebeat.yml"
+
+  - name: Restarted service filebeat clientlog
+    service:
+      name: filebeat
+      state: restarted
+      enabled: yes
