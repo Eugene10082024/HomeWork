@@ -251,5 +251,26 @@
 
 ![picture](pic/pic0.png)
 
+#### 2.5. Проверяем работу elk по сбору logs nginx.
+
+#### 2.5.1 
+
+![picture](pic/pic1.png)
 
 
+![picture](pic/pic2.png)
+
+
+![picture](pic/pic2_1.png)
+
+
+![picture](pic/pic3.png)
+
+
+![picture](pic/pic4.png)
+
+
+![picture](pic/pic5.png)
+
+
+![picture](pic/pic5_1.png)
