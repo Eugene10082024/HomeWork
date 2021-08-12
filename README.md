@@ -14,11 +14,11 @@
 ### 13. HW-lesson-17  - SELinux - когда все запрещено 
 ### 14. HW-lesson-18  - Docker 
 ### 15. HW-lesson-20  - Prometheus, Zabbix
-#### 16. HW-lesson-23      - Сбор и анализ логов                            - В работе
+#### 16. HW-lesson-23      - Сбор и анализ логов                            - на проверке
 17. HW-lesson-25      - Резервное копирование                          - Лекция перенесена
 #### 18. HW-lesson-26      - Архитектура сетей                              - В работе 
-19. HW-lesson-27      - DHCP, PXE                                      - август
-20. HW-lesson-28      - Фильтрация трафика - firewalld, iptables       - август
+#### 19. HW-lesson-27      - DHCP, PXE                                      - В работе
+#### 20. HW-lesson-28      - Фильтрация трафика - firewalld, iptables       - В работе
 21. HW-lessom-30      - Статическая и динамическая маршрутизация, OSPF - август
 22. HW-lesson-32      - Мосты, туннели и VPN                           - август
 23. HW-lesson-33      - DNS- настройка и обслуживание                  - август
