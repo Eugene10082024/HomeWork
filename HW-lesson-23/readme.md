@@ -20,16 +20,20 @@
 
 Для выполнения задания выбран сервер rsyslog.
 
-### 1.1. Две виртуальные машины разварачиваю с помощью vagnatfile. (имя файла - vagrantfile)
+### 1.1. Три виртуальные машины разварачиваю с помощью vagnatfile. (имя файла - vagrantfile)
 
-Параметры сервера сбора logs: имя - serverlog  ip-адрес: 192.168.11.230
+Параметры сервера сбора logs: имя - serverlog,  ip-адрес: 192.168.11.230
 
-Параметры клиента c которого собираю logs: имя - clientlog ip адрес: 192.168.11.231
+Параметры клиента c которого собираю logs: имя - clientlog, ip адрес: 192.168.11.231
+
+Дополнительно разварачивается ВМ serverelk для выполнения задания 2. Параметры: имя - serverelk, ip адрес: 192.168.11.232
 
 ### Дополнительно:
 ### 1.2. Для развертывания playbook ansible дополнтельно развернута ВМ с установленным ansible и создана учетная запись ansible для выполнения playbook.
 
 Файл для развертывания через vagrant - vagrantfile_ansible
+
+Параметры ВМ: имя - , ip адрес: 192.168.11.2
 
 Учетной записи ansible создан ssh-key:
 
@@ -39,6 +43,9 @@
 
     ssh-copy-id -i ~/.ssh/id_rsa.pub ansible@192.168.11.230
     ssh-copy-id -i ~/.ssh/id_rsa.pub ansible@192.168.11.231
+    ssh-copy-id -i ~/.ssh/id_rsa.pub ansible@192.168.11.232
+    
+    password для учетки ansible: ansible
     
 #### 1.2.2. Содержимое каталога provisioning переносим в /etc/ansible, предварительно все удалив из него.
 
@@ -216,7 +223,31 @@
         -rw-------. 1 root root  394 Aug  8 15:55 systemd.log
         -rw-------. 1 root root 4533 Aug  8 15:55 tag_audit_log.log
 
+### Решение задания 2.
+Для развертывания сервера EKL и настройки сбора log nginx разработал playbook Ansible. Данный playbook размещен в каталоге: provision_elk
 
+Его работа проверялась путем запуска с управляющей ВМ.
+
+#### 2.1. ДЛя развертывания elk? cодержимое каталога provisioning_elk переносим в /etc/ansible управляющей ВМ (192.168.11.2) , предварительно все удалив из него.
+
+  
+#### 2.2. Выполняем установку и настройку серверной elk (elasticsearch, logstash, kibana) и клиентской частей на clientlog (filebeat) c помощью playbook_elk.yml.
+ 
+    ansible-play playbook_elk.yml
+    
+### 2.3. После выполнения playbook проверяем работу развернутых сервисов.
+
+#### 2.3.1 На ВМ serverelk.
+
+    systemctl status elasticsearch.service
+    systemctl status logstash
+    systemctl status kibana
+   
+#### 2.3.2. На ВМ clientlog:
+
+    systemctl status filebeat
+
+### 2.4. Выполняем подключение к elk через kibana и выполняем первоначальную настройку для анализа logs nginx.
 
 
 
