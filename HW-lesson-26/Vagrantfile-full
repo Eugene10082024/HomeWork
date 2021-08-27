@@ -76,9 +76,9 @@ Vagrant.configure("2") do |config|
 
         box.vm.box = boxconfig[:box_name]
         box.vm.host_name = boxname.to_s
-			  box.vbguest.installer_options = { allow_kernel_upgrade: true }
+	box.vbguest.installer_options = { allow_kernel_upgrade: true }
         boxconfig[:net].each do |ipconf|
-          box.vm.network "private_network", ipconf
+        box.vm.network "private_network", ipconf
         end
 
         if boxconfig.key?(:public)
@@ -86,94 +86,100 @@ Vagrant.configure("2") do |config|
         end
 
         box.vm.provision "shell", inline: <<-SHELL
-          mkdir -p ~root/.ssh
-                cp ~vagrant/.ssh/auth* ~root/.ssh
+        mkdir -p ~root/.ssh
+        cp ~vagrant/.ssh/auth* ~root/.ssh
         SHELL
 
         case boxname.to_s
         when "inetRouter"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
-		    yum install -y net-tools traceroute
-			systemctl stop NetworkManager
-			systemctl disable NetworkManager
-            sysctl net.ipv4.conf.all.forwarding=1
-			yum install -y iptables-services
-			systemctl enable iptables 
-			systemctl start iptables
-			iptables -F
-            iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE
-			echo "NOZEROCONF=yes" >> /etc/sysconfig/network
-			echo "192.168.0.0/16 via 192.168.255.1 dev eth1" > /etc/sysconfig/network-scripts/route-eth1
-			sudo systemctl restart network.service		  
+		yum install -y net-tools traceroute
+		systemctl stop NetworkManager
+		systemctl disable NetworkManager
+            	sysctl net.ipv4.conf.all.forwarding=1
+		yum install -y iptables-services
+		systemctl enable iptables 
+		systemctl start iptables
+		iptables -F
+            	iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE
+		echo "NOZEROCONF=yes" >> /etc/sysconfig/network
+		echo "192.168.0.0/16 via 192.168.255.1 dev eth1" > /etc/sysconfig/network-scripts/route-eth1
+		systemctl restart network.service		  
 	    SHELL
 
         when "Office1Router"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
-		    yum install -y net-tools traceroute
-			systemctl stop NetworkManager
-			systemctl disable NetworkManager		  
-            sysctl net.ipv4.conf.all.forwarding=1
-            echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
-			echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-            echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-            systemctl restart network.service
+		yum install -y net-tools traceroute
+		systemctl stop NetworkManager
+		systemctl disable NetworkManager		  
+            	sysctl net.ipv4.conf.all.forwarding=1
+            	echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+		echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+		echo "NOZEROCONF=yes" >> /etc/sysconfig/network	
+            	echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+            	systemctl restart network.service
           SHELL
 
         when "Office1Server"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
-		  yum install -y net-tools traceroute
-		  systemctl stop NetworkManager
-		  systemctl disable NetworkManager		  
-		  echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
-		  echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-          echo "GATEWAY=192.168.2.65" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-          systemctl restart network.service
+		yum install -y net-tools traceroute
+		systemctl stop NetworkManager
+		systemctl disable NetworkManager		  
+		echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+		echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+		echo "NOZEROCONF=yes" >> /etc/sysconfig/network	
+          	echo "GATEWAY=192.168.2.65" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+          	systemctl restart network.service
          SHELL
 
         when "centralRouter"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
-		    yum install -y net-tools traceroute
-			systemctl stop NetworkManager
-			systemctl disable NetworkManager		  		 
-            sysctl net.ipv4.conf.all.forwarding=1
-            echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
-			echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-            echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-            systemctl restart network.service
+		yum install -y net-tools traceroute
+		systemctl stop NetworkManager
+		systemctl disable NetworkManager		  		 
+            	sysctl net.ipv4.conf.all.forwarding=1
+            	echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+		echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+		echo "NOZEROCONF=yes" >> /etc/sysconfig/network	
+            	echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+            	systemctl restart network.service
             SHELL
 
         when "centralServer"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
-		    yum install -y net-tools traceroute
-			systemctl stop NetworkManager
-			systemctl disable NetworkManager		  
-            echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
-            echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1			
-            echo "GATEWAY=192.168.0.33" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-            systemctl restart network
+		yum install -y net-tools traceroute
+		systemctl stop NetworkManager
+		systemctl disable NetworkManager		  
+            	echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+            	echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1			
+		echo "NOZEROCONF=yes" >> /etc/sysconfig/network	
+            	echo "GATEWAY=192.168.0.33" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+            	systemctl restart network
             SHELL
 
        when "office2Router"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
-		    yum install -y net-tools traceroute
-			systemctl stop NetworkManager
-			systemctl disable NetworkManager		  
-            sysctl net.ipv4.conf.all.forwarding=1
-            echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
-           echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1			
-            echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-            systemctl restart network
+		yum install -y net-tools traceroute
+		systemctl stop NetworkManager
+		systemctl disable NetworkManager		  
+            	sysctl net.ipv4.conf.all.forwarding=1
+            	echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+           	echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1			
+		echo "NOZEROCONF=yes" >> /etc/sysconfig/network	
+            	echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+            	systemctl restart network
             SHELL
 
         when "office2Server"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
-		  yum install -y net-tools traceroute
-		  systemctl stop NetworkManager
-		  systemctl disable NetworkManager		  
-          echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
-		  echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-          echo "GATEWAY=192.168.1.129" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-          systemctl restart network
+		yum install -y net-tools traceroute
+		systemctl stop NetworkManager
+		systemctl disable NetworkManager		  
+          	echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+		echo "DEFROUTE=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+		echo "NOZEROCONF=yes" >> /etc/sysconfig/network	
+          	echo "GATEWAY=192.168.1.129" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+          	systemctl restart network
           SHELL
         end
       end
