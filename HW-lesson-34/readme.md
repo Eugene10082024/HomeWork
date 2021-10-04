@@ -123,9 +123,9 @@ FreeIPA клиенты:
 		
 #### Проверка наличия клиента в домене.
 Проверку выполняем путем подключения по web интерфейсу к контроллеру домена freeipa и просмотра наличия узла ipaclient01.ipatest.local во вкладке узлы.
-![picture](pic/pic_1.png)
+![picture](pics/pic-01.png)
 
-![picture](pic/pic_2.png)
+![picture](pic/pic-02.png)
 
 
 
