@@ -1,0 +1,123 @@
+---
+ # hosts: all
+ # become: true
+ # tasks:
+
+  - name: set a hostname
+    hostname:
+      name: "{{ fqdn_client_ipa }}"
+ 
+  - name: replacement fie hostname
+    template:
+      src: hostname.j2
+      dest: /etc/hostname
+      owner: root
+      group: root
+      mode: 0664
+
+  - name: set timezone to Europe/Moscow
+    timezone:
+      name: Europe/Moscow
+
+  - name: install packages chrony, bind-utils
+    dnf:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - chrony
+      - bind-utils
+
+  - name: Putting SELinux into mode -  permissive.
+    selinux:
+      policy: targeted
+      state: permissive
+
+
+  - name: start and enabled service firewalld
+    systemd:
+      name: firewalld.service
+      enabled: yes	
+      state: started
+
+  - name: replacement file hosts
+    template:
+      src: hosts.j2
+      dest: /etc/hosts
+      owner: root
+      group: root
+      mode: 0664
+
+  - name: install package freeipa-client
+    dnf:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - freeipa-client
+
+  - name: замена файла resolv.conf
+    template:
+      src: resolv.conf.j2
+      dest: /etc/resolv.conf
+      owner: root
+      group: root
+      mode: 0664
+
+  - name: permit traffic in default zone for freeipa-ldap service
+    firewalld:
+      service: freeipa-ldap
+      permanent: yes
+      state: enabled
+
+  - name: permit traffic in default zone for freeipa-ldaps service
+    firewalld:
+      service: freeipa-ldaps
+      permanent: yes
+      state: enabled
+
+  - name: permit traffic in default zone for dns service
+    firewalld:
+      service: dns
+      permanent: yes
+      state: enabled
+
+  - name: permit traffic in default zone for ntp service
+    firewalld:
+      service: ntp
+      permanent: yes
+      state: enabled
+
+  - name: permit traffic in default zone for http service
+    firewalld:
+      service: http
+      permanent: yes
+      state: enabled
+
+  - name: permit traffic in default zone for https service
+    firewalld:
+      service: https
+      permanent: yes
+      state: enabled
+
+  - name: reload service firewalld
+    systemd:
+      name: firewalld.service
+      state: reloaded
+
+#  - name: install client to domain freeipa
+#    shell: ipa-client-install --domain=ipatest.local --server=ipaserver.ipatest.local --realm IPATEST.LOCAL --principal=admin --password=12345678 --mkhomedir --enable-dns-updates -U
+
+  - name: install client to domain freeipa
+    shell: ipa-client-install --domain={{ domain_ipa_fqdn }} --server={{ server_ipa }} --realm {{ realm_ipa }} --principal={{ admin_user }} --password={{ password_admin }} --mkhomedir --enable-dns-updates -U
+
+
+  - name: start oddjobd.service
+    systemd:
+      name:  oddjobd
+      state: restarted
+      enabled: yes
+
+  - name: enable-feature with-mkhomedir
+    shell: authselect enable-feature with-mkhomedir
+...

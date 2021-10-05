@@ -1,0 +1,3 @@
+ip_client_ipa: 192.168.11.241
+fqdn_client_ipa: ipaclient01.ipatest.local
+name_client_ipa: ipaclient01

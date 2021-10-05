@@ -1,0 +1,7 @@
+domain_ipa_fqdn: ipatest.local
+realm_ipa: IPATEST.LOCAL
+server_ipa: ipaserver.ipatest.local
+admin_user: admin
+password_admin: 12345678
+dns_ipa_server_ip: 192.168.11.240
+dns_dop: 10.0.2.3

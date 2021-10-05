@@ -1,0 +1,5 @@
+---
+
+# Плейбук для ввода ПК в домен  
+
+- import_playbook: ipaclient.yml
