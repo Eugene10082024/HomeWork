@@ -27,4 +27,4 @@
 #### 24. HW-lesson-34      - Сетевые пакеты. VLAN'ы. LACP                   - в работе
 #### 26. HW-lesson-39      - MySQL Backup + Репликация                      - в работе
 #### 27. HW-lesson-42      - PostgreSQL                                     - в работе
-     28. НW-lesson-43      - Динамический web                               - 19 октября
+28. НW-lesson-43      - Динамический web                               - 19 октября
