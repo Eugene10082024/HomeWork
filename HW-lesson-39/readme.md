@@ -339,28 +339,30 @@ mysql> show slave status \G;
 
 Еще раз проверяем, что gtid включен на slavemysql01.
 
-    mysql>  SHOW VARIABLES LIKE 'gtid_mode';
-    +---------------+-------+
-    | Variable_name | Value |
-    +---------------+-------+
-    | gtid_mode     | ON    |
-    +---------------+-------+
-    1 row in set (0,05 sec)
+            mysql>  SHOW VARIABLES LIKE 'gtid_mode';
+
+            +---------------+-------+
+            | Variable_name | Value |
+            +---------------+-------+
+            | gtid_mode     | ON    |
+            +---------------+-------+
+            1 row in set (0,05 sec)
 
 4.8. Проверяем наличие БД bet на slavemysql01.
-    mysql> use bet
-    Database changed
-    mysql> show tables;
-    +---------------+
-    | Tables_in_bet |
-    +---------------+
-    | bookmaker     |
-    | competition   |
-    | market        |
-    | odds          |
-    | outcome       |
-    +---------------+
-    5 rows in set (0,00 sec)
+            mysql> use bet
+            Database changed
+            mysql> show tables;
+            
+            +---------------+
+            | Tables_in_bet |
+            +---------------+
+            | bookmaker     |
+            | competition   |
+            | market        |
+            | odds          |
+            | outcome       |
+            +---------------+
+            5 rows in set (0,00 sec)
 
 необходимые таблицы перенесены.
 
