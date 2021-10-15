@@ -1,0 +1,117 @@
+---
+# Provision master server mysql
+- hosts: slavemysql01 # provision on server mysql
+  become: true
+  tasks:
+
+#  - name: upgrade all packages
+#    yum: 
+#      name: * 
+#      state: latest
+
+  - name: Update file hosts server
+    template:
+       src: templates/hosts-slave.j2
+       dest: /etc/hosts
+
+  - name: Install package epel-releas
+    yum:
+      name:
+        - epel-release
+      state: "latest"
+      update_cache: true
+
+  - name: Install package python2-PyMySQL
+    yum:
+      name:
+        - python2-PyMySQL
+      state: "latest"
+      update_cache: true
+
+
+  - name: Install repo Percona 5.7
+    yum:
+      name: https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+      state: present
+
+  - name: Install Server Percona 5.7
+    yum:
+      name: Percona-Server-server-57
+      state: present
+
+  - name: copy file 01-base.cnf in /etc/my.cnf.d/
+    copy:
+      src: files/slave/conf.d/01-base.cnf
+      dest: /etc/my.cnf.d/01-base.cnf
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: copy file 02-max-connections.cnf in /etc/my.cnf.d/
+    copy:
+      src: files/slave/conf.d/02-max-connections.cnf
+      dest: /etc/my.cnf.d/02-max-connections.cnf
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: copy file 03-performance.cnf in /etc/my.cnf.d/
+    copy:
+      src: files/slave/conf.d/03-performance.cnf
+      dest: /etc/my.cnf.d/03-performance.cnf
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: copy file 04-slow-query.cnf in /etc/my.cnf.d/
+    copy:
+      src: files/slave/conf.d/04-slow-query.cnf
+      dest: /etc/my.cnf.d/04-slow-query.cnf
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: copy file 05-binlog.cnf in /etc/my.cnf.d/
+    copy:
+      src: files/slave/conf.d/05-binlog.cnf
+      dest: /etc/my.cnf.d/05-binlog.cnf
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Start service mysql
+    service:
+      name: mysql
+      state: started
+      enabled: yes
+
+  - name: Read  root password
+    shell: "grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'"
+    register: root_password
+
+  - name: update expired root user password
+    command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ new_root_password }}';"
+    ignore_errors: yes
+
+  - name: create user root for host=127.0.0.1
+    command: mysql --user root --password={{ new_root_password }}  --execute="CREATE USER 'root'@'127.0.0.1' IDENTIFIED BY '{{ new_root_password }}';"
+    ignore_errors: yes
+
+#  - name: grant all privileges for root@127.0.0.1
+#    command: mysql --user root --password={{ new_root_password }} --execute="GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1';"
+#    ignore_errors: yes
+
+
+#  - name: Update MySQL root password
+#    mysql_user:
+#      name: root
+#      host: "{{ item }}"
+#      password: "{{ new_root_password }}"
+#      login_user: root
+#      login_password: "{{ new_root_password }}"
+#      check_implicit_admin: yes
+#    with_items:
+#         - "%"
+#         - "127.0.0.1"
+#         - "localhost"
+
