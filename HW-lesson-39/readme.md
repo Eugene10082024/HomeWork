@@ -167,17 +167,14 @@ Playbook выполняется с отдельной ВМ которую мож
     SOURCE /vagrant/Dumps/master.sql
     
 4.2. Выполнил команду (как в методичке)
+
     CHANGE MASTER TO MASTER_HOST = "192.168.11.250", MASTER_PORT = 3306, MASTER_USER = "repl", MASTER_PASSWORD = "Linux@2021", MASTER_AUTO_POSITION = 1;
 
 4.3. Выполняем команду.
     start slave
 
 4.4. Выполняем проверку - имеем ERROR    
-    mysql> show status slave \G;
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'slave' at line 1
-ERROR: 
-No query specified
-
+    
 mysql> show slave status \G;
 
                 *************************** 1. row ***************************
@@ -265,6 +262,7 @@ mysql> show slave status \G;
         
         CHANGE MASTER TO MASTER_HOST = "192.168.11.250", MASTER_PORT = 3306, MASTER_USER = "repl", MASTER_PASSWORD = "Linux@2021", MASTER_LOG_FILE = 'mysql-bin.000002', MASTER_LOG_POS = 120002;
 где:
+
 Значения MASTER_LOG_FILE и MASTER_LOG_POS бирем из п. 4.5
 
 4.7. Выполняем команду;
