@@ -367,50 +367,98 @@ mysql> show slave status \G;
 необходимые таблицы перенесены.
 
 #### 5. Проверка работы репликации
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-STOP SLAVE;
-DROP USER 'fetchers'@'localhost'show master status
-START SLAVE;
-
-
-
-
-        mysql> reset master; 
-        Query OK, 0 rows affected (0.20 sec) 
-        mysql> stop slave; 
-        Query OK, 0 rows affected (0.05 sec) 
-        mysql> reset slave; 
-        Query OK, 0 rows affected (0.42 sec) 
-set global gtid_purged=’7f8d9eb8-a7fe-11e2-84fd-0015177c251e:1-261′;
-
-UUID берем из поля - Master_UUID команды - SHOW SLAVE STATUS\G;
-
- CHANGE MASTER TO MASTER_HOST = "192.168.11.250", MASTER_PORT = 3306, MASTER_USER = "repl", MASTER_PASSWORD = "Linux@2021", MASTER_AUTO_POSITION = 1;
+ 5.1. На сервре mastermysql добавляем несколько записей в таблицу -  bookmaker
  
-START SLAVE; 
+    mysql> use bet;
+    Reading table information for completion of table and column names
+    You can turn off this feature to get a quicker startup with -A
 
-SHOW SLAVE STATUS\G;
+    Database changed
+    mysql>  INSERT INTO bookmaker (id,bookmaker_name) VALUES(1,'1xbet');
+    Query OK, 1 row affected (0,00 sec)
 
+mysql> SELECT * FROM bookmaker;
 
-https://www.abhinavbit.com/2019/05/gtid-replication-skip-transaction-using.html
+    +----+----------------+
+    | id | bookmaker_name |
+    +----+----------------+
+    |  1 | 1xbet          |
+    |  4 | betway         |
+    |  5 | bwin           |
+    |  6 | ladbrokes      |
+    |  3 | unibet         |
+    +----+----------------+
+    5 rows in set (0,00 sec)
+
+Добавлена запись с id=1 и bookmaker_name=1xbet
+
+5.2 Проверяем что изменилось на сервере slavemysql01
+
+    mysql> use bet;
+    Reading table information for completion of table and column names
+    You can turn off this feature to get a quicker startup with -A
+
+    Database changed
+    mysql> SELECT * FROM bookmaker; 
+    +----+----------------+
+    | id | bookmaker_name |
+    +----+----------------+
+    |  1 | 1xbet          |
+    |  4 | betway         |
+    |  5 | bwin           |
+    |  6 | ladbrokes      |
+    |  3 | unibet         |
+    +----+----------------+
+    5 rows in set (0,00 sec)
+
+Также появилась запись с id=1 и bookmaker_name=1xbet
+
+5.3. Добавим еще одну запись в таблицу bookmaker БД bet сервера mastermysql
+
+    INSERT INTO bookmaker (id,bookmaker_name) VALUES(7,'Linux2021');
+
+Имеем на сервере mastermysql:
+    mysql>     INSERT INTO bookmaker (id,bookmaker_name) VALUES(7,'Linux2021');
+    
+    Query OK, 1 row affected (0,00 sec)
+
+    mysql> SELECT * FROM bookmaker;
+    +----+----------------+
+    | id | bookmaker_name |
+    +----+----------------+
+    |  1 | 1xbet          |
+    |  4 | betway         |
+    |  5 | bwin           |
+    |  6 | ladbrokes      |
+    |  7 | Linux2021      |
+    |  3 | unibet         |
+    +----+----------------+
+    6 rows in set (0,00 sec)
+
+Смотрим на сервере slavemysql01
+
+    mysql> SELECT * FROM bookmaker;
+    +----+----------------+
+    | id | bookmaker_name |
+    +----+----------------+
+    |  1 | 1xbet          |
+    |  4 | betway         |
+    |  5 | bwin           |
+    |  6 | ladbrokes      |
+    |  7 | Linux2021      |
+    |  3 | unibet         |
+    +----+----------------+
+    6 rows in set (0,00 sec)
+
+Запись появилась на обоих серврерах.
+
+Репликация работает.
+
+5.4.Дополнительно смотрим соедержание файлmysql-bin.000003 на сервере slavemysql01
+
+    mysqlbinlog mysql-bin.000003
+
+На скрин-шоте выделены действия по добавлению записей вводимых на сервере mastermysql01.
 
 
 
