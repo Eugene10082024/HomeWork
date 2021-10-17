@@ -458,7 +458,7 @@ mysql> SELECT * FROM bookmaker;
 
 На скрин-шоте выделены действия по добавлению записей вводимых на сервере mastermysql01.
 
-
+![picture](pics/pic-01.png)
 
 
 
