@@ -31,26 +31,26 @@
 
 [16. HW-lesson-23  - Сбор и анализ логов](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-23)
 
-17. HW-lesson-25 - Резервное копирование
+17. HW-lesson-25 - Архитектура сетей   
 
-18. HW-lesson-26 - Архитектура сетей   
+18. HW-lesson-26 - DHCP, PXE
 
-19. HW-lesson-27 - DHCP, PXE
+19. HW-lesson-27 - Фильтрация трафика - firewalld, iptables
 
-20. HW-lesson-28 - Фильтрация трафика - firewalld, iptables
+20. HW-lessom-29 - Статическая и динамическая маршрутизация, OSPF
 
-21. HW-lessom-30 - Статическая и динамическая маршрутизация, OSPF
+21. HW-lesson-31 - Мосты, туннели и VPN
 
-22. HW-lesson-32 - Мосты, туннели и VPN
+22. HW-lesson-32 - DNS- настройка и обслуживание
 
-23. HW-lesson-33 - DNS- настройка и обслуживание
+23. HW-lesson-33      - Сетевые пакеты. VLAN'ы. LACP
 
-24. HW-lesson-34      - Сетевые пакеты. VLAN'ы. LACP
+[24. HW-lesson-34 - LDAP. Централизованная авторизация и аутентификация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-34)
 
-[25. HW-lesson-35 - LDAP. Централизованная авторизация и аутентификация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-35)
+[25. HW-lesson-39 - MySQL Backup + Репликация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-39)
 
-[26. HW-lesson-39 - MySQL Backup + Репликация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-39)
+[26. HW-lesson-40 - PostgreSQL](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-40)
 
-[27. HW-lesson-40 - PostgreSQL](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-40)
+27. HW-lesson-42 - Резервное копирование
 
 28. НW-lesson-43 - Динамический web
