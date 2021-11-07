@@ -199,64 +199,46 @@
     ETCD_HOST_IP=$(ip addr show $INT_NAME | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
 
     ETCD_NAME=$(hostname -s)
-
     
-Перед копированием скрипта создания etc.service необходимо внести изменения в следующие параметры скрипта:
-    --initial-cluster-token <имя кластера>  - в данной строке должен быть указано имя кластера которое было определено при инициализаии перовй ноды.
+Перед копированием скрипта создания etcd.service необходимо внести изменения в следующие параметры скрипта: initial-cluster-token и initial-cluster 
+   
+    --initial-cluster-token <имя кластера>  - в данной строке должен быть указано имя кластера которое было определено при инициализаии первого сервера.
     В примере используется имя кластера: cluster-etcd: --initial-cluster-token <cluster-etcd>
 
     --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380 \\
-
 Значение данного параметра можно взять скопировав значение переменной ETCD_INITIAL_CLUSTER полученной на шаге 3.2.1:
     --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380 \\
 
     или самостоятельно заполнить шаблон данного параметра.
+   
     --initial-cluster <node01-hostname>=http://<node01-IP>:2380,<node02-hostname>=http://<node02-IP>2380 
-
-
+ 
+Файл приведенный ниже размещен по адресу: [unit etcd.service для astra-patroni02 ](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/etcd02.service)
+  
 Копируем то что ниже и вcтавляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
 cat <<EOF | sudo tee /etc/systemd/system/etcd.service
-
 [Unit]
-
 Description=etcd service
-
 [Service]
-
 Type=notify
-
 User=etcd
-
 ExecStart=/usr/local/bin/etcd \\
-
 --name ${ETCD_NAME} \\
-
 --data-dir=/var/lib/etcd \\
-
 --enable-v2=true \\
-
 --listen-peer-urls http://0.0.0.0:2380 \\
-
 --listen-client-urls http://0.0.0.0:2379 \\
-
 --initial-advertise-peer-urls http://${ETCD_HOST_IP}:2380 \\
-
 --advertise-client-urls http://${ETCD_HOST_IP}:2379 \\
-
 --initial-cluster-token <cluster-etcd> \\
-
 --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380 \\
-
 --initial-cluster-state existing \
-
 [Install]
-
 WantedBy=multi-user.target
-
 EOF
 
-После выполнения команды можно проверить что получилось выполнив команду;
+После выполнения команды можно проверить что получилось выполнив команду:
     
     less /etc/systemd/system/etcd.service
 
@@ -264,36 +246,39 @@ EOF
 
     systemctl daemon-reload
     systemctl enable etcd
-
     systemctl start etcd
    
-##### 3.2.5. Проверка работы нод кластера. Команды данного пункта выполняем на первой ноде (astra-patroni01 - 192.168.122.103)
+##### 3.2.5. Проверка работы серверов кластера. Команды данного пункта выполняем на первой ноде (astra-patroni01 - 192.168.122.103)
 Проверка выполняется как в api версии 2, так и версии  3, 
 
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl member list
+   
+    Вывод команды должен быть примерно такой:
     232542f9074f4c33, started, astra-patroni02, http://192.168.122.104:2380, http://192.168.122.104:2379, false
     e8080638f53e747c, started, astra-patroni01, http://192.168.122.103:2380, http://192.168.122.103:2379, false
     
     root@astra-patroni01:/var/lib/etcd#  ETCDCTL_API=2 etcdctl member list
+    
+    Вывод команды должен быть примерно такой:
     232542f9074f4c33: name=astra-patroni02 peerURLs=http://192.168.122.104:2380 clientURLs=http://192.168.122.104:2379 isLeader=false
     e8080638f53e747c: name=astra-patroni01 peerURLs=http://192.168.122.103:2380 clientURLs=http://192.168.122.103:2379 isLeader=true
     
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl endpoint status --cluster -w table
+    
+    Вывод команды должен быть примерно такой:
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
     |          ENDPOINT           |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
     | http://192.168.122.104:2379 | 232542f9074f4c33 |   3.5.1 |   20 kB |     false |      false |         3 |          7 |                  7 |        |
     | http://192.168.122.103:2379 | e8080638f53e747c |   3.5.1 |   20 kB |      true |      false |         3 |          7 |                  7 |        |
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
-    root@astra-patroni01:/var/lib/etcd# 
+    
+Из вывода команд видно что второй сервер добавлен в кастер и первый сервер является лидером кластера.
 
-Из вывода команд видно что вторая нода добавлена в кастер и первая нода является лидером кластера.
+#### 3.3. Добавлнение третьего сервера astra-patroni03 - 192.168.122.105 в кластер etcd.
 
-
-#### 3.3. Добавлнение третий ноды (astra-patroni03 - 192.168.122.105) в кластер etcd.
-
-##### 3.3.1. Добавление третьей ноды (astra-patroni03 - 192.168.122.105) в кластер.
-Данная операция выполняется на первой ноде ((astra-patroni01 - 192.168.122.103).
+##### 3.3.1. Добавление третьего сервера astra-patroni03 - 192.168.122.105 в кластер.
+Данная операция выполняется на первом сервере astra-patroni01 - 192.168.122.103.
 
     etcdctl member add astra-patroni03 --peer-urls=http://192.168.122.105:2380
     
@@ -305,9 +290,9 @@ EOF
     ETCD_INITIAL_ADVERTISE_PEER_URLS="http://192.168.122.105:2380"
     ETCD_INITIAL_CLUSTER_STATE="existing"
 
-##### 3.3.2 Создание unit etcd.service на третьей ноде. Выполняется на третьей ноде (astra-patroni03 - 192.168.122.105)
+##### 3.3.2 Создание unit etcd.service на третьем сервере astra-patroni03 - 192.168.122.105.
 
-Для автоматического создания скрипта запуска etcd сервиса на ноде (astra-patroni03 - 192.168.122.105) созданим переменные.
+Для автоматического создания скрипта запуска etcd сервиса на сервере astra-patroni03 - 192.168.122.105 созданим переменные в терминале.
 
     INT_NAME="eth0"
 
@@ -315,88 +300,73 @@ EOF
 
     ETCD_NAME=$(hostname -s)
 
-    
-Перед копированием скрипта создания etc.service необходимо внести изменения в следующие параметры скрипта:
-    --initial-cluster-token <имя кластера>  - в данной строке должен быть указано имя кластера которое было определено при инициализаии перовй ноды.
+Перед копированием скрипта создания etcd.service необходимо внести изменения в следующие параметры скрипта: initial-cluster-token и initial-cluster 
+   
+    --initial-cluster-token <имя кластера>  - в данной строке должен быть указано имя кластера которое было определено при инициализаии первого сервера.
     В примере используется имя кластера: cluster-etcd: --initial-cluster-token <cluster-etcd>
-
-    --initial-cluster <строка>
-
+    --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380 \\
 Значение данного параметра можно взять скопировав значение переменной ETCD_INITIAL_CLUSTER полученной на шаге 3.3.1:
     --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380 \\
 
-или самостоятельно заполнить шаблон данного параметра.
-    --initial-cluster <node01-hostname>=http://<node01-IP>:2380,<node02-hostname>=http://<node02-IP>2380,<node03-hostname>=http://<node03-IP>2380 
-
-
+    или самостоятельно заполнить шаблон данного параметра.
+   
+    --initial-cluster <node01-hostname>=http://<node01-IP>:2380,<node02-hostname>=http://<node02-IP>2380,<node03-hostname>=http://<node03-IP>:2380 
+ 
+Файл приведенный ниже размещен по адресу: [unit etcd.service для astra-patroni02 ](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/etcd03.service)
+   
 Копируем подготовленный скрипт и вставляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
-
 cat <<EOF | sudo tee /etc/systemd/system/etcd.service
-
 [Unit]
-
 Description=etcd service
-
 [Service]
-
 Type=notify
-
 User=etcd
-
 ExecStart=/usr/local/bin/etcd \\
-
 --name ${ETCD_NAME} \\
-
 --data-dir=/var/lib/etcd \\
-
 --enable-v2=true \\
-
 --listen-peer-urls http://0.0.0.0:2380 \\
-
 --listen-client-urls http://0.0.0.0:2379 \\
-
 --initial-advertise-peer-urls http://${ETCD_HOST_IP}:2380 \\
-
 --advertise-client-urls http://${ETCD_HOST_IP}:2379 \\
-
 --initial-cluster-token <cluster-etcd> \\
-
 --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380 \\
-
 --initial-cluster-state existing \
-
 [Install]
-
 WantedBy=multi-user.target
-
 EOF
 
-После выполнения команды можно проверить что получилось выполнив команду;
-    
+После выполнения команды можно проверить что получилось выполнив команду:
+ 
     less /etc/systemd/system/etcd.service
 
-##### 3.3.3. Запуск etcd.service на второй ноде astra-patroni03 - 192.168.122.105.
+##### 3.3.3. Запуск etcd.service на третьем сервере astra-patroni03 - 192.168.122.105.
 
     systemctl daemon-reload
     systemctl enable etcd
-
     systemctl start etcd
    
-##### 3.2.5. Проверка работы нод кластера. Команды данного пункта выполняем на первой ноде (astra-patroni01 - 192.168.122.103)
+##### 3.2.5. Проверка работы нод кластера. Команды данного пункта выполняем на первом сервере astra-patroni01 - 192.168.122.103.
 Проверка выполняется как в api версии 2, так и версии  3, 
 
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl member list
+   
+    Вывод команды должен быть примерно такой:
     232542f9074f4c33, started, astra-patroni02, http://192.168.122.104:2380, http://192.168.122.104:2379, false
     6580a3065447af4e, started, astra-patroni03, http://192.168.122.105:2380, http://192.168.122.105:2379, false
     e8080638f53e747c, started, astra-patroni01, http://192.168.122.103:2380, http://192.168.122.103:2379, false
     
     root@astra-patroni01:/var/lib/etcd#  ETCDCTL_API=2 etcdctl member list
+    
+    Вывод команды должен быть примерно такой:
     232542f9074f4c33: name=astra-patroni02 peerURLs=http://192.168.122.104:2380 clientURLs=http://192.168.122.104:2379 isLeader=false
     6580a3065447af4e: name=astra-patroni03 peerURLs=http://192.168.122.105:2380 clientURLs=http://192.168.122.105:2379 isLeader=false
     e8080638f53e747c: name=astra-patroni01 peerURLs=http://192.168.122.103:2380 clientURLs=http://192.168.122.103:2379 isLeader=true
     
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl endpoint status --cluster -w table
+   
+    Вывод команды должен быть примерно такой:
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
     |          ENDPOINT           |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
@@ -406,13 +376,19 @@ EOF
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
 
 
-Кластер etcd из трех поднят.
+Кластер etcd поднят на трех серверах.
 
+#### 3.4. Доконфигурирование серверов кластера etcd.
+   
+   
 
-#### 3.4. Создание пользователя root в etcd и включение авторизации по пользователю.
+   
+   
+   
+#### 3.5. Создание пользователя root в etcd и включение авторизации по пользователю.
 Все действия выполняются на первой ноде кластера.
 
-#### 3.4.1. Создание пользователя root
+#### 3.5.1. Создание пользователя root
     root@astra-patroni01:/var/lib/etcd# etcdctl user add root
     Password of root: 
     Type password of root again for confirmation: 
@@ -421,12 +397,12 @@ EOF
     User: root
     Roles:
 
-#### 3.4.2. Включение авторизации по учетной записи    
+#### 3.5.2. Включение авторизации по учетной записи    
     root@astra-patroni01:/var/lib/etcd# etcdctl auth enable
     {"level":"warn","ts":"2021-10-24T10:48:19.666+0300","logger":"etcd-client","caller":"v3/retry_interceptor.go:62","msg":"retrying of unary invoker failed","target":"etcd-endpoints://0xc00031ca80/127.0.0.1:2379","attempt":0,"error":"rpc error: code = FailedPrecondition desc = etcdserver: root user does not have root role"}
     Authentication Enabled
 
-#### 3.4.3. Проверка работы включенной авторизации    
+#### 3.5.3. Проверка работы включенной авторизации    
 
 Без указания учетной записи - ошибка.
         root@astra-patroni01:/var/lib/etcd# etcdctl user get root
