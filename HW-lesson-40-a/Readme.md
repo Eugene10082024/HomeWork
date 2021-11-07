@@ -188,17 +188,18 @@
 #### 3.2. Добавлнение второго сервера в кластер etcd - astra-patroni02 - 192.168.122.104.
 
 ##### 3.2.1. Добавление второго сервера astra-patroni02 - 192.168.122.104 в список кластера.
+   
 Данная операция выполняется на первом сервере astra-patroni01 - 192.168.122.103.
 
-    etcdctl member add astra-patroni02 --peer-urls=http://192.168.122.104:2380
+       etcdctl member add astra-patroni02 --peer-urls=http://192.168.122.104:2380
    
 Вывод команды:
 
-Member 232542f9074f4c33 added to cluster ad3b449a63a41087
-ETCD_NAME="astra-patroni02"
-ETCD_INITIAL_CLUSTER="astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380"
-ETCD_INITIAL_ADVERTISE_PEER_URLS="http://192.168.122.104:2380"
-ETCD_INITIAL_CLUSTER_STATE="existing"
+      Member 232542f9074f4c33 added to cluster ad3b449a63a41087
+      ETCD_NAME="astra-patroni02"
+      ETCD_INITIAL_CLUSTER="astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380"
+      ETCD_INITIAL_ADVERTISE_PEER_URLS="http://192.168.122.104:2380"
+      ETCD_INITIAL_CLUSTER_STATE="existing"
 
     
 ##### 3.2.2 Создание unit etcd.service на второй ноде. Выполняется на второй ноде (astra-patroni02 - 192.168.122.104)
