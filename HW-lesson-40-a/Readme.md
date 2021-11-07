@@ -279,6 +279,7 @@
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl endpoint status --cluster -w table
     
 Вывод команды должен быть примерно такой:
+
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
     |          ENDPOINT           |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
@@ -414,7 +415,7 @@
 
 1. В значение параметра --initial-cluster включить все сервера кластера etcd:
 
-     --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380  
+      --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380  
 
  Файлы etcd.service для каждого сервера:
  
