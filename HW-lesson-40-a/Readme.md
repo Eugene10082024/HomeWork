@@ -101,7 +101,7 @@
 
 #### 3.1. Создаем лидера кластера etcd (в качестве примера берем - astra-patroni01 - 192.168.122.103). 
 
-Все действия выполняем под пользоватем root или с sudo
+Все действия выполняем под пользоватем root или из под sudo
 
 ##### 3.1.1. Создание переменных в терминале.
 
@@ -113,56 +113,34 @@
 
     ETCD_NAME=$(hostname -s)
     
-##### 3.1.2. Создание unit запуска etcd.service    
+##### 3.1.2. Создание unit запуска etcd.service на astra-patroni01 - 192.168.122.103 
 
 Копируем то что ниже и вктавляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
+Файл приведенный ниже размещен по адресу: [unit etcd.service для astra-patroni01 ](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/etcd01.service)
 
-ВНИМАНИЕ -  При первом запуске etcd.service будет создан кластер с именем cluster-etcd. Для создания кластера с другим именем необходимо его поменять в строке:
-
-             --initial-cluster-token <cluster-etcd> 
-
+ВНИМАНИЕ -  При первом запуске etcd.service будет создан кластер с именем cluster-etcd. Для создания кластера с другим именем необходимо его поменять в строке:     --initial-cluster-token <cluster-etcd> 
              
         cat <<EOF | sudo tee /etc/systemd/system/etcd.service
-
         [Unit]
-
         Description=etcd service
-
-        
         [Service]
-
         Type=notify
-
         User=etcd
-
         ExecStart=/usr/local/bin/etcd \\
-
         --name ${ETCD_NAME} \\
-
         --data-dir=/var/lib/etcd \\
-
         --enable-v2=true \\
-
         --initial-advertise-peer-urls http://${ETCD_HOST_IP}:2380 \\
-
         --listen-peer-urls http://${ETCD_HOST_IP}:2380 \\
-
         --listen-client-urls http://${ETCD_HOST_IP}:2379,http://127.0.0.1:2379 \\
-
         --advertise-client-urls http://${ETCD_HOST_IP}:2379 \\
-
         --initial-cluster-token <cluster-etcd> \\
-
         --initial-cluster ${ETCD_NAME}=http://${ETCD_HOST_IP}:2380 \\
-
         --initial-cluster-state new \
-
-        
+       
         [Install]
-
         WantedBy=multi-user.target
-
         EOF
 
 После выполнения команды можно проверить что получилось выполнив команду;
