@@ -1,0 +1,7 @@
+---
+
+# Playbook for deploy replication Postgres
+- import_playbook: deploy-server.yml
+- import_playbook: create-cluster.yml
+- import_playbook: custom-master.yml
+- import_playbook: custom-slave.yml

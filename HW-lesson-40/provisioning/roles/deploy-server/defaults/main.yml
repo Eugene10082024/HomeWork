@@ -1,0 +1,4 @@
+---
+
+#Каталог размещения cluster Postgres
+pgdata_cls: /mnt/pgs-cluster

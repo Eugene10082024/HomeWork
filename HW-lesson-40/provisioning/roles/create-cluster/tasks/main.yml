@@ -1,0 +1,79 @@
+---
+#копирование файла с репозиторием на сервер Postgres
+ - name: Copy repo postgers-13
+   copy:
+     src: files/CentOS-postgres-13.repo
+     dest: /etc/yum.repos.d/
+     owner: root
+     group: root
+     mode: '0644'
+     backup: yes
+
+#Установка необходимых пакетов для развертывания Postgresql
+ - name: Install a list of packages postgres cluster
+   yum:
+    name:
+      - postgresql13-server.x86_64
+      - postgresql13-contrib.x86_64
+      - repmgr13.x86_64
+    state: present
+
+#Остановка демона Postgresql 13
+# - name: Postgres stop
+#  service:
+#       name: postgresql-13
+#       state: stopped
+#       enabled: no
+
+#Удаление каталога размещения кластера Postgres
+# - name: delete directory Postgres cluster
+#  file:
+#     dest: "{{ pgdata_cls }}"
+#     state: absent
+
+#Создание каталога размещения кластера Postgres
+ - name: create directory Postgres cluster
+   file:
+     dest: "{{ pgdata_cls }}"
+     owner: postgres
+     group: postgres
+     state: directory
+     mode: 0755
+
+# Создание кластера Postgres
+ - name: Create cluster Postgres
+   command: "/usr/pgsql-13/bin/initdb -D {{ pgdata_cls }}"
+   become_user: postgres
+
+ - template:
+     src: postgresql-13.service.j2
+     dest: "/usr/lib/systemd/system/postgresql-13.service"
+     owner: root
+     group: root
+     mode: 0644
+
+ - template:
+     src: postgresql.conf.j2
+     dest: "{{ pgdata_cls }}/postgresql.conf"
+     owner: postgres
+     group: postgres
+     mode: 0600
+
+ - template:
+      src: pg_hba.conf.j2
+      dest: "{{ pgdata_cls }}/pg_hba.conf"
+      owner: postgres
+      group: postgres
+      mode: 0600
+
+
+#Перезборка systemctl
+ - name: Reload daemon definitions
+   command: "/usr/bin/systemctl daemon-reload"
+
+#Запуск демона Postgresql 13
+ - name: Start demon Postgres
+   service:
+     name: postgresql-13
+     state: started
+     enabled: yes

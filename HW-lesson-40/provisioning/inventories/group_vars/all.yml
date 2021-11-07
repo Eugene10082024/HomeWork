@@ -1,0 +1,5 @@
+---
+pgdata_cls: /mnt/pgs-cluster
+user_replication: replicator
+password_replicator: Qwerty@12
+

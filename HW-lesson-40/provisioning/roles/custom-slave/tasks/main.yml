@@ -1,0 +1,42 @@
+---
+#Stop service postgresql-13
+ - name: Stop demon Postgres
+   service:
+     name: postgresql-13
+     state: stopped
+     enabled: yes
+
+ - name: Recursively remove directory
+   ansible.builtin.file:
+     path: "{{ pgdata_cls }}"
+     state: absent
+
+#Create directory for Postgres slave
+ - name: create directory Postgres slave
+   file:
+     dest: "{{ pgdata_cls }}"
+     owner: postgres
+     group: postgres
+     state: directory
+     mode: 0700
+
+#Create slave cluster utility 
+ - name: Create slave cluster
+   shell: pg_basebackup -h 192.168.11.240 -D {{ pgdata_cls }} -U {{ user_replication }} -P -v  -R -X stream -C -S pgstaindby
+
+# Recursively change ownership of a directory postgres
+ - name: Recursively change ownership of a directory postgres
+   ansible.builtin.file:
+     path: "{{ pgdata_cls }}"
+     state: directory
+     recurse: yes
+     owner: postgres
+     group: postgres
+
+#Start service postgresql-13
+ - name: Start demon Postgres
+   service:
+     name: postgresql-13
+     state: started
+     enabled: yes
+

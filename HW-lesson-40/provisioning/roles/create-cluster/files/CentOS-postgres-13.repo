@@ -1,0 +1,8 @@
+[postgres]
+name=CentOS-$releasever - postgres-13
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os&infra=$infra
+#baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
+baseurl=http://download.postgresql.org/pub/repos/yum/13/redhat/rhel-7.9-x86_64/
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+

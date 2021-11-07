@@ -1,0 +1,29 @@
+---
+# Modify postgresql.conf
+ - template:
+     src: postgresql.conf.j2
+     dest: "{{ pgdata_cls }}/postgresql.conf"
+     owner: postgres
+     group: postgres
+     mode: 0600
+
+ - template:
+     src: pg_hba.conf.j2
+     dest: "{{ pgdata_cls }}/pg_hba.conf"
+     owner: postgres
+     group: postgres
+     mode: 0600
+
+# Create  user replicator 
+ - name: Create rails user, set MD5-hashed password, grant privs
+   postgresql_user:
+     name: "{{ user_replication }}"
+     password: "{{password_replicator }}"
+     role_attr_flags: REPLICATION
+
+#Restart service postgresql-13
+ - name: Start demon Postgres
+   service:
+     name: postgresql-13
+     state: restarted
+     enabled: yes

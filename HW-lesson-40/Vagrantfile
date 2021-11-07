@@ -2,13 +2,13 @@
 # vim: set ft=ruby :
 
 MACHINES = {
-  :mastermysql=> {
+  :masterpostgres=> {
         :box_name => "centos/7",
-        :ip_addr => '192.168.11.250',
+        :ip_addr => '192.168.11.240'
   },
-  :slavemysql01=> {
+  :slavepostgres=> {
         :box_name => "centos/7",
-        :ip_addr => '192.168.11.251',
+        :ip_addr => '192.168.11.241',
   }
  }
 
@@ -41,32 +41,19 @@ Vagrant.configure("2") do |config|
 
 #	config.vm.provision "ansible" do |ansible|
 #       ansible.verbose = "vvv"
-#		ansible.playbook = "provisioning/master-mysql.yml"
-#		ansible.playbook = "provisioning/slave-mysql.yml"
+#		ansible.playbook = "provisioning/playbook.yml"
 #		ansible.become = "true"
 #	end
 
 
-config.vm.define "mastermysql" do |mastermysql|
-		mastermysql.vm.provision "shell", inline: <<-SHELL
+config.vm.define "masterpostgres" do |masterpostgres|
+		masterpostgres.vm.provision "shell", inline: <<-SHELL
 
-	config.vm.provision "ansible" do |ansible|
-        ansible.playbook = "provisioning/master-mysql.yml"
-		ansible.become = "true"
-	end        
-        
-        
        SHELL
  end
 
- config.vm.define "slavemysql01" do |slavemysql01|
-		slavemysql01.vm.provision "shell", inline: <<-SHELL
-        
-        config.vm.provision "ansible" do |ansible|
-            ansible.playbook = "provisioning/slave-mysql.yml"
-            ansible.become = "true"
-        end        
-
+ config.vm.define "slavepostgres" do |slavepostgres|
+		slavepostgres.vm.provision "shell", inline: <<-SHELL
 
        SHELL
  end

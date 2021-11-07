@@ -1,0 +1,11 @@
+[master]
+masterpostgres	ansible_host=192.168.11.240
+
+[slave]
+slavepostgres	ansible_host=192.168.11.241
+
+[all:vars]
+ansible_user=ansible
+ansible_password=ansible
+ansible_become=yes
+ansible_become_password=ansible

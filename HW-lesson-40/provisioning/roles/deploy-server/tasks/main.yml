@@ -1,0 +1,54 @@
+ - name: Update file resolv.conf
+   template:
+     src: "templates/resolv.conf.j2"
+     dest: "/etc/resolv.conf"
+
+ - name: Update file hosts
+   template:
+     src: "templates/hosts.j2"
+     dest: "/etc/hosts"
+
+ - name: install packages
+   yum:
+     name: "{{ packages }}"
+     state: present
+   vars:
+     packages:
+       - epel-release
+       - net-tools
+       - wget
+       - chrony
+       - tzdata
+       - python-psycopg2
+
+ - name: Set timezone to Europe/Moscow
+   timezone:
+     name: Europe/Moscow
+
+ - name: restarted service chronyd
+   service:
+     name: chronyd
+     state: restarted
+     enabled: yes
+
+ - name: SELINUX in state permissive
+   selinux:
+     policy: targeted
+     state: permissive
+
+ - name: start service firewalld
+   service:
+     name: firewalld
+     state: started
+     enabled: yes
+
+ - name: Open ports for service postgres in firewalld
+   firewalld:
+     service: postgresql
+     permanent: true
+     state: enabled
+
+ - name: reload service firewalld
+   systemd:
+     name: firewalld
+     state: reloaded

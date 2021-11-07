@@ -20,14 +20,15 @@ MySQL: Backup + Репликация
 
         vagrant up
         
-Для подготовке к работе репликации на обеих ВМ   необходимо выполнить соответствующие playbook.
+Для подготовки к работе репликации на обеих ВМ   необходимо выполнить соответствующие playbook.
+
+Способ 1.
 
 Playbook выполняется с отдельной ВМ которую можно развернуть из файла vagrant_ansible.
 
-После развертывания ВМ необходимо дополнительно выполнить: сооздаnm ssh ключ для пользователя ansible, скопировать ключ  на mastermysql и slavesqlmy01.
+После развертывания ВМ необходимо дополнительно выполнить: создание ssh ключ для пользователя ansible, скопировать ключ  на mastermysql и slavesqlmy01.
 
 Команды для создания и копирования ключа приведены ниже.
-
 
         ssh-keygen
         
@@ -35,19 +36,33 @@ Playbook выполняется с отдельной ВМ которую мож
 
         ssh-copy-id -i ~/.ssh/id_rsa.pub ansible@192.168.11.251
 
-также под пользователем fnsible выполнить команду:
+также под пользователем ansible выполнить команду:
 
         ansible-galaxy collection install community.mysql
 
-После настройки ВМ ansible запускать playbook для подготовки mastermysql и slavesqlmy01 по настройке репликации.
+После настройки управляющей ВМ  запускать playbook для подготовки mastermysql и slavesqlmy01 по настройке репликации.
 
     ansible-playbook master-mysql.yml
 
     ansible-playbook slave-mysql.yml
 
+Способ 2.
+
+Расскомментировать следующие строки в файле vagrantfile:
+	
+	config.vm.provision "ansible" do |ansible|
+        ansible.verbose = "vvv"
+        ansible.playbook = "provisioning/playbook.yml"
+        ansible.become = "true"
+	end
+
+Выполнить команду:
+
+    vagrant provision
+    
 Для правильной работы playbook в каталоге где размещен vagrant файл создания mastermysql и slavesqlmy01 необходимо создать каталог Dumps в который поместить файл bet.dmp. 
 
-также в этом каталоге будет создан файл master.sql
+Также в этом каталоге будет создан файл master.sql
 
 После выполнения playbook  подключаемся к каждой ВМ и выполняем проверки согласно методички.
 
