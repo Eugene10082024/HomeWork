@@ -48,17 +48,9 @@
 24. HW-lesson-34      - Сетевые пакеты. VLAN'ы. LACP
 
 [25. HW-lesson-35 - LDAP. Централизованная авторизация и аутентификация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-35)
-     
-### 25. HW-lesson-35      - LDAP. Централизованная авторизация и аутентификация
 
-#### 17. HW-lesson-25      - Резервное копирование                          - в работе
-#### 18. HW-lesson-26      - Архитектура сетей                              - В работе 
-#### 19. HW-lesson-27      - DHCP, PXE                                      - В работе
-#### 20. HW-lesson-28      - Фильтрация трафика - firewalld, iptables       - В работе
-#### 21. HW-lessom-30      - Статическая и динамическая маршрутизация, OSPF - В работе
-#### 22. HW-lesson-32      - Мосты, туннели и VPN                           - В работе
-#### 23. HW-lesson-33      - DNS- настройка и обслуживание                  - В работе
-#### 24. HW-lesson-34      - Сетевые пакеты. VLAN'ы. LACP                   - в работе
-#### 26. HW-lesson-39      - MySQL Backup + Репликация                      - в работе
-#### 27. HW-lesson-42      - PostgreSQL                                     - в работе
-28. НW-lesson-43      - Динамический web                               - 19 октября
+[26. HW-lesson-39 - MySQL Backup + Репликация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-39)
+
+[27. HW-lesson-40 - PostgreSQL](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-40)
+
+28. НW-lesson-43 - Динамический web
