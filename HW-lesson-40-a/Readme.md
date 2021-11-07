@@ -214,17 +214,25 @@
     
 Перед копированием скрипта создания etcd.service необходимо внести изменения в следующие параметры скрипта: initial-cluster-token и initial-cluster 
    
-    --initial-cluster-token <имя кластера>  - в данной строке должен быть указано имя кластера которое было определено при инициализаии первого сервера.
-    В примере используется имя кластера: cluster-etcd: --initial-cluster-token <cluster-etcd>
-
-    --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380 \\
-Значение данного параметра можно взять скопировав значение переменной ETCD_INITIAL_CLUSTER полученной на шаге 3.2.1:
-    --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380 \\
-
-    или самостоятельно заполнить шаблон данного параметра.
+Параметр initial-cluster-token:   
    
-    --initial-cluster <node01-hostname>=http://<node01-IP>:2380,<node02-hostname>=http://<node02-IP>2380 
+--initial-cluster-token <имя кластера>  - в данной строке должен быть указано имя кластера которое было определено при инициализаии первого сервера.
+   
+ В примере используется имя кластера: cluster-etcd: --initial-cluster-token <cluster-etcd>
+
+Параметр initial-cluster:
+   
+--initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380 \\
+   
+Значение данного параметра можно взять скопировав значение переменной ETCD_INITIAL_CLUSTER полученной на шаге 3.2.1:
+   
+--initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380 \\
+
+или самостоятельно заполнить шаблон данного параметра.
+   
+--initial-cluster <node01-hostname>=http://<node01-IP>:2380,<node02-hostname>=http://<node02-IP>2380 
   
+
 Копируем то что ниже и вcтавляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
       cat <<EOF | sudo tee /etc/systemd/system/etcd.service
@@ -311,16 +319,24 @@
     ETCD_NAME=$(hostname -s)
 
 Перед копированием скрипта создания etcd.service необходимо внести изменения в следующие параметры скрипта: initial-cluster-token и initial-cluster 
-   
-    --initial-cluster-token <имя кластера>  - в данной строке должен быть указано имя кластера которое было определено при инициализаии первого сервера.
-    В примере используется имя кластера: cluster-etcd: --initial-cluster-token <cluster-etcd>
-    --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380 \\
-Значение данного параметра можно взять скопировав значение переменной ETCD_INITIAL_CLUSTER полученной на шаге 3.3.1:
-    --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380 \\
 
-    или самостоятельно заполнить шаблон данного параметра.
+Параметр initial-cluster-token:
    
-    --initial-cluster <node01-hostname>=http://<node01-IP>:2380,<node02-hostname>=http://<node02-IP>2380,<node03-hostname>=http://<node03-IP>:2380 
+--initial-cluster-token <имя кластера>  - в данной строке должен быть указано имя кластера которое было определено при инициализаии первого сервера.
+   
+В примере используется имя кластера: cluster-etcd: --initial-cluster-token <cluster-etcd>
+ 
+Параметр initial-cluster:
+   
+--initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380 \\
+
+Значение данного параметра можно взять скопировав значение переменной ETCD_INITIAL_CLUSTER полученной на шаге 3.3.1:
+
+--initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380 \\
+
+или самостоятельно заполнить шаблон данного параметра.
+   
+--initial-cluster <node01-hostname>=http://<node01-IP>:2380,<node02-hostname>=http://<node02-IP>2380,<node03-hostname>=http://<node03-IP>:2380 
    
 Копируем подготовленный скрипт и вставляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
