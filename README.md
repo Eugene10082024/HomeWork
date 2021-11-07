@@ -31,6 +31,7 @@
 
 [16. HW-lesson-23  - Сбор и анализ логов](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-23)
 
+[17.  HW-lesson-25 - Резервное копирование]
 
 
 
@@ -39,10 +40,7 @@
 
 
 
-
-### 14. HW-lesson-18  - Docker 
-### 15. HW-lesson-20  - Prometheus, Zabbix
-### 16. HW-lesson-23  - Сбор и анализ логов      
+      
 ### 25. HW-lesson-35      - LDAP. Централизованная авторизация и аутентификация
 
 #### 17. HW-lesson-25      - Резервное копирование                          - в работе
