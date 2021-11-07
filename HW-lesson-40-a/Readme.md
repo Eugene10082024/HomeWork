@@ -119,7 +119,6 @@
 Копируем то что ниже и вктавляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
 ВНИМАНИЕ -  При первом запуске etcd.service будет создан кластер с именем cluster-etcd. Для создания кластера с другим именем необходимо его поменять в строке:
-
 --initial-cluster-token <cluster-etcd> 
              
         cat <<EOF | sudo tee /etc/systemd/system/etcd.service
