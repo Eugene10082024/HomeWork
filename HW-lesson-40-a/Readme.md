@@ -163,6 +163,7 @@
    
       e8080638f53e747c, started, astra-patroni01, http://192.168.122.103:2380, http://192.168.122.103:2379, false
    
+   
       ETCDCTL_API=2 etcdctl member list
 
 Вывод команды примерно такой:
