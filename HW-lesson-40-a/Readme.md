@@ -118,7 +118,9 @@
 
 Копируем то что ниже и вктавляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
-ВНИМАНИЕ -  При первом запуске etcd.service будет создан кластер с именем cluster-etcd. Для создания кластера с другим именем необходимо его поменять в строке:     --initial-cluster-token <cluster-etcd> 
+ВНИМАНИЕ -  При первом запуске etcd.service будет создан кластер с именем cluster-etcd. Для создания кластера с другим именем необходимо его поменять в строке:
+
+--initial-cluster-token <cluster-etcd> 
              
         cat <<EOF | sudo tee /etc/systemd/system/etcd.service
         [Unit]
@@ -157,22 +159,22 @@
 
     ETCDCTL_API=3 etcdctl member list
 
-    Вывод команды примерно такой:
-    e8080638f53e747c, started, astra-patroni01, http://192.168.122.103:2380, http://192.168.122.103:2379, false
+Вывод команды примерно такой:
+e8080638f53e747c, started, astra-patroni01, http://192.168.122.103:2380, http://192.168.122.103:2379, false
     
     ETCDCTL_API=2 etcdctl member list
 
-    Вывод команды примерно такой:
-    e8080638f53e747c: name=astra-patroni01 peerURLs=http://192.168.122.103:2380 clientURLs=http://192.168.122.103:2379 isLeader=true
+Вывод команды примерно такой:
+e8080638f53e747c: name=astra-patroni01 peerURLs=http://192.168.122.103:2380 clientURLs=http://192.168.122.103:2379 isLeader=true
     
     ETCDCTL_API=3 etcdctl endpoint status --cluster -w table
-    Вывод команды примерно такой:
-    +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
-    |          ENDPOINT           |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
-    +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
-    | http://192.168.122.103:2379 | e8080638f53e747c |   3.5.1 |   20 kB |      true |      false |         2 |          4 |                  4 |        |
-    +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
-
+    
+Вывод команды примерно такой:
++-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+|          ENDPOINT           |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
++-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+| http://192.168.122.103:2379 | e8080638f53e747c |   3.5.1 |   20 kB |      true |      false |         2 |          4 |                  4 |        |
++-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
 
 #### 3.2. Добавлнение второго сервера в кластер etcd - astra-patroni02 - 192.168.122.104.
 
@@ -181,12 +183,13 @@
 
     etcdctl member add astra-patroni02 --peer-urls=http://192.168.122.104:2380
    
-    Вывод команды:
-    Member 232542f9074f4c33 added to cluster ad3b449a63a41087
-    ETCD_NAME="astra-patroni02"
-    ETCD_INITIAL_CLUSTER="astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380"
-    ETCD_INITIAL_ADVERTISE_PEER_URLS="http://192.168.122.104:2380"
-    ETCD_INITIAL_CLUSTER_STATE="existing"
+Вывод команды:
+
+Member 232542f9074f4c33 added to cluster ad3b449a63a41087
+ETCD_NAME="astra-patroni02"
+ETCD_INITIAL_CLUSTER="astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380"
+ETCD_INITIAL_ADVERTISE_PEER_URLS="http://192.168.122.104:2380"
+ETCD_INITIAL_CLUSTER_STATE="existing"
 
     
 ##### 3.2.2 Создание unit etcd.service на второй ноде. Выполняется на второй ноде (astra-patroni02 - 192.168.122.104)
