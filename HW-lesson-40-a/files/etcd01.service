@@ -1,22 +1,18 @@
-cat <<EOF | sudo tee /etc/systemd/system/etcd.service
 [Unit]
 Description=etcd service
-
 [Service]
 Type=notify
 User=etcd
-ExecStart=/usr/local/bin/etcd \\
---name ${ETCD_NAME} \\
---data-dir=/var/lib/etcd \\
---enable-v2=true \\
---initial-advertise-peer-urls http://${ETCD_HOST_IP}:2380 \\
---listen-peer-urls http://${ETCD_HOST_IP}:2380 \\
---listen-client-urls http://${ETCD_HOST_IP}:2379,http://127.0.0.1:2379 \\
---advertise-client-urls http://${ETCD_HOST_IP}:2379 \\
---initial-cluster-token <cluster-etcd> \\
---initial-cluster ${ETCD_NAME}=http://${ETCD_HOST_IP}:2380 \\
---initial-cluster-state new \
-
+ExecStart=/usr/local/bin/etcd \
+--name astra-patroni01 \
+--data-dir=/var/lib/etcd \
+--enable-v2=true \
+--initial-advertise-peer-urls http://192.168.122.103:2380 \
+--listen-peer-urls http://192.168.122.103:2380 \
+--listen-client-urls http://192.168.122.103:2379,http://127.0.0.1:2379 \
+--advertise-client-urls http://192.168.122.103:2379 \
+--initial-cluster-token <cluster-etcd> \
+--initial-cluster astra-patroni01=http://192.168.122.103:2380,astra-patroni02=http://192.168.122.104,astra-patroni03=http://192.168.122.105 \
+--initial-cluster-state existing 
 [Install]
 WantedBy=multi-user.target
-EOF
