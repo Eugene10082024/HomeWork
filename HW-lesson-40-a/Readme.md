@@ -435,7 +435,7 @@
       
    
 #### 3.5. Создание пользователя root в etcd и включение авторизации по пользователю.
-Все действия выполняются на первой ноде кластера.
+Все действия выполняются на любом из серверов кластера etcd.
 
 #### 3.5.1. Создание пользователя root
     root@astra-patroni01:/var/lib/etcd# etcdctl user add root
@@ -455,11 +455,14 @@
 
 Без указания учетной записи - ошибка.
         root@astra-patroni01:/var/lib/etcd# etcdctl user get root
+        
         {"level":"warn","ts":"2021-10-24T10:49:07.783+0300","logger":"etcd-client","caller":"v3/retry_interceptor.go:62","msg":"retrying of unary invoker failed","target":"etcd-endpoints://0xc000432380/127.0.0.1:2379","attempt":0,"error":"rpc error: code = InvalidArgument desc = etcdserver: user name is empty"}
         Error: etcdserver: user name is empty
         
 С указанием учетной записи - все норм.        
+    
     root@astra-patroni01:/var/lib/etcd# etcdctl --user root user get root
+    
     Password: 
     User: root
     Roles: root
@@ -470,7 +473,7 @@
 
 ### 4. Установка Pаtroni.
 
-#### 4.1. Установка дополнительных пакетов (выполняем на всех нодах кластера).
+#### 4.1. Установка дополнительных пакетов (выполняем на всех серверах кластера patroni).
 ##### 4.1.1. Установка python3.5.
 
             apt -y install python3.5
@@ -485,20 +488,24 @@
             apt -y install python3-psycopg2
             apt -y install python3-pip
             
-Если вдруг будет не стыковка с версиями пакетами можно попробовать -   aptitude install           
+ВНИМАНИЕ - Если вдруг будет не стыковка с версиями пакетами можно попробовать -   aptitude install           
  
 
 #### 4.2. Загрузка доп пакетов patroni c хоста имеющего доступ в Интернет.
+
 Перед тем как скачать необходимые пакеты необходимо на данный хост установить пакеты п. 4.1.1 - 4.1.2
 
 Выполняем следующие команды 
+
     root@astra-control: mkdir install-patroni[etcd]
     root@astra-control:cd /home/asarafanov/install-patroni[etcd]
     root@astra-control:/home/asarafanov/install# python3 -m pip download patroni[etcd]
     root@astra-control:/home/asarafanov/install-psycopg2-binary# python3 -m pip download psycopg2-binary
 
 Имеем:     
+
     root@astra-control:/home/asarafanov/install-patroni[etcd]# ls -al
+    
     итого 2516
     drwxr-xr-x  2 root       root         4096 окт 24 12:46 .
     drwxr-x--- 20 asarafanov asarafanov   4096 окт 24 13:21 ..
@@ -517,10 +524,7 @@
     -rw-r--r--  1 root       root        30763 окт 24 12:46 wcwidth-0.2.5-py2.py3-none-any.whl
     -rw-r--r--  1 root       root        42808 окт 24 12:46 ydiff-1.2.tar.gz
 
-После чего переносим скачинные файлы на ноды кластера patroni.
-    /home/asarafanov/install-patroni[etcd]# scp * asarafanov@192.168.122.105:/home/asarafanov/install/python-patroni
-    /home/asarafanov/install-patroni[etcd]# scp * asarafanov@192.168.122.105:/home/asarafanov/install/python-patroni
-    /home/asarafanov/install-patroni[etcd]# scp * asarafanov@192.168.122.105:/home/asarafanov/install/python-patroni
+После чего переносим скачинные файлы на ноды кластера patroni с помощью утилиты scp.
 
 #### 4.3. Установка пакетов Patroni (на все ноды кластера).
 
