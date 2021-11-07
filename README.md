@@ -3,6 +3,10 @@
 
 [2. HW-lesson-02 - Дисковая подсистема](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-02)
 
+[3.  HW-lesson-03  - Файловые системы и LVM](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-03)
+
+[4.  HW-lesson-04  - ZFS](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-04)
+
 ### 2.  HW-lesson-02 - Дисковая подсистема
 ### 3.  HW-lesson-03  - Файловые системы и LVM
 ### 4.  HW-lesson-04  - ZFS
