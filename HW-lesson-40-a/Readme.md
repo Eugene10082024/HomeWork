@@ -157,19 +157,23 @@
 ##### 3.1.4. Проверка работы созданого кластера etcd.
 Проверка выполняется как в api версии 2, так и версии  3, 
 
+Команда 1:
+   
     ETCDCTL_API=3 etcdctl member list
 
 Вывод команды примерно такой:
    
       e8080638f53e747c, started, astra-patroni01, http://192.168.122.103:2380, http://192.168.122.103:2379, false
    
-   
+Команда 2:
+
       ETCDCTL_API=2 etcdctl member list
 
 Вывод команды примерно такой:
    
       e8080638f53e747c: name=astra-patroni01 peerURLs=http://192.168.122.103:2380 clientURLs=http://192.168.122.103:2379 isLeader=true
    
+Команда 3:
    
       ETCDCTL_API=3 etcdctl endpoint status --cluster -w table
     
