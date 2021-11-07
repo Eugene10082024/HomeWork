@@ -396,9 +396,27 @@
 Кластер etcd поднят на трех серверах.
 
 #### 3.4. Доконфигурирование серверов кластера etcd.
-   
-   
+Для того чтобы кластер работал в нормальном режиме необходимо внести некоторые измения в файлы unit (/etc/systemd/system/etcd.service) серверов astra-patroni01 (192.168.122.103) и astra-patroni02 (192.168.122.104).
 
+В файле /etc/systemd/system/etcd.service сервера astra-patroni01 (192.168.122.103):
+
+1. Значение параметра  --initial-cluster-state new  заменить на existing
+
+2. В значение параметра --initial-cluster включить все сервера кластера etcd:
+   --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380  
+  
+В В файле /etc/systemd/system/etcd.service сервера astra-patroni02 (192.168.122.104):
+
+1. В значение параметра --initial-cluster включить все сервера кластера etcd:
+     --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380  
+
+ Файлы etcd.service для каждого сервера:
+ 
+ [файл etcd.service сервера astra-patroni01](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/etcd01.service)
+ 
+ [файл etcd.service сервера astra-patroni02](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/etcd02.service)
+ 
+ [файл etcd.service сервера astra-patroni01](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/etcd03.service)
    
    
    
