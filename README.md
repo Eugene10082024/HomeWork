@@ -1,6 +1,8 @@
 # Выполненые ДЗ по лекциям в OTUS
 [1. HW-lesson-01 - С чего начинается Linux](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-01)
-[2. HW-lesson-02 - - Дисковая подсистема](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-02)
+
+[2. HW-lesson-02 - Дисковая подсистема](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-02)
+
 ### 2.  HW-lesson-02 - Дисковая подсистема
 ### 3.  HW-lesson-03  - Файловые системы и LVM
 ### 4.  HW-lesson-04  - ZFS
