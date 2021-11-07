@@ -138,7 +138,6 @@
         --initial-cluster-token cluster-etcd \\
         --initial-cluster ${ETCD_NAME}=http://${ETCD_HOST_IP}:2380 \\
         --initial-cluster-state new \
-       
         [Install]
         WantedBy=multi-user.target
         EOF
@@ -265,19 +264,21 @@
 
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl member list
    
-    Вывод команды должен быть примерно такой:
+Вывод команды должен быть примерно такой:
+
     232542f9074f4c33, started, astra-patroni02, http://192.168.122.104:2380, http://192.168.122.104:2379, false
     e8080638f53e747c, started, astra-patroni01, http://192.168.122.103:2380, http://192.168.122.103:2379, false
     
     root@astra-patroni01:/var/lib/etcd#  ETCDCTL_API=2 etcdctl member list
     
-    Вывод команды должен быть примерно такой:
+Вывод команды должен быть примерно такой:
+
     232542f9074f4c33: name=astra-patroni02 peerURLs=http://192.168.122.104:2380 clientURLs=http://192.168.122.104:2379 isLeader=false
     e8080638f53e747c: name=astra-patroni01 peerURLs=http://192.168.122.103:2380 clientURLs=http://192.168.122.103:2379 isLeader=true
     
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl endpoint status --cluster -w table
     
-    Вывод команды должен быть примерно такой:
+Вывод команды должен быть примерно такой:
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
     |          ENDPOINT           |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
@@ -369,21 +370,24 @@
 
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl member list
    
-    Вывод команды должен быть примерно такой:
+Вывод команды должен быть примерно такой:
+
     232542f9074f4c33, started, astra-patroni02, http://192.168.122.104:2380, http://192.168.122.104:2379, false
     6580a3065447af4e, started, astra-patroni03, http://192.168.122.105:2380, http://192.168.122.105:2379, false
     e8080638f53e747c, started, astra-patroni01, http://192.168.122.103:2380, http://192.168.122.103:2379, false
     
     root@astra-patroni01:/var/lib/etcd#  ETCDCTL_API=2 etcdctl member list
     
-    Вывод команды должен быть примерно такой:
+Вывод команды должен быть примерно такой:
+
     232542f9074f4c33: name=astra-patroni02 peerURLs=http://192.168.122.104:2380 clientURLs=http://192.168.122.104:2379 isLeader=false
     6580a3065447af4e: name=astra-patroni03 peerURLs=http://192.168.122.105:2380 clientURLs=http://192.168.122.105:2379 isLeader=false
     e8080638f53e747c: name=astra-patroni01 peerURLs=http://192.168.122.103:2380 clientURLs=http://192.168.122.103:2379 isLeader=true
     
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl endpoint status --cluster -w table
    
-    Вывод команды должен быть примерно такой:
+Вывод команды должен быть примерно такой:
+
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
     |          ENDPOINT           |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
@@ -403,11 +407,13 @@
 1. Значение параметра  --initial-cluster-state new  заменить на existing
 
 2. В значение параметра --initial-cluster включить все сервера кластера etcd:
-   --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380  
+
+      --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380  
   
 В В файле /etc/systemd/system/etcd.service сервера astra-patroni02 (192.168.122.104):
 
 1. В значение параметра --initial-cluster включить все сервера кластера etcd:
+
      --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380  
 
  Файлы etcd.service для каждого сервера:
