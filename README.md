@@ -7,26 +7,30 @@
 
 [4.  HW-lesson-04  - ZFS](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-04)
 
-[5.  HW-lesson-05  - NFS,FUSE](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-04)
+[5.  HW-lesson-05  - NFS,FUSE](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-05)
 
-[6.  HW-lesson-06  - Управление пакетами. Дистрибьюция софта.](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-04)
+[6.  HW-lesson-06  - Управление пакетами. Дистрибьюция софта.](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-06)
 
-[7.  HW-lesson-07  - Загрузка системы](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-04)
+[7.  HW-lesson-07  - Загрузка системы](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-07)
 
-[8.  HW-lesson-08  - Инициализация системы. Systemd](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-04)
+[8.  HW-lesson-08  - Инициализация системы. Systemd](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-08)
+
+[9.  HW-lesson-09  - Bash](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-09)
+
+[10. HW-lesson-11  - Управление процессами](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-11)
+
+[11. HW-lesson-14  - Автоматизация администрирования. Ansible-1](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-14)
+
+[12. HW-lesson-15  - Пользователи и группы. Авторизация и аутентификация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-15)
+
+[13. HW-lesson-17  - SELinux - когда все запрещено](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-17)
 
 
 
 
-ewalld, iptables - В работе
-21. HW-lessom-30 - Статическая и динамическая маршрутизация, OSPF - В работе
-22. HW-lesson-32 - Мосты, туннели и VPN - В работе
-23. HW-lesson-33 - DNS- настройка и обслуживание - В работе
-24. HW-lesson-34 - Сетевые пакеты. VLAN'ы. LACP - в работе
-### 9.  HW-lesson-09  - Bash 
-### 10. HW-lesson-11  - Управление процессами 
-### 11. HW-lesson-14  - Автоматизация администрирования. Ansible-1 
-### 12. HW-lesson-15  - Пользователи и группы. Авторизация и аутентификация
+
+
+
 ### 13. HW-lesson-17  - SELinux - когда все запрещено 
 ### 14. HW-lesson-18  - Docker 
 ### 15. HW-lesson-20  - Prometheus, Zabbix
