@@ -43,14 +43,14 @@
 
 В данном примере кластер etcd будет развернут на astra-patroni01, astra-patroni02, astra-patroni03
 
-#### 2.1. Для начала скачаем bin архив etcd на каждый сервер кластера etcd.  
-Версия etcd 3.5.1 находится по адресу: https://github.com/etcd-io/etcd/releases/
-
+#### 2.1. Скачаем bin архив etcd на каждый сервер кластера etcd.  
+Различные версии etcd находится по адресу: https://github.com/etcd-io/etcd/releases/
 Для установки и настройки используем - etcd-v3.5.1-linux-amd64
-Для развертывания создал папку: sudo mkdir /home/asarafanov/install 
    
 #### 2.2. Разваричиваем разварачиваем скаченный архив:
-     
+Для развертывания создаем папку и разархивируем скопированный архив.
+
+     mkdir /home/asarafanov/install 
      cd /home/asarafanov/install 
      tar xzvf etcd-v3.5.1-linux-amd64
      rm etcd-v3.5.1-linux-amd64
@@ -65,34 +65,31 @@
 
      etcd --version
     
-#### 2.5.Создание пользователя под которым будет работать etcd и необходимые каталоги.
+#### 2.5.Создаем пользователя под которым будет работать etcd и необходимые каталоги с соответсвующим владельцем и правами.
 
      groupadd --system etcd
      useradd -s /sbin/nologin --system -g etcd etcd
      mkdir -p /var/lib/etcd/
      chown -R etcd:etcd /var/lib/etcd/
      
-#### 2.6 Настройка фаервола.(Если он включен): - НЕ НАДО ДЕЛАТЬ. FIREWALL НЕ ВКЛЮЧЕН
+#### 2.6 Настраиваем фаервол.(Если он включен): 
     
     ufw allow proto tcp from any to any port 2379,2380
 
     
-#### 2.7. Настройка логов. - ВЫПОЛНЕНО
+#### 2.7. Настраиваем логирование. 
 
-
-        mcedit /etc/rsyslog.d/etcd.conf
+Открываем файл для редактирования mcedit /etc/rsyslog.d/etcd.conf и добавляем строки:
 
         if $programname == 'etcd' then /var/log/etcd/etcd.log
 
         & stop
 
     
-#### 2.8. Настройка rsyslog для ротации. - ВЫПОЛНЕНО  
+#### 2.8. Настройваем ротацию в rsyslog и рестартуем сервис rsyslog.
 
         mcedit /etc/rsyslog.conf
-
-        $FileCreateMode 0644 
-
+        $FileCreateMode 0644
         
         systemctl restart rsyslog     
      
