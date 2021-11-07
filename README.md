@@ -31,16 +31,24 @@
 
 [16. HW-lesson-23  - Сбор и анализ логов](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-23)
 
-[17.  HW-lesson-25 - Резервное копирование]
+17. HW-lesson-25 - Резервное копирование
 
+18. HW-lesson-26 - Архитектура сетей   
 
+19. HW-lesson-27 - DHCP, PXE
 
+20. HW-lesson-28 - Фильтрация трафика - firewalld, iptables
 
+21. HW-lessom-30 - Статическая и динамическая маршрутизация, OSPF
 
+22. HW-lesson-32 - Мосты, туннели и VPN
 
+23. HW-lesson-33 - DNS- настройка и обслуживание
 
+24. HW-lesson-34      - Сетевые пакеты. VLAN'ы. LACP
 
-      
+[25. HW-lesson-35 - LDAP. Централизованная авторизация и аутентификация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-35)
+     
 ### 25. HW-lesson-35      - LDAP. Централизованная авторизация и аутентификация
 
 #### 17. HW-lesson-25      - Резервное копирование                          - в работе
