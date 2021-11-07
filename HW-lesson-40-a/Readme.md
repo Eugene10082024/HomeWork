@@ -117,8 +117,6 @@
 
 Копируем то что ниже и вктавляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
-Файл приведенный ниже размещен по адресу: [unit etcd.service для astra-patroni01 ](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/etcd01.service)
-
 ВНИМАНИЕ -  При первом запуске etcd.service будет создан кластер с именем cluster-etcd. Для создания кластера с другим именем необходимо его поменять в строке:     --initial-cluster-token <cluster-etcd> 
              
         cat <<EOF | sudo tee /etc/systemd/system/etcd.service
@@ -212,8 +210,6 @@
     или самостоятельно заполнить шаблон данного параметра.
    
     --initial-cluster <node01-hostname>=http://<node01-IP>:2380,<node02-hostname>=http://<node02-IP>2380 
- 
-Файл приведенный ниже размещен по адресу: [unit etcd.service для astra-patroni02 ](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/etcd02.service)
   
 Копируем то что ниже и вcтавляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
@@ -311,8 +307,6 @@ EOF
     или самостоятельно заполнить шаблон данного параметра.
    
     --initial-cluster <node01-hostname>=http://<node01-IP>:2380,<node02-hostname>=http://<node02-IP>2380,<node03-hostname>=http://<node03-IP>:2380 
- 
-Файл приведенный ниже размещен по адресу: [unit etcd.service для astra-patroni02 ](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/etcd03.service)
    
 Копируем подготовленный скрипт и вставляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
