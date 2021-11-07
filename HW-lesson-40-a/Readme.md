@@ -160,16 +160,19 @@
     ETCDCTL_API=3 etcdctl member list
 
 Вывод команды примерно такой:
+   
 e8080638f53e747c, started, astra-patroni01, http://192.168.122.103:2380, http://192.168.122.103:2379, false
     
     ETCDCTL_API=2 etcdctl member list
 
 Вывод команды примерно такой:
+   
 e8080638f53e747c: name=astra-patroni01 peerURLs=http://192.168.122.103:2380 clientURLs=http://192.168.122.103:2379 isLeader=true
     
     ETCDCTL_API=3 etcdctl endpoint status --cluster -w table
     
 Вывод команды примерно такой:
+   
 +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
 |          ENDPOINT           |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
 +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
