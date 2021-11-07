@@ -33,10 +33,12 @@
 #### 1.4. Удаление созданного кластера postgres.
 
 После развертывания postgres в astra linux создается кластер по умолчанию.
+
 Местонахождение - /var/lib/postgresql/9.6/main
+
 Удаляем все из каталога /var/lib/postgresql/9.6/main/ 
 
-   rm -rf /var/lib/postgresql/9.6/main/*
+         rm -rf /var/lib/postgresql/9.6/main/*
   
 ### 2. Установка и первоначальная настройка кластера etcd. 
 Выполняется на всех серверах, где будет развернут кластер etcd.
