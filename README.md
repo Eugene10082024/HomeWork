@@ -25,13 +25,21 @@
 
 [13. HW-lesson-17  - SELinux - когда все запрещено](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-17)
 
+[14. HW-lesson-18  - Docker](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-18)
+
+[15. HW-lesson-20  - Prometheus, Zabbix](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-20)
+
+[16. HW-lesson-23  - Сбор и анализ логов](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-23)
 
 
 
 
 
 
-### 13. HW-lesson-17  - SELinux - когда все запрещено 
+
+
+
+
 ### 14. HW-lesson-18  - Docker 
 ### 15. HW-lesson-20  - Prometheus, Zabbix
 ### 16. HW-lesson-23  - Сбор и анализ логов      
