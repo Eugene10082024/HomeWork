@@ -1,9 +1,15 @@
+## Развертывание кластера Postgresql + Patroni на Astra Linux SE 1.6 
 
 Состав кластера: 
+
    astra-patroni01 - 192.168.122.103 
-   astra-patroni02 - 192.168.122.104
-   astra-patroni03 - 192.168.122.105 
    
+   astra-patroni02 - 192.168.122.104
+   
+   astra-patroni03 - 192.168.122.105 
+
+Схема кластера:
+
 
 
 ### 1. Настройка пакета postgres
@@ -13,42 +19,33 @@
 #### 1.1. Устанавливаем пакет posgres из repo astra:
 
         apt-get install postgresql-astra postgresql-contrib
-    
-       
+           
 #### 1.2. Отключение мандатного контроля для ненайденных юзеров(replicator/postgres)
 
         mcedit /etc/parsec/mswitch.conf
         zero_if_notfound: yes
 
-#### 1.3. Отключение сервиса postgresql.
+#### 1.3. Остановка и отключение сервиса postgresql.
 
         systemctl disable postgresql
         systemctl stop postgresql
         
-##### 1.4. Перенос созданного кластера postgres в другое место:
+##### 1.4. Удаление созданного кластера postgres.
 
 После развертывания postgres в astra linux создается кластер по умолчанию.
 Местонахождение - /var/lib/postgresql/9.6/main
-Чтобы он нам не мешал создаем папку для backup кластера и переносим его туда. 
+Удаляем все из каталога /var/lib/postgresql/9.6/main/ 
 
-    mkdir /home/asarafanov/postgres_bk
-    mv /var/lib/postgresql/9.6/main/* /home/asarafanov/postgres_bk
-    
-Можно просто удалить все из каталога /var/lib/postgresql/9.6/main/ 
+   rm -rf /var/lib/postgresql/9.6/main/*
+  
+### 2. Установка и первоначальная настройка кластера etcd. Выполняется на всех серверах, где будет развернут кластер etcd.
+В данном примере кластер etcd будет развернут на astra-patroni01, astra-patroni02, astra-patroni03
 
-    rm -rf /var/lib/postgresql/9.6/main/*
-    
+#### 2.1. Для начала скачаем bin архив etcd на каждый сервер кластера etcd.  
+Версия etcd 3.5.1 находится по адресу: https://github.com/etcd-io/etcd/releases/
 
-### 2. Установка и первоначальная настройка кластера etcd. Выполняется на всех серверах, где будет развернут кластер. - ВЫПОЛНЕН ПОЛНОСТЬЮ
-
-При необходимости выполнения опр пунктов на разрых серверах кластера будет выделено отдельно.    
-В инстукции кластер etcd будет развернут на тех же нодах где и postgresql т.е. 3 ноды.
-
-#### 2.1. Для начала скачаем bin архив etcd на каждый сервер кластера etcd. 
-     Версия etcd 3.5.1 находится по адресу: https://github.com/etcd-io/etcd/releases/
-     Для установки и настройки использую - etcd-v3.5.1-linux-amd64
-   
-     Для развертывания создал папку: sudo mkdir /home/asarafanov/install 
+Для установки и настройки используем - etcd-v3.5.1-linux-amd64
+Для развертывания создал папку: sudo mkdir /home/asarafanov/install 
    
 #### 2.2. Разваричиваем разварачиваем скаченный архив:
      
