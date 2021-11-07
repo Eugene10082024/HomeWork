@@ -119,7 +119,7 @@
 Копируем то что ниже и вктавляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
 ВНИМАНИЕ -  При первом запуске etcd.service будет создан кластер с именем cluster-etcd. Для создания кластера с другим именем необходимо его поменять в строке:
---initial-cluster-token <cluster-etcd> 
+--initial-cluster-token cluster-etcd 
              
         cat <<EOF | sudo tee /etc/systemd/system/etcd.service
         [Unit]
@@ -135,7 +135,7 @@
         --listen-peer-urls http://${ETCD_HOST_IP}:2380 \\
         --listen-client-urls http://${ETCD_HOST_IP}:2379,http://127.0.0.1:2379 \\
         --advertise-client-urls http://${ETCD_HOST_IP}:2379 \\
-        --initial-cluster-token <cluster-etcd> \\
+        --initial-cluster-token cluster-etcd \\
         --initial-cluster ${ETCD_NAME}=http://${ETCD_HOST_IP}:2380 \\
         --initial-cluster-state new \
        
@@ -147,7 +147,7 @@
     
     less /etc/systemd/system/etcd.service
 
-##### 3.1.3. Запуск etcd.service на ноде astra-patroni01 - 192.168.122.103.
+##### 3.1.3. Запуск etcd.service на сервере astra-patroni01 - 192.168.122.103.
 
     systemctl daemon-reload
     systemctl enable etcd
@@ -217,20 +217,15 @@
    
 --initial-cluster-token <имя кластера>  - в данной строке должен быть указано имя кластера которое было определено при инициализаии первого сервера.
    
- В примере используется имя кластера: cluster-etcd: --initial-cluster-token <cluster-etcd>
+ В примере используется имя кластера: cluster-etcd: 
+ 
+      --initial-cluster-token cluster-etcd
 
 Параметр initial-cluster:
    
---initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380 \\
+      --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380 \\
    
-Значение данного параметра можно взять скопировав значение переменной ETCD_INITIAL_CLUSTER полученной на шаге 3.2.1:
-   
---initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni01=http://192.168.122.103:2380 \\
-
-или самостоятельно заполнить шаблон данного параметра.
-   
---initial-cluster <node01-hostname>=http://<node01-IP>:2380,<node02-hostname>=http://<node02-IP>2380 
-  
+Значение данного параметра можно взять скопировав значение переменной ETCD_INITIAL_CLUSTER полученной на шаге 3.2.1
 
 Копируем то что ниже и вcтавляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
@@ -323,19 +318,15 @@
    
 --initial-cluster-token <имя кластера>  - в данной строке должен быть указано имя кластера которое было определено при инициализаии первого сервера.
    
-В примере используется имя кластера: cluster-etcd: --initial-cluster-token <cluster-etcd>
+В примере используется имя кластера: cluster-etcd: 
+
+      --initial-cluster-token <cluster-etcd>
  
 Параметр initial-cluster:
    
---initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380 \\
+      --initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380 \\
 
-Значение данного параметра можно взять скопировав значение переменной ETCD_INITIAL_CLUSTER полученной на шаге 3.3.1:
-
---initial-cluster astra-patroni02=http://192.168.122.104:2380,astra-patroni03=http://192.168.122.105:2380,astra-patroni01=http://192.168.122.103:2380 \\
-
-или самостоятельно заполнить шаблон данного параметра.
-   
---initial-cluster <node01-hostname>=http://<node01-IP>:2380,<node02-hostname>=http://<node02-IP>2380,<node03-hostname>=http://<node03-IP>:2380 
+Значение данного параметра можно взять скопировав значение переменной ETCD_INITIAL_CLUSTER полученной на шаге 3.3.1.
    
 Копируем подготовленный скрипт и вставляем в терминал. После чего нажимаем Enter и создаем unit файл: /etc/systemd/system/etcd.service
 
@@ -370,7 +361,10 @@
     systemctl enable etcd
     systemctl start etcd
    
-##### 3.2.5. Проверка работы нод кластера. Команды данного пункта выполняем на первом сервере astra-patroni01 - 192.168.122.103.
+##### 3.3.4. Проверка работы серверов кластера etcd. 
+
+Команды данного пункта выполняем на первом сервере astra-patroni01 - 192.168.122.103.
+
 Проверка выполняется как в api версии 2, так и версии  3, 
 
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl member list
