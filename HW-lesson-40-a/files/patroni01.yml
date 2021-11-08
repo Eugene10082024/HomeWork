@@ -1,0 +1,73 @@
+name: astra-patroni01
+scope: clr-patroni
+restapi:
+  listen: 0.0.0.0:8008
+  connect_address: astra-patroni01:8008
+  authentication:
+    username: patroni
+    password: patroni
+etcd:
+  hosts: localhost:2379
+  username: root
+  password: root
+bootstrap:
+  dcs:
+    ttl: 30
+    loop_wait: 10
+    retry_timeout: 10
+    maximum_lag_on_failover: 1048576
+    master_start_timeout: 300
+  postgresql:
+     use_pg_rewind: true
+     use_slots: true
+     parameters:
+       wal_level: replica
+       hot_standby: "on"
+       wal_keep_segments: 8
+       max_wal_senders: 5
+       max_replication_slots: 5
+       checkpoint_timeout: 30
+  initdb:
+   - auth-host: md5
+   - auth-local: peer
+   - encoding: UTF8
+   - data-checksums
+   - locale: ru_RU.UTF-8
+  pg_hba:
+   - local all all trust
+   - host all all 192.168.122.103/32 trust
+   - host all all 192.168.122.104/32 trust
+   - host all all 192.168.122.105/32 trust
+   - host all all 0.0.0.0/0 md5
+   - host replication replicator samenet md5  
+   - host replication replicator 127.0.0.1/32 md5
+  users:
+    usr1cv8:
+      password: usr1cv8
+      options:
+        - superuser
+postgresql:
+  listen: 0.0.0.0:5433
+  connect_address: astra-patroni01:5433
+  config_dir: /etc/postgresql/9.6/main
+  bin_dir: /usr/lib/postgresql/9.6/bin
+  data_dir: /var/lib/postgresql/9.6/main
+  pgpass: /tmp/pgpass
+  authentication:
+    superuser:
+      username: postgres
+      password: postgres
+    replication:
+      username: replicator
+      password: replicator
+    rewind:
+      username: rewind_user
+      password: rewind
+  parameters:
+    unix_socket_directories: '/var/run/postgresql/'
+    stats_temp_directory: '/var/run/postgresql/9.6-main.pg_stat_tmp'
+tags:
+  nofailover: false
+  noloadbalance: false
+  clonefrom: false
+  nosync: false
