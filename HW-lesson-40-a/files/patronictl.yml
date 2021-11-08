@@ -1,0 +1,6 @@
+dcs_api:
+ etcd://localhost:2379
+scope: clr-patroni
+authentication:
+ username: patroni
+ password: patroni
