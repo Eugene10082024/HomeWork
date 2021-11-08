@@ -262,6 +262,8 @@
 ##### 3.2.5. Проверка работы серверов кластера. Команды данного пункта выполняем на первой ноде (astra-patroni01 - 192.168.122.103)
 Проверка выполняется как в api версии 2, так и версии  3, 
 
+Команда 1:
+
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl member list
    
 Вывод команды должен быть примерно такой:
@@ -269,12 +271,16 @@
     232542f9074f4c33, started, astra-patroni02, http://192.168.122.104:2380, http://192.168.122.104:2379, false
     e8080638f53e747c, started, astra-patroni01, http://192.168.122.103:2380, http://192.168.122.103:2379, false
     
+Команда 2:    
+    
     root@astra-patroni01:/var/lib/etcd#  ETCDCTL_API=2 etcdctl member list
     
 Вывод команды должен быть примерно такой:
 
     232542f9074f4c33: name=astra-patroni02 peerURLs=http://192.168.122.104:2380 clientURLs=http://192.168.122.104:2379 isLeader=false
     e8080638f53e747c: name=astra-patroni01 peerURLs=http://192.168.122.103:2380 clientURLs=http://192.168.122.103:2379 isLeader=true
+    
+Команда 3:    
     
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl endpoint status --cluster -w table
     
@@ -369,6 +375,8 @@
 
 Проверка выполняется как в api версии 2, так и версии  3, 
 
+Команда 1:
+
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl member list
    
 Вывод команды должен быть примерно такой:
@@ -377,6 +385,8 @@
     6580a3065447af4e, started, astra-patroni03, http://192.168.122.105:2380, http://192.168.122.105:2379, false
     e8080638f53e747c, started, astra-patroni01, http://192.168.122.103:2380, http://192.168.122.103:2379, false
     
+ Команда 2:   
+    
     root@astra-patroni01:/var/lib/etcd#  ETCDCTL_API=2 etcdctl member list
     
 Вывод команды должен быть примерно такой:
@@ -384,6 +394,8 @@
     232542f9074f4c33: name=astra-patroni02 peerURLs=http://192.168.122.104:2380 clientURLs=http://192.168.122.104:2379 isLeader=false
     6580a3065447af4e: name=astra-patroni03 peerURLs=http://192.168.122.105:2380 clientURLs=http://192.168.122.105:2379 isLeader=false
     e8080638f53e747c: name=astra-patroni01 peerURLs=http://192.168.122.103:2380 clientURLs=http://192.168.122.103:2379 isLeader=true
+    
+Команда 3:    
     
     root@astra-patroni01:/var/lib/etcd# ETCDCTL_API=3 etcdctl endpoint status --cluster -w table
    
@@ -396,7 +408,6 @@
     | http://192.168.122.105:2379 | 6580a3065447af4e |   3.5.1 |   20 kB |     false |      false |         3 |          9 |                  9 |        |
     | http://192.168.122.103:2379 | e8080638f53e747c |   3.5.1 |   20 kB |      true |      false |         3 |          9 |                  9 |        |
     +-----------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
-
 
 Кластер etcd поднят на трех серверах.
 
@@ -426,7 +437,7 @@
  
  [файл etcd.service сервера astra-patroni01](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/etcd03.service)
    
- #### 3.4.2. Приминение внесенных изменений в файлы etcd.service.
+ #### 3.4.2. Применение внесенных изменений в файлы etcd.service.
  
  Для того чтобы внесенные изменения применились на серверах astra-patroni01 (192.168.122.103) и astra-patroni02 (192.168.122.104) необходимо выполнить:
  
@@ -438,7 +449,9 @@
 Все действия выполняются на любом из серверов кластера etcd.
 
 #### 3.5.1. Создание пользователя root
+
     root@astra-patroni01:/var/lib/etcd# etcdctl user add root
+    
     Password of root: 
     Type password of root again for confirmation: 
     User root created
@@ -446,8 +459,10 @@
     User: root
     Roles:
 
-#### 3.5.2. Включение авторизации по учетной записи    
+#### 3.5.2. Включение авторизации под учетной записью root
+
     root@astra-patroni01:/var/lib/etcd# etcdctl auth enable
+    
     {"level":"warn","ts":"2021-10-24T10:48:19.666+0300","logger":"etcd-client","caller":"v3/retry_interceptor.go:62","msg":"retrying of unary invoker failed","target":"etcd-endpoints://0xc00031ca80/127.0.0.1:2379","attempt":0,"error":"rpc error: code = FailedPrecondition desc = etcdserver: root user does not have root role"}
     Authentication Enabled
 
@@ -488,23 +503,27 @@
             apt -y install python3-psycopg2
             apt -y install python3-pip
             
-ВНИМАНИЕ - Если вдруг будет не стыковка с версиями пакетами можно попробовать -   aptitude install           
+ВНИМАНИЕ - Если вдруг будет не стыковка с версиями пакетов можно попробовать -   aptitude install           
  
-
 #### 4.2. Загрузка доп пакетов patroni c хоста имеющего доступ в Интернет.
 
 Перед тем как скачать необходимые пакеты необходимо на данный хост установить пакеты п. 4.1.1 - 4.1.2
 
+При развертывании кластера Patroni postgres может возникнуть ситуация, когда клатер находится в контуре с отсутствием Интернета.
+Для получения необходимых пакетов можно их скачать на ПК имеющим доступ в Интернет, после чего перенети и развернуть пакеты в закрытом контуре.
+
 Выполняем следующие команды 
 
-    root@astra-control: mkdir install-patroni[etcd]
-    root@astra-control:cd /home/asarafanov/install-patroni[etcd]
-    root@astra-control:/home/asarafanov/install# python3 -m pip download patroni[etcd]
-    root@astra-control:/home/asarafanov/install-psycopg2-binary# python3 -m pip download psycopg2-binary
+    root@astra-control: mkdir /root/install-patroni[etcd]
+    root@astra-control:cd /root/install-patroni[etcd]
+    root@astra-control:/root/install-patroni[etcd]# python3 -m pip download patroni[etcd]
+    root@astra-control: mkdir /root/iinstall-psycopg2-binary
+    root@astra-control:cd /root/iinstall-psycopg2-binary
+    root@astra-control:/root/install-psycopg2-binary# python3 -m pip download psycopg2-binary
 
 Имеем:     
 
-    root@astra-control:/home/asarafanov/install-patroni[etcd]# ls -al
+    root@astra-control:/root/install-patroni[etcd]# ls -al
     
     итого 2516
     drwxr-xr-x  2 root       root         4096 окт 24 12:46 .
@@ -524,9 +543,9 @@
     -rw-r--r--  1 root       root        30763 окт 24 12:46 wcwidth-0.2.5-py2.py3-none-any.whl
     -rw-r--r--  1 root       root        42808 окт 24 12:46 ydiff-1.2.tar.gz
 
-После чего переносим скачинные файлы на ноды кластера patroni с помощью утилиты scp.
+После чего переносим скачинные файлы на сервера кластера patroni с помощью утилиты scp.
 
-#### 4.3. Установка пакетов Patroni (на все ноды кластера).
+#### 4.3. Установка пакетов Patroni на серверах кластера:astra-patroni01, astra-patroni02, astra-patroni03.
 
     python3 -m pip install psutil --no-index --find-links file:///home/asarafanov/install/python-patroni/
     python3 -m pip install setuptools --no-index --find-links file:///home/asarafanov/install/python-patroni/ - при установке получил сообщение - Requirement already satisfied: setuptools in /usr/lib/python3/dist-packages
@@ -535,7 +554,7 @@
     python3 -m pip install psycopg2-binary --no-index --find-links file:///home/asarafanov/install/python-patroni/
     python3 -m pip install patroni[etcd] --no-index --find-links file:///home/asarafanov/install/python-patroni/
 
-Проверяем что установилось:
+Проверяем что установилось нас серверах  astra-patroni01,  astra-patroni02,  astra-patroni03:
 
     root@astra-patroni01:~# patroni --version
     patroni 2.1.1
@@ -549,11 +568,11 @@
     patroni 2.1.1
     root@astra-patroni03:~# 
     
+   
 
 ### 5. Конфигурирование и запуск кластера Patroni.
 
 #### 5.1. Создание каталога и назначение владельца (на всех нодах кластера).
-
     
     root@astra-patroni01:~# mkdir /etc/patroni; chown postgres:postgres /etc/patroni; chmod 700 /etc/patroni
 
