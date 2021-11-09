@@ -10,6 +10,39 @@
 
 Схема кластера:
 
+### На что обратить внимание перед началом установки на Astra Linux SE 1.6
+#### Отключение NetworkManager на серверах кластера
+При проведении тестирования работы развернутого контура выявлен не запуск в частности сервиса etcd.service
+Такое поведение обусловлено не очень понятное поведение сервиса NetworkManager.
+Т.к. не было желания проводить дополнительные работы по поиску причин было принятно решение отключить данный сервис и выполнить ручную настройку сетевого интерфейса через файл /etc/network/interfaces
+
+Отключение сервиса NetworkManager.
+      systemctl stop NetworkManager
+      systemctl disable NetworkManager
+      systemctl mask NetworkManager
+      
+Внесение изменений в файл /etc/network/interfaces.
+Содержание файла (astra-patroni01):
+      source /etc/network/inerfaces.d/*
+      
+      auto lo
+      iface lo inet loopback
+      
+      auto eth0
+      iface eth0 inet static
+         address 192.168.122.103
+         netmask  255.255.255.0 
+         geteway 192.168.122.1
+
+После сохранения файла выполнить restart сервиса networking.service или
+      systemctl restart networking.service      
+
+#### Проверка установленных locate на серверах.
+
+
+
+#### Дополнительная информация.
+
 
 
 ### 1. Настройка пакета postgres
