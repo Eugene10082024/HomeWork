@@ -17,6 +17,7 @@
 Т.к. не было желания проводить дополнительные работы по поиску причин было принятно решение отключить данный сервис и выполнить ручную настройку сетевого интерфейса через файл /etc/network/interfaces
 
 Отключение сервиса NetworkManager.
+
       systemctl stop NetworkManager
       systemctl disable NetworkManager
       systemctl mask NetworkManager
@@ -34,7 +35,8 @@
          netmask  255.255.255.0 
          geteway 192.168.122.1
 
-После сохранения файла выполнить restart сервиса networking.service или
+После сохранения файла выполнить restart сервиса networking.service или reboot
+
       systemctl restart networking.service      
 
 #### Проверка установленных locate на серверах.
