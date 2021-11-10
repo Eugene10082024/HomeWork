@@ -667,11 +667,6 @@
          - host all all 0.0.0.0/0 md5
          - host replication replicator samenet md5  
          - host replication replicator 127.0.0.1/32 md5
-        users:
-          usr-owner-db:
-            password: passw0rd
-            options:
-              - superuser
       postgresql:
         listen: 0.0.0.0:5433
         connect_address: <HOSTNAME>:5433
@@ -699,7 +694,10 @@
         nosync: false
 
 Ссылки на готовые файлы для развертывания кластера на серверах astra-patroni01, astra-patroni02, astra-patroni03
+
 [файл patroni.yml сервера astra-patroni01](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patroni01.yml)
+
 [файл patroni.yml сервера astra-patroni02](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patroni02.yml)
+
 [файл patroni.yml сервера astra-patroni03](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patroni03.yml)
 
