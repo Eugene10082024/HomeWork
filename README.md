@@ -7,7 +7,7 @@
 
 [4.  HW-lesson-04  - ZFS](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-04)
 
-[5.  HW-lesson-05  - NFS,FUSE](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-05)
+[5.  HW-lesson-05  - NFS, FUSE](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-05)
 
 [6.  HW-lesson-06  - Управление пакетами. Дистрибьюция софта.](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-06)
 
