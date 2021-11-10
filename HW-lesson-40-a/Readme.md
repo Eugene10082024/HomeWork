@@ -615,27 +615,17 @@
 
 ##### 5.2.1. Пример файла patroni.yml
 
-Описание параметров которые надо заполнить в примере:
-    <HOSTNAME> - Имя узла.
+Описание параметров которые надо заполнить в шаблоне файла приведенного ниже:
 
+    <HOSTNAME> - имя узла кластера patroni.
     <NAMESPACE IN ETCD> - URL в кластере etcd. Обычно используется имя кластера.
-
     <CLUSTER NAME> - Имя кластера в etcd.
-
-    <ETCD root pass> - Пароль созданного юзера в etcd.
-
-    <USER_1C pass> - Пароль для нового юзера 1с в postgres.
-
-    <Postgres password> - Пароль юзера postgres.
-
-    <Replicator password> - Пароль юзера Replicator.
-
-    <Rewind password> - Пароль юзера rewind_user.
-
+    
 ###### Шаблон файла patroni.yml
     
-      name: astra-patroni01
-      scope: clr-patroni
+      name: <HOSTNAME>
+      namespace: <NAMESPACE_IN_ETCD>
+      scope:  <CLUSTER_NAME>
       restapi:
         listen: 0.0.0.0:8008
         connect_address: astra-patroni01:8008
@@ -678,13 +668,13 @@
          - host replication replicator samenet md5  
          - host replication replicator 127.0.0.1/32 md5
         users:
-          usr1cv8:
-            password: usr1cv8
+          usr-owner-db:
+            password: passw0rd
             options:
               - superuser
       postgresql:
         listen: 0.0.0.0:5433
-        connect_address: astra-patroni01:5433
+        connect_address: <HOSTNAME>:5433
         config_dir: /etc/postgresql/9.6/main
         bin_dir: /usr/lib/postgresql/9.6/bin
         data_dir: /var/lib/postgresql/9.6/main
@@ -708,5 +698,8 @@
         clonefrom: false
         nosync: false
 
-
+Ссылки на готовые файлы для развертывания кластера на серверах astra-patroni01, astra-patroni02, astra-patroni03
+[файл patroni.yml сервера astra-patroni01](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patroni01.yml)
+[файл patroni.yml сервера astra-patroni02](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patroni02.yml)
+[файл patroni.yml сервера astra-patroni03](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patroni03.yml)
 
