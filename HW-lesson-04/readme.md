@@ -50,7 +50,7 @@ Complete!
 	[root@vm-zfs ~]# sudo sh -c "echo zfs >/etc/modules-load.d/zfs.conf"
 	[root@vm-zfs ~]#reboot
 
-### 1.6. Проверяем надичие драйверов после reboot.
+### 1.6. Проверяем наличие драйверов после reboot.
 
 	[root@vm-zfs ~]# lsmod | grep zfs
 	zfs                  4215915  6
@@ -276,7 +276,7 @@ Complete!
 	otus                        350M  128K  350M   1% /otus
 	otus/hometask2              352M  2.0M  350M   1% /otus/hometask2
 	
-### 2.6. Выводим информацию обо всех файловых систем.
+### 2.6. Выводим информацию обо всех файловых системах.
 	[root@vm-zfs zfs_import]# zfs get -s local all
 	NAME                        PROPERTY              VALUE                        SOURCE
 	otus                        recordsize            128K                         local
