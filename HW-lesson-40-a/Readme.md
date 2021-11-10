@@ -620,6 +620,7 @@
     <HOSTNAME> - имя узла кластера patroni.
     <NAMESPACE IN ETCD> - URL в кластере etcd. Обычно используется имя кластера.
     <CLUSTER NAME> - Имя кластера в etcd.
+    <IP_HOST01>,<IP_HOST02>,<IP_HOST03> - IP адреса северов входящих в кластер Patroni
     
 ###### Шаблон файла patroni.yml
     
@@ -661,9 +662,9 @@
          - locale: ru_RU.UTF-8
         pg_hba:
          - local all all trust
-         - host all all 192.168.122.103/32 trust
-         - host all all 192.168.122.104/32 trust
-         - host all all 192.168.122.105/32 trust
+         - host all all <IP_HOST01>/32 trust
+         - host all all <IP_HOST02>/32 trust
+         - host all all <IP_HOST03>/32 trust
          - host all all 0.0.0.0/0 md5
          - host replication replicator samenet md5  
          - host replication replicator 127.0.0.1/32 md5
