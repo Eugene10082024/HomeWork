@@ -41,8 +41,8 @@ bootstrap:
    - host all all 0.0.0.0/0 md5   
    - host replication replicator 127.0.0.1/32 md5
   users:
-    usr1cv8:
-      password: usr1cv8
+    user-owner-db:
+      password: passw0rd
       options:
         - superuser
 postgresql:
