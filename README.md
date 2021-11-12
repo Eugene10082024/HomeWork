@@ -31,28 +31,30 @@
 
 [16  - Сбор и анализ логов](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-23)
 
-17.  - Архитектура сетей   
+[17  - Особенности настройки ELK](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-23-a)
 
-18.  - DHCP, PXE
+18.  - Архитектура сетей   
 
-19.  - Фильтрация трафика - firewalld, iptables
+19.  - DHCP, PXE
 
-20.  - Статическая и динамическая маршрутизация, OSPF
+20.  - Фильтрация трафика - firewalld, iptables
 
-21.  - Мосты, туннели и VPN
+21.  - Статическая и динамическая маршрутизация, OSPF
 
-22.  - DNS- настройка и обслуживание
+22.  - Мосты, туннели и VPN
 
-23.  - Сетевые пакеты. VLAN'ы. LACP
+23.  - DNS- настройка и обслуживание
 
-[24. - LDAP. Централизованная авторизация и аутентификация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-34)
+24.  - Сетевые пакеты. VLAN'ы. LACP
 
-[25. - MySQL Backup + Репликация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-39)
+[25. - LDAP. Централизованная авторизация и аутентификация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-34)
 
-[26. - PostgreSQL](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-40)
+[26. - MySQL Backup + Репликация](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-39)
 
-[27. - Кластер Patroni-PostgreSQL](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-40-a)
+[27. - PostgreSQL](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-40)
 
-28.  - Резервное копирование
+[28. - Кластер Patroni-PostgreSQL](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-40-a)
 
-29.  - Динамический web
+29.  - Резервное копирование
+
+30.  - Динамический web
