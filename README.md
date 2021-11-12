@@ -51,7 +51,7 @@
 
 [26. - PostgreSQL](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-40)
 
-[27. - Кластер Patroni-PostgreSQL](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-40)
+[27. - Кластер Patroni-PostgreSQL](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-40-a)
 
 28.  - Резервное копирование
 
