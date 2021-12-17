@@ -764,7 +764,7 @@
  
  [файл patronictl.yaml](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patronictl.yaml)
 
-Выполняем команду - patronictl -c /etc/patroni/patroni.yml list и получаем примерно следующий вывод:
+Выполняем команду для проверки - patronictl -c /etc/patroni/patroni.yml list и получаем примерно следующий вывод:
 
        root@astra-patroni01:~# patronictl -c /etc/patroni/patroni.yml list
       + Cluster: clr-patroni (7022631128063698926) ------+---------+----+-----------+
@@ -776,6 +776,77 @@
       +-----------------+----------------------+---------+---------+----+-----------+
       root@astra-patroni01:~# 
 
+Для применения настроек postgresql.conf на всех серверах кластера необходимо вносить изменения через patronictl
+      
+      patronictl -c /etc/patroni/patroni.yml edit-config clr-patroni
+      
+ ### 6. Установка и конфигурирование haproxy.
+ 
+ #### 6.1. Установка  haproxy.
+ 
+ Установка haproxy выполняется на каждом сервере кластера.
+ 
+      apt install -y haproxy
+ 
+ #### 6.2. Конфигурирование haproxy.
+ Переименовываем файл /etc/haproxy/haproxy.cfg в /etc/haproxy/haproxy.bk
+ 
+ Создаем файл /etc/haproxy/haproxy.cfg и создаем новую конфигурацию.
+ 
+ ##### Пример файла haproxy.cfg
+ 
+         global
+         maxconn 1000
+         defaults
+         mode tcp
+         retries 2
+         timeout client 30m
+         timeout connect 10s
+         timeout server 30m
+         timeout check 5s
+
+
+         listen stats
+         mode http
+         bind *:7000
+         stats enable
+         stats uri /
+         stats refresh 5s
+
+         frontend postgresql
+         bind *:5432
+         default_backend postgres-patroni
+
+         backend postgres-patroni
+         option httpchk
+         http-check expect status 200
+
+         default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
+         server astra-patroni01 astra-patroni01:5433 maxconn 1000 check port 8008
+         server astra-patroni02 astra-patroni02:5433 maxconn 1000 check port 8008
+         server astra-patroni03 astra-patroni03:5433 maxconn 1000 check port 8008
+ 
+ [файл haproxy.cfg cервера astra-patroni01](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/haproxy01.cfg)
+ 
+ [файл haproxy.cfg cервера astra-patroni02](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/haproxy02.cfg)
+ 
+ [файл haproxy.cfg cервера astra-patroni03](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/haproxy03.cfg)
+ 
+ Перезапускаем сервис haproxy.
+ 
+      systemctl restart haproxy.service
+      systemctl enable haproxy.service 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+      
  
  
 
