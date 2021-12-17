@@ -804,23 +804,18 @@
          timeout connect 10s
          timeout server 30m
          timeout check 5s
-
-
          listen stats
          mode http
          bind *:7000
          stats enable
          stats uri /
          stats refresh 5s
-
          frontend postgresql
          bind *:5432
          default_backend postgres-patroni
-
          backend postgres-patroni
          option httpchk
          http-check expect status 200
-
          default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
          server astra-patroni01 astra-patroni01:5433 maxconn 1000 check port 8008
          server astra-patroni02 astra-patroni02:5433 maxconn 1000 check port 8008
@@ -837,8 +832,78 @@
       systemctl restart haproxy.service
       systemctl enable haproxy.service 
  
+  ### 7. Установка и конфигурирование keepalived.
  
+ Keepalived устанавливается на каждом сервере кластера.
  
+ Перед установкой keepalived необходимо дополнительно установить psmisc на каждом сервере кластера
+ 
+      apt install -y psmisc
+      
+ #### 7.1. Устанавливаем keepalived
+  
+      apt install -y keepalived
+  
+  #### 7.2. Конфигурирование keepalived
+  
+  Выполняем конфигурирование keepalived, редактируя файл /etc/ /etc/keepalived/keepalived.conf
+  
+  Ниже приведен шаблон файла.
+  
+  Описание параметров которые надо заполнить в шаблоне файла приведенного ниже: 
+           host-name - имя сервера кластера
+           MASTER/BACKUP - одно из состояний keepalived. В калстере может быть один MASTER, остальные BACKUP
+           Virtual_ip - виртуальный IP адрес
+           password - пароль   
+             
+#### Шаблон файла keepalived.conf
+           
+        global_defs {
+      router_id <host-name>
+      }
+
+      vrrp_script chk_haproxy {
+      script "killall -0 haproxy"
+      interval 1
+      weight -20
+      debug
+      fall 2
+      rise 2
+      }
+
+      vrrp_instance <host-name> {
+      interface eth0
+      state <MASTER/BACKUP>
+      virtual_router_id 50
+      priority 100
+      authentication {
+      auth_type PASS
+      auth_pass <password>
+      }
+      track_script {
+      chk_haproxy weight 20
+      }
+      virtual_ipaddress {
+      <Virtual_ip>
+      }
+      }
+
+[файл keepalived.cfg cервера astra-patroni01](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/keepalived01.cfg) 
+
+[файл keepalived.cfg cервера astra-patroni02](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/keepalived02.cfg)   
+
+[файл keepalived.cfg cервера astra-patroni02](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/keepalived02.cfg) 
+  
+#### 7.3. Запускаем сервис keepalived.
+
+      systemctl start keepalived
+      systemctl enable keepalived
+  
+### 8. Подлючение к кластеру и проверка работоспособности.
+
+  
+  
+  
  
  
  
