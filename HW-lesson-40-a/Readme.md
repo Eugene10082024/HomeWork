@@ -734,3 +734,48 @@
 
 [файл patroni.service](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patroni.service)
 
+После того как файл создан необходимо на каждом сервере кластера выполнить следующие команды:
+
+      systemctl daemon-reload
+      systemctl start patroni.service
+      systemctl enable patroni.service
+
+После запуска юнита проверяем его статус:
+   
+      systemctl status patroni
+      
+ #### 5.4. Настройка patronictl
+ 
+ Настройка данной утилиты выполняется на всех серверах кластера.
+ 
+ Настройки выполняем под пользоваетем root
+ 
+      mkdir ~/.config/patroni
+      vi ~/.config/patroni/patronictl.yaml
+ 
+ ##### Пример файла patronictl.yaml
+ 
+      dcs_api:
+       etcd://localhost:2379
+      scope: clr-patroni
+      authentication:
+       username: patroni
+       password: patroni 
+ 
+ [файл patronictl.yaml](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patronictl.yaml)
+
+Выполняем команду - patronictl -c /etc/patroni/patroni.yml list и получаем примерно следующий вывод:
+
+       root@astra-patroni01:~# patronictl -c /etc/patroni/patroni.yml list
+      + Cluster: clr-patroni (7022631128063698926) ------+---------+----+-----------+
+      | Member          | Host                 | Role    | State   | TL | Lag in MB |
+      +-----------------+----------------------+---------+---------+----+-----------+
+      | astra-patroni01 | astra-patroni01:5433 | Replica | running | 28 |         0 |
+      | astra-patroni02 | astra-patroni02:5433 | Replica | running | 28 |         0 |
+      | astra-patroni03 | astra-patroni03:5433 | Leader  | running | 28 |           |
+      +-----------------+----------------------+---------+---------+----+-----------+
+      root@astra-patroni01:~# 
+
+ 
+ 
+
