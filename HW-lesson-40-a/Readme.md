@@ -702,3 +702,11 @@
 
 [файл patroni.yml сервера astra-patroni03](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patroni03.yml)
 
+#### Проверка созданного конфигурационного файла
+
+      patroni --validate-config /etc/patroni/patroni.yml
+
+
+
+
+
