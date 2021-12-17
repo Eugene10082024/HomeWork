@@ -613,6 +613,8 @@
 
 #### 5.2. Создание конфигурационного файла patroni.yml
 
+Файл patroni.yml рамещаем в каталоге /etc/patroni на каждом сервере кластера
+
 ##### 5.2.1. Пример файла patroni.yml
 
 Описание параметров которые надо заполнить в шаблоне файла приведенного ниже:
@@ -622,7 +624,7 @@
     <CLUSTER NAME> - Имя кластера в etcd.
     <IP_HOST01>,<IP_HOST02>,<IP_HOST03> - IP адреса северов входящих в кластер Patroni
     
-###### Шаблон файла patroni.yml
+##### Шаблон файла patroni.yml
     
       name: <HOSTNAME>
       namespace: <NAMESPACE_IN_ETCD>
@@ -702,11 +704,33 @@
 
 [файл patroni.yml сервера astra-patroni03](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patroni03.yml)
 
-#### Проверка созданного конфигурационного файла
+##### Проверка созданного конфигурационного файла
 
       patroni --validate-config /etc/patroni/patroni.yml
 
+При выводе сообщения смотрим файл /etc/patroni/patroni.yml
 
+#### 5.3. Создание юнита запуска patroni.service. 
 
+Юнит созается на каждом сервере кластера. Он размещается в каталоге /etc/systemd/system/
 
+##### Шаблон юнита
+         [Unit]
+         Description=Runners to orchestrate a high-availability PostgreSQL
+         After=syslog.target network.target
+
+         [Service]
+         Type=simple
+         User=postgres
+         Group=postgres
+         ExecStart=/usr/local/bin/patroni /etc/patroni/patroni.yml
+         ExecReload=/bin/kill -s HUP $MAINPID
+         KillMode=process
+         TimeoutSec=30
+         Restart=no
+
+         [Install]
+         WantedBy=multi-user.target
+
+[файл patroni.service](https://github.com/Aleksey-10081967/HomeWork/blob/main/HW-lesson-40-a/files/patroni.service)
 
