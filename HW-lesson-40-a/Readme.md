@@ -88,16 +88,16 @@
 #### 2.2. Разваричиваем разварачиваем скаченный архив:
 Для развертывания создаем папку и разархивируем скопированный архив.
 
-     mkdir /home/asarafanov/install 
-     cd /home/asarafanov/install 
+     mkdir /home/user/install 
+     cd /home/user/install 
      tar xzvf etcd-v3.5.1-linux-amd64
      rm etcd-v3.5.1-linux-amd64
    
 #### 2.3. Копируем bin файлы etcd в папку /usr/local/bin/
 
-     cp /home/asarafanov/install/etcd-v3.5.1-linux-amd64/etcd* /usr/local/bin/
+     cp /home/user/install/etcd-v3.5.1-linux-amd64/etcd* /usr/local/bin/
      можно и так:
-     mv /home/asarafanov/install/etcd-v3.5.1-linux-amd64/etcd* /usr/local/bin/
+     mv /home/user/install/etcd-v3.5.1-linux-amd64/etcd* /usr/local/bin/
    
 #### 2.4.Проверяем правильность развернутой версии.
 
