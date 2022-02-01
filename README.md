@@ -1,4 +1,4 @@
-# Выполненые ДЗ по лекциям в OTUS
+# Выполненные работы
 [01 - С чего начинается Linux](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-01)
 
 [02 - Дисковая подсистема](https://github.com/Aleksey-10081967/HomeWork/tree/main/HW-lesson-02)
