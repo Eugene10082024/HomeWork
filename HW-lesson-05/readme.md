@@ -10,7 +10,10 @@
 ## Настройка NFS сервера.
 
 ### 1.1. Разворачиваем следующие пакеты 
+CentOS:
 	yum install nfs-utils nfs-utils-lib -y
+Astra Linux
+	apt install nfs_kernel-server
 
 ### 1.2. Проверяем и при необходимости включаем следующие службы: rpcbind, nfs-server, nfs-lock, nfs-idmap
 
