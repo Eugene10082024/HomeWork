@@ -10,9 +10,13 @@
 ## Настройка NFS сервера.
 
 ### 1.1. Разворачиваем следующие пакеты 
+
 CentOS:
+
 	yum install nfs-utils nfs-utils-lib -y
+	
 Astra Linux
+
 	apt install nfs_kernel-server
 
 ### 1.2. Проверяем и при необходимости включаем следующие службы: rpcbind, nfs-server, nfs-lock, nfs-idmap
@@ -208,20 +212,3 @@ NFS каталог не примонтировался при загрузке. 
     192.168.11.101:/mnt/share   40G  3,7G   37G  10% /mnt/nfs-share
 
 NFS появился.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
