@@ -9,7 +9,8 @@
 
 ## Настройка NFS сервера.
 
-### 1.1. yum install nfs-utils nfs-utils-lib -y
+### 1.1. Разворачиваем следующие пакеты 
+	yum install nfs-utils nfs-utils-lib -y
 
 ### 1.2. Проверяем и при необходимости включаем следующие службы: rpcbind, nfs-server, nfs-lock, nfs-idmap
 
