@@ -18,6 +18,14 @@ CentOS:
 Astra Linux
 
 	apt install nfs_kernel-server
+	
+РЕД ОС версии 7.1 или 7.2:
+
+	yum install nfs-utils nfs4-acl-tools
+
+РЕД ОС версии 7.3 и выше:
+
+	dnf install nfs-utils nfs4-acl-tools
 
 ### 1.2. Проверяем и при необходимости включаем следующие службы: rpcbind, nfs-server, nfs-lock, nfs-idmap
 
