@@ -552,8 +552,8 @@
     root@astra-control: mkdir /root/install-patroni[etcd]
     root@astra-control:cd /root/install-patroni[etcd]
     root@astra-control:/root/install-patroni[etcd]# python3 -m pip download patroni[etcd]
-    root@astra-control: mkdir /root/iinstall-psycopg2-binary
-    root@astra-control:cd /root/iinstall-psycopg2-binary
+    root@astra-control: mkdir /root/install-psycopg2-binary
+    root@astra-control:cd /root/install-psycopg2-binary
     root@astra-control:/root/install-psycopg2-binary# python3 -m pip download psycopg2-binary
 
 Имеем:     
